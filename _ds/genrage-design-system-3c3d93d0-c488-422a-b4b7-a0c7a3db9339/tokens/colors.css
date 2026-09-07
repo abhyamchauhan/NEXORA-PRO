@@ -1,0 +1,53 @@
+/* GENRAGE — Color tokens
+   Monochrome streetwear palette: ink black, concrete greys, paper white.
+   Colour appears only as function — sale red, in-stock/rating green. */
+:root {
+  /* ---- Base neutrals (the whole brand lives here) ---- */
+  --gr-black: #000000;        /* true black — hero grounds, footer */
+  --gr-ink: #1c1c1c;          /* near-black — buttons, primary text on light */
+  --gr-graphite: #262626;     /* borders on dark surfaces */
+  --gr-grey-700: #4a4a4a;
+  --gr-grey-500: #6b6b6b;     /* subdued/muted text */
+  --gr-grey-400: #a7a7a7;     /* strong border */
+  --gr-grey-300: #c4c4c4;     /* concrete — signature section background */
+  --gr-grey-200: #dddddd;     /* hairline border on light */
+  --gr-grey-100: #ededed;     /* warning/neutral fill */
+  --gr-grey-050: #f5f5f5;     /* off-white surface */
+  --gr-white: #ffffff;        /* paper */
+
+  /* ---- Functional accents ---- */
+  --gr-sale: #c5312d;         /* on-sale red — discount badges & strike context */
+  --gr-sale-fg: #ffffff;
+  --gr-rating: #47a730;       /* review stars / in-stock green */
+  --gr-rating-deep: #307a07;  /* success text */
+  --gr-success-bg: #d4e3cb;
+  --gr-warning-bg: #ededed;
+  --gr-warning-fg: #6b6b6b;
+  --gr-error-bg: #dbdbdb;
+  --gr-error-fg: #6b6b6b;
+
+  /* ---- Semantic aliases (use these in components) ---- */
+  --text-strong: var(--gr-ink);
+  --text-body: var(--gr-ink);
+  --text-subdued: var(--gr-grey-500);
+  --text-on-dark: var(--gr-white);
+  --text-inverse: var(--gr-white);
+
+  --surface-page: var(--gr-white);
+  --surface-raised: var(--gr-white);
+  --surface-concrete: var(--gr-grey-300);
+  --surface-muted: var(--gr-grey-050);
+  --surface-dark: var(--gr-black);
+
+  --border-hairline: var(--gr-grey-200);
+  --border-strong: var(--gr-grey-400);
+  --border-dark: var(--gr-graphite);
+
+  --action-bg: var(--gr-ink);
+  --action-fg: var(--gr-white);
+  --action-bg-hover: #000000;
+  --action-ghost-border: var(--gr-ink);
+
+  --price-sale: var(--gr-sale);
+  --star: var(--gr-rating);
+}

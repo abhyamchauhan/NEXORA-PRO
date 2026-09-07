@@ -1,0 +1,30 @@
+/* GENRAGE — Effects: radii, borders, shadows, motion
+   The brand reads HARD: near-square corners, thin hairlines, whisper shadows.
+   Nothing bounces; hovers are colour/opacity swaps, presses nudge down 1px. */
+:root {
+  /* Radii — deliberately minimal. Streetwear = sharp. */
+  --radius-none: 0px;         /* inputs, product cards, badges */
+  --radius-button: 2px;       /* the ONLY rounding in the system */
+  --radius-pill: 9999px;      /* circle icon buttons, size chips only */
+
+  /* Borders */
+  --border-width: 1px; /* @kind other */
+  --border-width-strong: 1.5px; /* @kind other */
+
+  /* Shadows — barely-there. Product photography carries the depth, not chrome. */
+  --shadow-sm: 0 2px 8px rgb(0 0 0 / 0.05);
+  --shadow: 0 5px 15px rgb(0 0 0 / 0.05);
+  --shadow-md: 0 5px 30px rgb(0 0 0 / 0.05);
+  --shadow-drawer: -8px 0 40px rgb(0 0 0 / 0.12);
+
+  /* Motion */
+  --ease-out: cubic-bezier(0.22, 0.61, 0.36, 1); /* @kind other */
+  --ease-standard: cubic-bezier(0.4, 0, 0.2, 1); /* @kind other */
+  --dur-fast: 120ms; /* @kind other */
+  --dur: 200ms; /* @kind other */
+  --dur-slow: 320ms; /* @kind other */
+
+  /* Layout chrome */
+  --header-height: 72px;
+  --overlay: rgb(0 0 0 / 0.4);   /* modal / drawer scrim */
+}

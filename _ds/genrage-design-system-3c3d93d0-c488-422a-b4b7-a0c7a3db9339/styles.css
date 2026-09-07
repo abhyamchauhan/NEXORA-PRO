@@ -1,0 +1,11 @@
+/* ============================================================
+   GENRAGE DESIGN SYSTEM — global entry point
+   Consumers link THIS file. It is nothing but @imports so the
+   compiler can walk the full token + font closure.
+   ============================================================ */
+@import "tokens/fonts.css";
+@import "tokens/colors.css";
+@import "tokens/typography.css";
+@import "tokens/spacing.css";
+@import "tokens/effects.css";
+@import "tokens/base.css";

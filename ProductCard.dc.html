@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="_ds/genrage-design-system-3c3d93d0-c488-422a-b4b7-a0c7a3db9339/tokens/fonts.css">
+<link rel="stylesheet" href="_ds/genrage-design-system-3c3d93d0-c488-422a-b4b7-a0c7a3db9339/tokens/colors.css">
+<link rel="stylesheet" href="_ds/genrage-design-system-3c3d93d0-c488-422a-b4b7-a0c7a3db9339/tokens/typography.css">
+<link rel="stylesheet" href="_ds/genrage-design-system-3c3d93d0-c488-422a-b4b7-a0c7a3db9339/tokens/spacing.css">
+<link rel="stylesheet" href="_ds/genrage-design-system-3c3d93d0-c488-422a-b4b7-a0c7a3db9339/tokens/effects.css">
+<link rel="stylesheet" href="_ds/genrage-design-system-3c3d93d0-c488-422a-b4b7-a0c7a3db9339/tokens/base.css">
+<link rel="stylesheet" href="_ds/genrage-design-system-3c3d93d0-c488-422a-b4b7-a0c7a3db9339/styles.css">
+<script src="_ds/genrage-design-system-3c3d93d0-c488-422a-b4b7-a0c7a3db9339/_ds_bundle.js"></script>
+<style>
+@keyframes nx-pop{from{opacity:0;transform:translateY(8px) scale(.972)}to{opacity:1;transform:none}}
+@keyframes nx-shimmer{0%{opacity:.4}50%{opacity:.85}100%{opacity:.4}}
+@keyframes nx-wobble{0%{transform:rotate(0deg) scale(1)}26%{transform:rotate(-1.2deg) scale(1.07)}54%{transform:rotate(.8deg) scale(1.04)}78%{transform:rotate(-.35deg) scale(1.01)}100%{transform:rotate(0deg) scale(1)}}
+button{transition:transform 300ms cubic-bezier(.22,.8,.28,1),opacity 200ms ease,background-color 220ms ease}
+button:active{transform:translateY(1px) scale(.985)}
+[data-nx=icon]:hover{animation:nx-wobble 560ms cubic-bezier(.22,.8,.28,1)}
+[data-nx=card]{transition:transform 460ms cubic-bezier(.22,.8,.28,1)}
+[data-nx=card]:hover{transform:translateY(-5px)}
+[data-nx=card]:active{transform:translateY(-2px) scale(.994)}
+[data-nx=card]:hover [data-nx=media]{transform:scale(1.035)}
+@media (prefers-reduced-motion:reduce){
+ *,*::before,*::after{animation-duration:1ms !important;animation-iteration-count:1 !important;transition-duration:1ms !important}
+ [data-nx=card]:hover,[data-nx=card]:active,button:active{transform:none}
+ [data-nx=card]:hover [data-nx=media]{transform:none}
+}
+</style>
+</helmet>
+<article data-nx="card" style="display:flex;flex-direction:column;gap:14px;cursor:pointer;animation:nx-pop 380ms cubic-bezier(.22,.8,.28,1) both" onClick="{{ c.onOpen }}" onMouseEnter="{{ c.onEnter }}" onMouseLeave="{{ c.onLeave }}">
+  <div style="position:relative;width:100%;aspect-ratio:4/5;background:#c9c7c4;overflow:hidden">
+    <sc-if value="{{ c.thumb }}" hint-placeholder-val="{{ false }}"><img src="{{ c.thumb }}" alt="{{ c.name }}" data-nx="media" style="width:100%;height:100%;object-fit:cover;display:block;transition:opacity 220ms ease,transform 720ms cubic-bezier(.22,.8,.28,1)" /></sc-if>
+    <sc-if value="{{ c.loading }}" hint-placeholder-val="{{ true }}">
+      <div style="position:absolute;inset:0;display:flex;align-items:flex-end;justify-content:center;padding-bottom:18px;background:#c9c7c4;animation:nx-shimmer 1.7s ease-in-out infinite">
+        <span style="font-family:var(--font-body,'Nunito',sans-serif);font-size:9px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:#4a4a4a">Rendering</span>
+      </div>
+    </sc-if>
+    <div style="position:absolute;top:0;left:0;display:flex;flex-direction:column;align-items:flex-start;gap:4px;padding:10px">
+      <sc-for list="{{ c.badges }}" as="b" hint-placeholder-count="0">
+        <x-import component-from-global-scope="GENRAGEDesignSystem_3c3d93.Badge" tone="{{ b.tone }}" hint-size="auto,22px">{{ b.label }}</x-import>
+      </sc-for>
+    </div>
+    <button type="button" data-nx="icon" aria-label="Toggle wishlist" onClick="{{ c.onWish }}" style="position:absolute;top:8px;right:8px;width:36px;height:36px;display:flex;align-items:center;justify-content:center;border:none;background:transparent;color:#1c1c1c;cursor:pointer;transition:opacity 200ms ease" style-hover="opacity:.55">
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="{{ c.heartFill }}" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.8 6.6a5 5 0 0 0-7.1 0L12 8.3l-1.7-1.7a5 5 0 0 0-7.1 7.1L12 22l8.8-8.3a5 5 0 0 0 0-7.1Z"></path></svg>
+    </button>
+    <button type="button" onClick="{{ c.onQuick }}" style="position:absolute;bottom:0;right:0;height:40px;padding:0 16px;border:none;background:#0b0b0b;color:#fff;font-family:var(--font-body,'Nunito',sans-serif);font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;cursor:pointer;transition:background 200ms ease" style-hover="background:#c5312d">{{ c.quickLabel }}</button>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:7px">
+    <span style="font-family:var(--font-body,'Nunito',sans-serif);font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:#a7a7a7">{{ c.sub }}</span>
+    <h3 style="margin:0;font-family:var(--font-display,'Instrument Sans',sans-serif);font-size:15px;font-weight:600;letter-spacing:.01em;text-transform:uppercase;color:#fff;line-height:1.2">{{ c.name }}</h3>
+    <div style="--gr-ink:#ffffff;--gr-grey-500:#a7a7a7">
+      <x-import component-from-global-scope="GENRAGEDesignSystem_3c3d93.PriceTag" price="{{ c.price }}" compare-at="{{ c.compareAt }}" size="md" hint-size="auto,20px"></x-import>
+    </div>
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:12px">
+      <div style="--gr-ink:#ffffff;--gr-grey-500:#a7a7a7">
+        <x-import component-from-global-scope="GENRAGEDesignSystem_3c3d93.RatingStars" rating="{{ c.rating }}" count="{{ c.reviewCount }}" size="12" hint-size="auto,16px"></x-import>
+      </div>
+      <div style="display:flex;gap:5px">
+        <sc-for list="{{ c.colors }}" as="s" hint-placeholder-count="2">
+          <span title="{{ s.name }}" style="width:11px;height:11px;border-radius:50%;background:{{ s.hex }};border:1px solid #4a4a4a;display:block"></span>
+        </sc-for>
+      </div>
+    </div>
+  </div>
+</article>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:320,&quot;height&quot;:460},&quot;c&quot;:{&quot;editor&quot;:null,&quot;tsType&quot;:&quot;CardVM&quot;,&quot;default&quot;:{&quot;name&quot;:&quot;Orbital Hoodie&quot;,&quot;sub&quot;:&quot;Hoodies&quot;,&quot;price&quot;:1899,&quot;compareAt&quot;:2799,&quot;rating&quot;:4.8,&quot;reviewCount&quot;:412,&quot;quickLabel&quot;:&quot;Quick add&quot;,&quot;heartFill&quot;:&quot;none&quot;,&quot;loading&quot;:true,&quot;badges&quot;:[],&quot;colors&quot;:[]}}}"></script>
+</body>
+</html>

@@ -1,0 +1,25 @@
+/* GENRAGE — Spacing, sizing & layout tokens */
+:root {
+  /* Spacing scale */
+  --sp-1: 0.25rem;
+  --sp-2: 0.5rem;
+  --sp-3: 0.75rem;
+  --sp-4: 1rem;
+  --sp-5: 1.25rem;
+  --sp-6: 1.5rem;
+  --sp-8: 2rem;
+  --sp-10: 2.5rem;
+  --sp-12: 3rem;
+  --sp-16: 4rem;
+  --sp-20: 5rem;
+
+  /* Containers (from the live theme) */
+  --container-md: 71.875rem;   /* 1150px */
+  --container-lg: 78.75rem;    /* 1260px */
+  --container-xl: 85rem;       /* 1360px */
+  --container-gutter: 3rem;    /* desktop page gutter */
+  --container-gutter-sm: 1.25rem;
+
+  --section-spacing: 3rem;     /* vertical rhythm between sections */
+  --grid-gap: 1.5rem;          /* product grid gap */
+}

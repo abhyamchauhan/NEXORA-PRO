@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NEXORA — start here</title>
+<link rel="stylesheet" href="_ds/genrage-design-system-3c3d93d0-c488-422a-b4b7-a0c7a3db9339/tokens/fonts.css">
+<style>
+  *{box-sizing:border-box}
+  html,body{margin:0;background:#000;color:#fff;-webkit-font-smoothing:antialiased}
+  body{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;
+       font-family:'Nunito',system-ui,sans-serif}
+  .card{width:min(680px,100%);border:1px solid #262626;background:#080808;padding:clamp(24px,4vw,44px);
+        display:flex;flex-direction:column;gap:18px}
+  .mark{display:flex;align-items:center;gap:11px}
+  .mark span:first-child{width:34px;height:34px;display:flex;align-items:center;justify-content:center;
+        border:1px solid #fff;font-family:'Instrument Sans',sans-serif;font-size:17px;font-weight:700;letter-spacing:-.02em}
+  .wordmark{font-family:'Instrument Sans',sans-serif;font-size:19px;font-weight:700;letter-spacing:.24em;text-transform:uppercase}
+  .kicker{font-size:10px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:#6b6b6b}
+  h1{margin:0;font-family:'Instrument Sans',sans-serif;font-size:clamp(24px,3.4vw,36px);font-weight:700;
+     letter-spacing:-.02em;line-height:1.02;text-transform:uppercase}
+  p{margin:0;max-width:58ch;font-size:14px;line-height:1.7;color:#c4c4c4;text-wrap:pretty}
+  .steps{display:flex;flex-direction:column;gap:1px;background:#1c1c1c}
+  .step{background:#000;padding:14px 16px;display:flex;gap:12px;align-items:baseline}
+  .step b{font-family:'Instrument Sans',sans-serif;font-size:11px;font-weight:700;letter-spacing:.1em;color:#4a4a4a;flex:0 0 auto}
+  .step span{font-size:13px;line-height:1.6;color:#e9e5dd}
+  code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12.5px;background:#141414;
+       border:1px solid #262626;padding:2px 6px;color:#fff}
+  a.cta{align-self:flex-start;padding:16px 26px;background:#fff;color:#000;text-decoration:none;border-radius:2px;
+        font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;transition:opacity 200ms ease}
+  a.cta:hover{opacity:.82}
+  a{color:#fff}
+  a:hover{opacity:.6}
+  .hide{display:none}
+</style>
+</head>
+<body>
+  <main class="card">
+    <div class="mark"><span>N</span><span class="wordmark">Nexora</span></div>
+
+    <div id="served" class="hide" style="display:none;flex-direction:column;gap:18px">
+      <span class="kicker">Ready</span>
+      <h1>Opening the storefront</h1>
+      <p>You are on a local server, so everything works. If the redirect does not fire, use the button.</p>
+      <a class="cta" href="NEXORA.dc.html">Enter NEXORA</a>
+    </div>
+
+    <div id="blocked" class="hide" style="display:none;flex-direction:column;gap:18px">
+      <span class="kicker" style="color:#c5312d">One step first</span>
+      <h1>Run it from a local server</h1>
+      <p>This page was opened straight from disk (<code>file://</code>). Browsers refuse to load JavaScript
+         modules over <code>file://</code> for security, so the storefront would render blank. Serving the
+         folder over <code>http://</code> fixes it — there is no build step and nothing to install for the site itself.</p>
+      <div class="steps">
+        <div class="step"><b>01</b><span><strong>VS Code (easiest):</strong> install the <em>Live Server</em> extension, then right-click <code>NEXORA.dc.html</code> in the explorer → <em>Open with Live Server</em>.</span></div>
+        <div class="step"><b>02</b><span><strong>Python:</strong> open a terminal in this folder and run <code>python3 -m http.server 8080</code> — on Windows use <code>py -m http.server 8080</code>.</span></div>
+        <div class="step"><b>03</b><span><strong>Node:</strong> <code>npx serve .</code> or <code>npx http-server -p 8080</code>.</span></div>
+        <div class="step"><b>04</b><span>Then open <code>http://localhost:8080/NEXORA.dc.html</code>. Shortcut scripts <code>serve.sh</code> (macOS/Linux) and <code>serve.cmd</code> (Windows) are included.</span></div>
+      </div>
+      <p style="color:#6b6b6b;font-size:13px">Keep the folder intact: <code>NEXORA.dc.html</code>, <code>ProductCard.dc.html</code>,
+         <code>support.js</code>, the three <code>nexora-*.js</code> files, <code>assets/</code> and <code>_ds/</code> must stay side by side.
+         An internet connection is needed on first load for three.js and the webfonts.</p>
+    </div>
+  </main>
+
+<script>
+  (function () {
+    var onFile = location.protocol === "file:";
+    var el = document.getElementById(onFile ? "blocked" : "served");
+    el.style.display = "flex";
+    el.classList.remove("hide");
+    if (!onFile) setTimeout(function () { location.replace("NEXORA.dc.html"); }, 900);
+  })();
+</script>
+</body>
+</html>

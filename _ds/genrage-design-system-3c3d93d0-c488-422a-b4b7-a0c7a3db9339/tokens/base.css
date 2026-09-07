@@ -1,0 +1,50 @@
+/* GENRAGE — base element defaults + a few utility helpers.
+   Keeps specimens and kits consistent without pulling in a framework. */
+:root { color-scheme: light; }
+
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  font-weight: var(--fw-body);
+  letter-spacing: var(--body-tracking);
+  line-height: var(--body-leading);
+  color: var(--text-body);
+  background: var(--surface-page);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Display headings — the GENRAGE shout */
+.gr-display, .gr-h1, .gr-h2, .gr-h3, .gr-h4 {
+  font-family: var(--font-display);
+  font-weight: var(--fw-display);
+  text-transform: var(--display-transform);
+  letter-spacing: var(--display-tracking);
+  line-height: var(--display-leading);
+  margin: 0;
+  text-wrap: balance;
+}
+.gr-display { font-size: var(--text-display); font-weight: var(--fw-display-black); }
+.gr-h1 { font-size: var(--text-h1); }
+.gr-h2 { font-size: var(--text-h2); }
+.gr-h3 { font-size: var(--text-h3); }
+.gr-h4 { font-size: var(--text-h4); }
+
+/* Eyebrow / overline label */
+.gr-eyebrow {
+  font-family: var(--font-display);
+  font-weight: var(--fw-display);
+  text-transform: var(--label-transform);
+  letter-spacing: var(--label-tracking);
+  font-size: var(--text-h6);
+  color: var(--text-subdued);
+  margin: 0;
+}
+
+.gr-body { font-family: var(--font-body); font-size: var(--text-base); }
+.gr-subdued { color: var(--text-subdued); }
+
+a { color: var(--gr-ink); text-decoration: none; transition: opacity var(--dur) var(--ease-standard); }
+a:hover { opacity: 0.6; }
+
+*, *::before, *::after { box-sizing: border-box; }

@@ -1,0 +1,2074 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="_ds/genrage-design-system-3c3d93d0-c488-422a-b4b7-a0c7a3db9339/tokens/fonts.css">
+<link rel="stylesheet" href="_ds/genrage-design-system-3c3d93d0-c488-422a-b4b7-a0c7a3db9339/tokens/colors.css">
+<link rel="stylesheet" href="_ds/genrage-design-system-3c3d93d0-c488-422a-b4b7-a0c7a3db9339/tokens/typography.css">
+<link rel="stylesheet" href="_ds/genrage-design-system-3c3d93d0-c488-422a-b4b7-a0c7a3db9339/tokens/spacing.css">
+<link rel="stylesheet" href="_ds/genrage-design-system-3c3d93d0-c488-422a-b4b7-a0c7a3db9339/tokens/effects.css">
+<link rel="stylesheet" href="_ds/genrage-design-system-3c3d93d0-c488-422a-b4b7-a0c7a3db9339/tokens/base.css">
+<link rel="stylesheet" href="_ds/genrage-design-system-3c3d93d0-c488-422a-b4b7-a0c7a3db9339/styles.css">
+<script src="_ds/genrage-design-system-3c3d93d0-c488-422a-b4b7-a0c7a3db9339/_ds_bundle.js"></script>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:#000}
+body{-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:#ffffff;text-decoration:none;transition:opacity 200ms ease}
+a:hover{opacity:.6}
+input,select,textarea,button{font-family:inherit}
+::selection{background:#ffffff;color:#000000}
+input[type=range]{accent-color:#ffffff}
+select option{background:#101010;color:#fff}
+@keyframes nx-shimmer{0%{opacity:.4}50%{opacity:.85}100%{opacity:.4}}
+@keyframes nx-in{from{opacity:0}to{opacity:1}}
+@keyframes nx-up{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+@keyframes nx-drawer{from{transform:translateX(100%)}to{transform:none}}
+@keyframes nx-marq{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+@keyframes nx-pop{from{opacity:0;transform:translateY(8px) scale(.972)}to{opacity:1;transform:none}}
+@keyframes nx-page{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@keyframes nx-page-b{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@keyframes nx-wobble{0%{transform:rotate(0deg) scale(1)}26%{transform:rotate(-1.2deg) scale(1.07)}54%{transform:rotate(.8deg) scale(1.04)}78%{transform:rotate(-.35deg) scale(1.01)}100%{transform:rotate(0deg) scale(1)}}
+/* --- motion system: transforms + opacity only, attribute-driven so nothing is restyled --- */
+button,a,select,label,summary,[role=button]{transition:transform 300ms cubic-bezier(.22,.8,.28,1),opacity 200ms ease,background-color 220ms ease,border-color 220ms ease,color 200ms ease}
+button:active,a:active,[role=button]:active{transform:translateY(1px) scale(.985)}
+[data-nx=nav]{position:relative}
+[data-nx=nav]::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:1px;background:currentColor;transform:scaleX(0);transform-origin:left center;transition:transform 340ms cubic-bezier(.22,.8,.28,1)}
+[data-nx=nav]:hover::after{transform:scaleX(1)}
+[data-nx=nav]:hover{opacity:1}
+[data-nx=icon]:hover{animation:nx-wobble 560ms cubic-bezier(.22,.8,.28,1)}
+[data-nx=card]{transition:transform 460ms cubic-bezier(.22,.8,.28,1)}
+[data-nx=card]:hover{transform:translateY(-5px)}
+[data-nx=card]:active{transform:translateY(-2px) scale(.994)}
+[data-nx=media]{transition:transform 720ms cubic-bezier(.22,.8,.28,1)}
+[data-nx=card]:hover [data-nx=media],[data-nx=tile]:hover [data-nx=media]{transform:scale(1.035)}
+[data-nx=tile]{transition:transform 460ms cubic-bezier(.22,.8,.28,1)}
+[data-nx=tile]:hover{transform:translateY(-3px)}
+[data-nx=tile]:active{transform:translateY(-1px) scale(.996)}
+[data-nx=cta]:hover{transform:translateY(-2px)}
+[data-nx=pop]{animation:nx-pop 300ms cubic-bezier(.22,.8,.28,1) both}
+@media (prefers-reduced-motion:reduce){
+ *,*::before,*::after{animation-duration:1ms !important;animation-iteration-count:1 !important;transition-duration:1ms !important}
+ [data-nx=card]:hover,[data-nx=tile]:hover,[data-nx=cta]:hover,[data-nx=card]:active,[data-nx=tile]:active,button:active,a:active{transform:none}
+ [data-nx=card]:hover [data-nx=media],[data-nx=tile]:hover [data-nx=media]{transform:none}
+}
+</style>
+</helmet>
+<div style="background:#000;color:#fff;min-height:100vh;font-family:var(--font-body,'Nunito',sans-serif)">
+
+  <sc-if value="{{ annVisible }}" hint-placeholder-val="{{ true }}">
+    <div style="background:#0b0b0b;border-bottom:1px solid #1c1c1c;padding:9px 16px;text-align:center">
+      <span style="font-family:var(--font-body,'Nunito',sans-serif);font-size:10px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:#c4c4c4">{{ annText }}</span>
+    </div>
+  </sc-if>
+
+  <header style="position:sticky;top:0;z-index:70;background:rgba(0,0,0,.94);backdrop-filter:blur(6px);border-bottom:1px solid #262626">
+    <div style="width:100%;max-width:1360px;margin:0 auto;padding:0 clamp(16px,3vw,48px);height:70px;display:flex;align-items:center;justify-content:space-between;gap:20px">
+      <a href="#/" style="display:flex;align-items:center;gap:11px;flex:0 0 auto">
+        <span style="width:34px;height:34px;display:flex;align-items:center;justify-content:center;border:1px solid #ffffff;font-family:var(--font-display,'Instrument Sans',sans-serif);font-size:17px;font-weight:700;letter-spacing:-.02em">N</span>
+        <span style="display:flex;flex-direction:column;line-height:1">
+          <span style="font-family:var(--font-display,'Instrument Sans',sans-serif);font-size:18px;font-weight:700;letter-spacing:.02em;text-transform:uppercase">NEXORA</span>
+          <span style="font-family:var(--font-body,'Nunito',sans-serif);font-size:8px;font-weight:700;letter-spacing:.28em;text-transform:uppercase;color:#a7a7a7;margin-top:3px">3D Atelier</span>
+        </span>
+      </a>
+
+      <sc-if value="{{ isDesktop }}" hint-placeholder-val="{{ true }}">
+        <nav style="display:flex;align-items:center;gap:clamp(14px,1.8vw,28px)">
+          <sc-for list="{{ navItems }}" as="n" hint-placeholder-count="4">
+            <button type="button" data-nx="nav" onClick="{{ n.onClick }}" style="border:none;background:transparent;padding:6px 0;cursor:pointer;font-family:var(--font-body,'Nunito',sans-serif);font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;white-space:nowrap;color:{{ n.color }};border-bottom:1px solid {{ n.underline }};transition:color 200ms ease" style-hover="color:#ffffff">{{ n.label }}</button>
+          </sc-for>
+        </nav>
+      </sc-if>
+
+      <div style="display:flex;align-items:center;gap:6px">
+        <button type="button" data-nx="icon" aria-label="Search" onClick="{{ openSearch }}" style="width:40px;height:40px;display:flex;align-items:center;justify-content:center;border:none;background:transparent;color:#fff;cursor:pointer" style-hover="opacity:.6">
+          <svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.6-3.6"></path></svg>
+        </button>
+        <button type="button" data-nx="icon" aria-label="Wishlist" onClick="{{ goWishlist }}" style="position:relative;width:40px;height:40px;display:flex;align-items:center;justify-content:center;border:none;background:transparent;color:#fff;cursor:pointer" style-hover="opacity:.6">
+          <svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.8 6.6a5 5 0 0 0-7.1 0L12 8.3l-1.7-1.7a5 5 0 0 0-7.1 7.1L12 22l8.8-8.3a5 5 0 0 0 0-7.1Z"></path></svg>
+          <sc-if value="{{ hasWish }}" hint-placeholder-val="{{ false }}">
+            <span style="position:absolute;top:4px;right:2px;min-width:16px;height:16px;padding:0 4px;display:flex;align-items:center;justify-content:center;background:#fff;color:#000;font-size:9px;font-weight:700;font-family:var(--font-body,'Nunito',sans-serif)">{{ wishCount }}</span>
+          </sc-if>
+        </button>
+        <button type="button" data-nx="icon" aria-label="Shopping bag" onClick="{{ openDrawer }}" style="position:relative;width:40px;height:40px;display:flex;align-items:center;justify-content:center;border:none;background:transparent;color:#fff;cursor:pointer" style-hover="opacity:.6">
+          <svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 7h12l1.2 13H4.8L6 7Z"></path><path d="M9 7V5a3 3 0 0 1 6 0v2"></path></svg>
+          <sc-if value="{{ hasCart }}" hint-placeholder-val="{{ false }}">
+            <span style="position:absolute;top:4px;right:2px;min-width:16px;height:16px;padding:0 4px;display:flex;align-items:center;justify-content:center;background:#c5312d;color:#fff;font-size:9px;font-weight:700;font-family:var(--font-body,'Nunito',sans-serif)">{{ cartCount }}</span>
+          </sc-if>
+        </button>
+        <sc-if value="{{ isDesktop }}" hint-placeholder-val="{{ true }}">
+          <button type="button" data-nx="cta" onClick="{{ goLogin }}" style="margin-left:8px;padding:9px 14px;border:1px solid #262626;background:transparent;color:#fff;cursor:pointer;font-family:var(--font-body,'Nunito',sans-serif);font-size:10px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;transition:border-color 200ms ease,background 200ms ease" style-hover="border-color:#ffffff">{{ accountLabel }}</button>
+        </sc-if>
+        <sc-if value="{{ isMobile }}" hint-placeholder-val="{{ false }}">
+          <button type="button" data-nx="icon" aria-label="Menu" onClick="{{ toggleMenu }}" style="width:40px;height:40px;display:flex;align-items:center;justify-content:center;border:none;background:transparent;color:#fff;cursor:pointer">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"></path></svg>
+          </button>
+        </sc-if>
+      </div>
+    </div>
+
+    <sc-if value="{{ navOpen }}" hint-placeholder-val="{{ false }}">
+      <div style="border-top:1px solid #1c1c1c;background:#080808;animation:nx-pop 260ms cubic-bezier(.22,.8,.28,1) both;transform-origin:top center">
+        <div style="width:100%;max-width:1360px;margin:0 auto;padding:34px clamp(16px,3vw,48px) 40px;display:grid;grid-template-columns:{{ menuCols }};gap:32px">
+          <sc-for list="{{ catMenu }}" as="g" hint-placeholder-count="4">
+            <div style="display:flex;flex-direction:column;gap:14px">
+              <button type="button" onClick="{{ g.onClick }}" style="border:none;background:transparent;padding:0;text-align:left;cursor:pointer;font-family:var(--font-display,'Instrument Sans',sans-serif);font-size:13px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#fff" style-hover="opacity:.6">{{ g.label }}</button>
+              <div style="display:flex;flex-direction:column;gap:9px">
+                <sc-for list="{{ g.subs }}" as="s" hint-placeholder-count="5">
+                  <button type="button" onClick="{{ s.onClick }}" style="border:none;background:transparent;padding:0;text-align:left;cursor:pointer;font-family:var(--font-body,'Nunito',sans-serif);font-size:13px;color:#a7a7a7;transition:color 200ms ease" style-hover="color:#ffffff">{{ s.label }}</button>
+                </sc-for>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </sc-if>
+  </header>
+
+  <sc-if value="{{ menuOpen }}" hint-placeholder-val="{{ false }}">
+    <div style="position:fixed;inset:0;z-index:90;background:#000;display:flex;flex-direction:column;animation:nx-in 200ms ease both;overflow-y:auto">
+      <div style="height:70px;display:flex;align-items:center;justify-content:space-between;padding:0 20px;border-bottom:1px solid #262626">
+        <span style="font-family:var(--font-display,'Instrument Sans',sans-serif);font-size:17px;font-weight:700;letter-spacing:.02em">NEXORA</span>
+        <button type="button" aria-label="Close menu" onClick="{{ toggleMenu }}" style="width:40px;height:40px;border:none;background:transparent;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg>
+        </button>
+      </div>
+      <div style="padding:28px 20px 60px;display:flex;flex-direction:column;gap:30px">
+        <sc-for list="{{ catMenu }}" as="g" hint-placeholder-count="4">
+          <div style="display:flex;flex-direction:column;gap:14px;padding-bottom:24px;border-bottom:1px solid #1c1c1c">
+            <button type="button" onClick="{{ g.onClick }}" style="border:none;background:transparent;padding:0;text-align:left;cursor:pointer;font-family:var(--font-display,'Instrument Sans',sans-serif);font-size:26px;font-weight:700;letter-spacing:-.01em;text-transform:uppercase;color:#fff">{{ g.label }}</button>
+            <div style="display:flex;flex-wrap:wrap;gap:8px">
+              <sc-for list="{{ g.subs }}" as="s" hint-placeholder-count="5">
+                <button type="button" onClick="{{ s.onClick }}" style="border:1px solid #262626;background:transparent;padding:8px 12px;cursor:pointer;font-family:var(--font-body,'Nunito',sans-serif);font-size:12px;color:#c4c4c4">{{ s.label }}</button>
+              </sc-for>
+            </div>
+          </div>
+        </sc-for>
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <sc-for list="{{ navItems }}" as="n" hint-placeholder-count="4">
+            <button type="button" onClick="{{ n.onClick }}" style="border:none;background:transparent;padding:0;text-align:left;cursor:pointer;font-family:var(--font-body,'Nunito',sans-serif);font-size:13px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:#a7a7a7">{{ n.label }}</button>
+          </sc-for>
+          <button type="button" onClick="{{ goLogin }}" style="margin-top:10px;border:none;background:transparent;padding:0;text-align:left;cursor:pointer;font-family:var(--font-body,'Nunito',sans-serif);font-size:13px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:#fff">{{ accountLabel }}</button>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ searchOpen }}" hint-placeholder-val="{{ false }}">
+    <div style="position:fixed;inset:0;z-index:95;background:rgba(0,0,0,.72);animation:nx-in 160ms ease both" onClick="{{ closeSearch }}">
+      <div style="background:#0b0b0b;border-bottom:1px solid #262626;animation:nx-pop 260ms cubic-bezier(.22,.8,.28,1) both;transform-origin:top center" onClick="{{ stop }}">
+        <div style="width:100%;max-width:900px;margin:0 auto;padding:38px clamp(16px,3vw,48px) 30px">
+          <div style="display:flex;align-items:center;gap:14px;border-bottom:1px solid #4a4a4a;padding-bottom:14px">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#a7a7a7" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.6-3.6"></path></svg>
+            <input type="text" value="{{ q }}" onChange="{{ onQ }}" onKeyDown="{{ onSearchKey }}" placeholder="Search garments, collections, categories" autoFocus="{{ true }}" style="flex:1;min-width:0;border:none;background:transparent;color:#fff;font-family:var(--font-display,'Instrument Sans',sans-serif);font-size:22px;letter-spacing:-.01em;outline:none;padding:4px 0" />
+            <button type="button" aria-label="Close search" onClick="{{ closeSearch }}" style="border:none;background:transparent;color:#a7a7a7;cursor:pointer;width:32px;height:32px;display:flex;align-items:center;justify-content:center">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg>
+            </button>
+          </div>
+          <div style="padding-top:22px;display:flex;flex-direction:column;gap:4px">
+            <sc-for list="{{ suggestions }}" as="s" hint-placeholder-count="4">
+              <button type="button" onClick="{{ s.onClick }}" style="display:flex;align-items:center;gap:14px;padding:10px 6px;border:none;background:transparent;cursor:pointer;text-align:left;transition:background 180ms ease" style-hover="background:#151515">
+                <span style="width:44px;height:54px;background:#c9c7c4;flex:0 0 auto;display:block;background-image:url({{ s.thumb }});background-size:cover;background-position:center"></span>
+                <span style="display:flex;flex-direction:column;gap:3px;min-width:0">
+                  <span style="font-family:var(--font-display,'Instrument Sans',sans-serif);font-size:13px;font-weight:600;letter-spacing:.02em;text-transform:uppercase;color:#fff">{{ s.name }}</span>
+                  <span style="font-family:var(--font-body,'Nunito',sans-serif);font-size:11px;color:#a7a7a7">{{ s.meta }}</span>
+                </span>
+                <span style="margin-left:auto;font-family:var(--font-body,'Nunito',sans-serif);font-size:12px;font-weight:700;color:#c4c4c4">{{ s.price }}</span>
+              </button>
+            </sc-for>
+            <sc-if value="{{ hasQuery }}" hint-placeholder-val="{{ false }}">
+              <button type="button" onClick="{{ submitSearch }}" style="margin-top:14px;align-self:flex-start;border:none;background:transparent;color:#fff;cursor:pointer;font-family:var(--font-body,'Nunito',sans-serif);font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;border-bottom:1px solid #4a4a4a;padding-bottom:4px">{{ searchAllLabel }}</button>
+            </sc-if>
+            <sc-if value="{{ noResults }}" hint-placeholder-val="{{ false }}">
+              <p style="margin:8px 0 0;font-family:var(--font-body,'Nunito',sans-serif);font-size:13px;color:#a7a7a7">Nothing matches that yet. Try “hoodie”, “pleat”, or “Render 01”.</p>
+            </sc-if>
+          </div>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <main style="min-height:60vh;animation:{{ pageAnim }}">
+
+    <sc-if value="{{ isHome }}" hint-placeholder-val="{{ true }}">
+      <section data-screen-label="Home">
+        <div style="width:100%;max-width:1360px;margin:0 auto;padding:clamp(28px,4vw,56px) clamp(16px,3vw,48px) 0;display:grid;grid-template-columns:{{ heroCols }};gap:clamp(24px,3vw,44px);align-items:stretch">
+          <div style="display:flex;flex-direction:column;justify-content:center;gap:26px;animation:nx-up 500ms ease both">
+            <span style="font-family:var(--font-body,'Nunito',sans-serif);font-size:10px;font-weight:700;letter-spacing:.24em;text-transform:uppercase;color:#a7a7a7">Render 01 — Autumn Drop</span>
+            <h1 style="margin:0;font-family:var(--font-display,'Instrument Sans',sans-serif);font-size:clamp(44px,6.4vw,92px);font-weight:700;letter-spacing:-.02em;line-height:.9;text-transform:uppercase;text-wrap:balance">Wear the<br />render</h1>
+            <p style="margin:0;max-width:44ch;font-family:var(--font-body,'Nunito',sans-serif);font-size:15px;line-height:1.65;color:#c4c4c4;text-wrap:pretty">Every NEXORA garment is patterned in 3D before a single metre is cut. Turn it, zoom it, wireframe it — then wear the thing you already know the shape of.</p>
+            <div style="display:flex;flex-wrap:wrap;gap:12px;padding-top:4px">
+              <x-import component-from-global-scope="GENRAGEDesignSystem_3c3d93.Button" variant="inverse" size="lg" on-click="{{ goShopAll }}" hint-size="150px,54px">Shop all</x-import>
+              <button type="button" onClick="{{ goStudio }}" style="display:inline-flex;align-items:center;gap:10px;padding:17px 26px;border:1px solid #4a4a4a;background:transparent;color:#fff;cursor:pointer;font-family:var(--font-body,'Nunito',sans-serif);font-size:13px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;border-radius:2px;transition:border-color 200ms ease" style-hover="border-color:#ffffff">
+                <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2 3 7v10l9 5 9-5V7l-9-5Z"></path><path d="m3 7 9 5 9-5M12 22V12"></path></svg>
+                Open 3D Studio
+              </button>
+            </div>
+            <div style="display:flex;gap:26px;padding-top:14px;border-top:1px solid #1c1c1c;margin-top:6px">
+              <sc-for list="{{ heroStats }}" as="s" hint-placeholder-count="3">
+                <div style="display:flex;flex-direction:column;gap:5px;padding-top:16px">
+                  <span style="font-family:var(--font-display,'Instrument Sans',sans-serif);font-size:20px;font-weight:700;letter-spacing:-.01em">{{ s.value }}</span>
+                  <span style="font-family:var(--font-body,'Nunito',sans-serif);font-size:9px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:#a7a7a7">{{ s.label }}</span>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+
+          <div style="position:relative;background:#c9c7c4;min-height:clamp(420px,58vh,640px);overflow:hidden">
+            <span style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:var(--font-display,'Instrument Sans',sans-serif);font-size:clamp(60px,11vw,170px);font-weight:700;letter-spacing:-.04em;color:rgba(255,255,255,.42);pointer-events:none;user-select:none;white-space:nowrap">EXPLORE</span>
+            <div ref="{{ heroStageRef }}" style="position:absolute;inset:0"></div>
+            <div style="position:absolute;top:16px;left:18px;display:flex;flex-direction:column;gap:4px;pointer-events:none">
+              <span style="font-family:var(--font-body,'Nunito',sans-serif);font-size:9px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:#4a4a4a">3D Viewer</span>
+              <span style="font-family:var(--font-display,'Instrument Sans',sans-serif);font-size:14px;font-weight:700;letter-spacing:.02em;text-transform:uppercase;color:#1c1c1c">{{ heroLookLabel }}</span>
+            </div>
+            <div style="position:absolute;bottom:16px;left:18px;display:flex;align-items:center;gap:8px;pointer-events:none">
+              <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="#4a4a4a" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M9 5 4 12l5 7M15 5l5 7-5 7"></path></svg>
+              <span style="font-family:var(--font-body,'Nunito',sans-serif);font-size:9px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:#4a4a4a">Drag to rotate</span>
+            </div>
+            <sc-if value="{{ noWebgl }}" hint-placeholder-val="{{ false }}">
+              <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:30px;text-align:center">
+                <span style="font-family:var(--font-body,'Nunito',sans-serif);font-size:12px;color:#4a4a4a">This browser has WebGL switched off, so the 3D twins can’t render here.</span>
+              </div>
+            </sc-if>
+          </div>
+        </div>
+
+        <div style="width:100%;max-width:1360px;margin:0 auto;padding:clamp(20px,2.4vw,30px) clamp(16px,3vw,48px) 0;display:grid;grid-template-columns:{{ stripCols }};gap:2px">
+          <sc-for list="{{ heroStrip }}" as="s" hint-placeholder-count="4">
+            <button type="button" onClick="{{ s.onClick }}" onMouseEnter="{{ s.onEnter }}" style="position:relative;border:none;padding:0;background:#c9c7c4;cursor:pointer;overflow:hidden;aspect-ratio:16/10;display:block">
+              <span role="img" aria-label="{{ s.name }}" style="position:absolute;inset:0;display:block;background-image:url({{ s.thumb }});background-size:cover;background-position:center"></span>
+              <span style="position:absolute;left:0;right:0;bottom:0;display:flex;align-items:center;justify-content:space-between;gap:8px;padding:9px 12px;background:rgba(0,0,0,.78)">
+                <span style="font-family:var(--font-body,'Nunito',sans-serif);font-size:9px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ s.name }}</span>
+                <span style="font-family:var(--font-body,'Nunito',sans-serif);font-size:10px;font-weight:700;color:#c4c4c4">{{ s.price }}</span>
+              </span>
+            </button>
+          </sc-for>
+        </div>
+
+        <sc-if value="{{ hasBand }}" hint-placeholder-val="{{ false }}">
+          <div style="margin-top:clamp(34px,4vw,60px);position:relative;width:100%;height:{{ bandHeight }};overflow:hidden;background:#0b0b0b">
+            <span role="img" aria-label="{{ bandTitle }}" style="position:absolute;inset:0;display:block;background-image:url({{ bandImg }});background-size:cover;background-position:center 34%"></span>
+            <span style="position:absolute;inset:0;display:block;background:linear-gradient(to right,rgba(0,0,0,.66),rgba(0,0,0,.12) 58%,rgba(0,0,0,0))"></span>
+            <div style="position:absolute;left:0;bottom:0;display:flex;flex-direction:column;gap:14px;align-items:flex-start;padding:clamp(20px,3.4vw,52px);max-width:min(580px,88%)">
+              <span style="font-family:var(--font-body,'Nunito',sans-serif);font-size:10px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:#ffffff">{{ bandEyebrow }}</span>
+              <h2 style="margin:0;font-family:var(--font-display,'Instrument Sans',sans-serif);font-size:clamp(32px,4.6vw,64px);font-weight:700;letter-spacing:-.02em;line-height:.92;text-transform:uppercase;color:#ffffff">{{ bandTitle }}</h2>
+              <p style="margin:0;max-width:38ch;font-family:var(--font-body,'Nunito',sans-serif);font-size:14px;line-height:1.6;color:#ffffff">{{ bandCopy }}</p>
+              <x-import component-from-global-scope="GENRAGEDesignSystem_3c3d93.Button" variant="inverse" size="lg" on-click="{{ bandOnClick }}" hint-size="210px,54px">Shop the campaign</x-import>
+            </div>
+          </div>
+        </sc-if>
+
+        <div style="margin-top:clamp(44px,5vw,72px);border-top:1px solid #1c1c1c;border-bottom:1px solid #1c1c1c;overflow:hidden;padding:14px 0">
+          <div style="display:flex;gap:44px;width:max-content;animation:nx-marq 26s linear infinite">
+            <sc-for list="{{ marquee }}" as="m" hint-placeholder-count="6">
+              <span style="font-family:var(--font-display,'Instrument Sans',sans-serif);font-size:12px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:#a7a7a7;white-space:nowrap">{{ m.text }}</span>
+            </sc-for>
+          </div>
+        </div>
+
+        <sc-for list="{{ homeRows }}" as="row" hint-placeholder-count="2">
+          <div style="width:100%;max-width:1360px;margin:0 auto;padding:clamp(44px,5vw,76px) clamp(16px,3vw,48px) 0">
+            <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:20px;padding-bottom:26px;border-bottom:1px solid #1c1c1c;margin-bottom:30px">
+              <div style="display:flex;flex-direction:column;gap:10px">
+                <span style="font-family:var(--font-body,'Nunito',sans-serif);font-size:10px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:#a7a7a7">{{ row.eyebrow }}</span>
+                <h2 style="margin:0;font-family:var(--font-display,'Instrument Sans',sans-serif);font-size:clamp(26px,3.2vw,40px);font-weight:700;letter-spacing:-.01em;line-height:1;text-transform:uppercase">{{ row.title }}</h2>
+              </div>
+              <button type="button" onClick="{{ row.onAll }}" style="border:none;background:transparent;color:#c4c4c4;cursor:pointer;font-family:var(--font-body,'Nunito',sans-serif);font-size:10px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;white-space:nowrap;padding-bottom:4px;border-bottom:1px solid #4a4a4a;transition:color 200ms ease" style-hover="color:#ffffff">View all</button>
+            </div>
+            <div style="display:grid;grid-template-columns:{{ gridCols }};gap:clamp(14px,1.6vw,26px)">
+              <sc-for list="{{ row.items }}" as="c" hint-placeholder-count="4">
+                <dc-import name="ProductCard" c="{{ c }}" hint-size="100%,430px"></dc-import>
+              </sc-for>
+            </div>
+          </div>
+        </sc-for>
+
+        <div style="width:100%;max-width:1360px;margin:0 auto;padding:clamp(44px,5vw,76px) clamp(16px,3vw,48px) 0">
+          <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:20px;padding-bottom:26px;border-bottom:1px solid #1c1c1c;margin-bottom:30px">
+            <div style="display:flex;flex-direction:column;gap:10px">
+              <span style="font-family:var(--font-body,'Nunito',sans-serif);font-size:10px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:#a7a7a7">Shot on location</span>
+              <h2 style="margin:0;font-family:var(--font-display,'Instrument Sans',sans-serif);font-size:clamp(26px,3.2vw,40px);font-weight:700;letter-spacing:-.01em;line-height:1;text-transform:uppercase">Collections</h2>
+            </div>
+            <button type="button" onClick="{{ goCollections }}" style="border:none;background:transparent;color:#c4c4c4;cursor:pointer;font-family:var(--font-body,'Nunito',sans-serif);font-size:10px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;white-space:nowrap;padding-bottom:4px;border-bottom:1px solid #4a4a4a" style-hover="color:#ffffff">See the lookbook</button>
+          </div>
+          <div style="display:grid;grid-template-columns:{{ tileCols }};gap:2px">
+            <sc-for list="{{ catTiles }}" as="t" hint-placeholder-count="3">
+              <button type="button" data-nx="tile" onClick="{{ t.onClick }}" style="position:relative;border:none;padding:0;background:#c9c7c4;cursor:pointer;overflow:hidden;aspect-ratio:3/4;display:block">
+                <span role="img" data-nx="media" aria-label="{{ t.label }}" style="position:absolute;inset:0;background-image:url({{ t.thumb }});background-size:cover;background-position:center;display:block;transition:transform 400ms ease" style-hover="transform:scale(1.03)"></span>
+                <span style="position:absolute;left:0;bottom:0;right:0;padding:20px;display:flex;flex-direction:column;gap:6px;align-items:flex-start;background:linear-gradient(to top,rgba(0,0,0,.8),transparent)">
+                  <span style="font-family:var(--font-display,'Instrument Sans',sans-serif);font-size:clamp(22px,2.4vw,32px);font-weight:700;letter-spacing:-.01em;text-transform:uppercase;color:#fff;line-height:1">{{ t.label }}</span>
+                  <span style="font-family:var(--font-body,'Nunito',sans-serif);font-size:10px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:#c4c4c4">{{ t.count }}</span>
+                </span>
+              </button>
+            </sc-for>
+          </div>
+        </div>
+
+        <div style="margin-top:clamp(44px,5vw,76px);background:#c4c4c4;color:#1c1c1c">
+          <div style="width:100%;max-width:1360px;margin:0 auto;padding:clamp(40px,5vw,72px) clamp(16px,3vw,48px);display:grid;grid-template-columns:{{ promoCols }};gap:clamp(24px,3vw,48px);align-items:center">
+            <div style="display:flex;flex-direction:column;gap:18px">
+              <span style="font-family:var(--font-body,'Nunito',sans-serif);font-size:10px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:#4a4a4a">Nexora 3D Studio</span>
+              <h2 style="margin:0;font-family:var(--font-display,'Instrument Sans',sans-serif);font-size:clamp(30px,4vw,54px);font-weight:700;letter-spacing:-.02em;line-height:.95;text-transform:uppercase">Turn a photo<br />into a garment</h2>
+              <p style="margin:0;max-width:48ch;font-family:var(--font-body,'Nunito',sans-serif);font-size:15px;line-height:1.65;color:#1c1c1c">Drop in any clothing photograph. The studio reads its colour, silhouette and weave, Claude classifies the garment, and our parametric block library builds a turnable 3D twin you can drop straight into the catalogue.</p>
+              <div style="display:flex;gap:12px;flex-wrap:wrap;padding-top:6px">
+                <x-import component-from-global-scope="GENRAGEDesignSystem_3c3d93.Button" variant="primary" size="lg" on-click="{{ goStudio }}" hint-size="190px,54px">Open the studio</x-import>
+              </div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:1px;background:#a7a7a7">
+              <sc-for list="{{ studioSteps }}" as="s" hint-placeholder-count="4">
+                <div style="display:flex;gap:16px;padding:18px 20px;background:#c4c4c4;align-items:flex-start">
+                  <span style="font-family:var(--font-display,'Instrument Sans',sans-serif);font-size:12px;font-weight:700;letter-spacing:.08em;color:#4a4a4a;padding-top:2px">{{ s.n }}</span>
+                  <span style="display:flex;flex-direction:column;gap:4px">
+                    <span style="font-family:var(--font-display,'Instrument Sans',sans-serif);font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#1c1c1c">{{ s.title }}</span>
+                    <span style="font-family:var(--font-body,'Nunito',sans-serif);font-size:13px;line-height:1.55;color:#4a4a4a">{{ s.body }}</span>
+                  </span>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+      </section>
+    </sc-if>
+
+    <sc-if value="{{ isAbout }}" hint-placeholder-val="{{ false }}">
+      <section data-screen-label="About" style="width:100%;max-width:900px;margin:0 auto;padding:clamp(40px,6vw,90px) clamp(16px,3vw,48px)">
+        <span style="font-family:var(--font-body,'Nunito',sans-serif);font-size:10px;font-weight:700;letter-spacing:.24em;text-transform:uppercase;color:#a7a7a7">About</span>
+        <h1 style="margin:16px 0 26px;font-family:var(--font-display,'Instrument Sans',sans-serif);font-size:clamp(34px,5vw,64px);font-weight:700;letter-spacing:-.02em;line-height:.95;text-transform:uppercase">Patterned in 3D,<br />homegrown in India</h1>
+        <div style="display:flex;flex-direction:column;gap:20px;max-width:62ch">
+          <p style="margin:0;font-family:var(--font-body,'Nunito',sans-serif);font-size:16px;line-height:1.7;color:#c4c4c4">NEXORA is a studio-first clothing label. Every block starts as geometry: we cut the pattern in 3D, test the drape in simulation, and only then send it to the tailors we work with outside Delhi.</p>
+          <p style="margin:0;font-family:var(--font-body,'Nunito',sans-serif);font-size:16px;line-height:1.7;color:#c4c4c4">That is also why every product page ships with its 3D twin instead of a slideshow. You see the garment the way we made it — turnable, measurable, honest about volume. No pinned-back photography.</p>
+          <p style="margin:0;font-family:var(--font-body,'Nunito',sans-serif);font-size:16px;line-height:1.7;color:#c4c4c4">The 3D Studio is the same toolchain, opened up. Give it a reference photograph and it returns a parametric garment you can turn, wireframe and publish.</p>
+        </div>
+      </section>
+    </sc-if>
+
+    <sc-if value="{{ isCategory }}" hint-placeholder-val="{{ false }}">
+      <section data-screen-label="Category">
+        <sc-if value="{{ hasCatHero }}" hint-placeholder-val="{{ false }}">
+          <div style="position:relative;width:100%;height:{{ catHeroHeight }};overflow:hidden;background:#0b0b0b">
+            <span role="img" aria-label="{{ catHeroTitle }}" style="position:absolute;inset:0;display:block;background-image:url({{ catHeroImg }});background-size:cover;background-position:center 32%"></span>
+            <span style="position:absolute;inset:0;display:block;background:linear-gradient(to top,rgba(0,0,0,.72),rgba(0,0,0,.05) 60%)"></span>
+            <div style="position:absolute;left:0;bottom:0;display:flex;flex-direction:column;gap:12px;align-items:flex-start;padding:clamp(20px,3.4vw,52px);max-width:min(600px,90%)">
+              <span style="font-family:var(--font-body,'Nunito',sans-serif);font-size:10px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:#ffffff">{{ catHeroEyebrow }}</span>
+              <h2 style="margin:0;font-family:var(--font-display,'Instrument Sans',sans-serif);font-size:clamp(30px,4.4vw,60px);font-weight:700;letter-spacing:-.02em;line-height:.92;text-transform:uppercase;color:#ffffff">{{ catHeroTitle }}</h2>
+              <p style="margin:0;max-width:40ch;font-family:var(--font-body,'Nunito',sans-serif);font-size:14px;line-height:1.6;color:#ffffff">{{ catHeroCopy }}</p>
+            </div>
+          </div>
+        </sc-if>
+        <div style="width:100%;max-width:1360px;margin:0 auto;padding:clamp(22px,3vw,40px) clamp(16px,3vw,48px) 0;display:flex;align-items:flex-end;justify-content:space-between;gap:20px;flex-wrap:wrap;padding-bottom:22px;border-bottom:1px solid #1c1c1c">
+          <div style="display:flex;flex-direction:column;gap:10px">
+            <span style="font-family:var(--font-body,'Nunito',sans-serif);font-size:10px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:#a7a7a7">{{ catCrumb }}</span>
+            <h1 style="margin:0;font-family:var(--font-display,'Instrument Sans',sans-serif);font-size:clamp(30px,4.2vw,52px);font-weight:700;letter-spacing:-.02em;line-height:.95;text-transform:uppercase">{{ catTitle }}</h1>
+            <span style="font-family:var(--font-body,'Nunito',sans-serif);font-size:12px;color:#a7a7a7">{{ catCount }}</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px">
+            <span style="font-family:var(--font-body,'Nunito',sans-serif);font-size:10px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:#a7a7a7">Sort</span>
+            <select value="{{ sortValue }}" onChange="{{ onSort }}" style="background:#0b0b0b;color:#fff;border:1px solid #262626;padding:10px 12px;font-family:var(--font-body,'Nunito',sans-serif);font-size:12px;outline:none;cursor:pointer">
+              <sc-for list="{{ sortOptions }}" as="o" hint-placeholder-count="5">
+                <option value="{{ o.value }}">{{ o.label }}</option>
+              </sc-for>
+            </select>
+            <sc-if value="{{ isMobile }}" hint-placeholder-val="{{ false }}">
+              <button type="button" onClick="{{ toggleRail }}" style="padding:10px 14px;border:1px solid #262626;background:transparent;color:#fff;cursor:pointer;font-family:var(--font-body,'Nunito',sans-serif);font-size:10px;font-weight:700;letter-spacing:.16em;text-transform:uppercase">{{ railLabel }}</button>
+            </sc-if>
+          </div>
+        </div>
+
+        <div style="width:100%;max-width:1360px;margin:0 auto;padding:0 clamp(16px,3vw,48px)">
+        <sc-if value="{{ hasChips }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex;flex-wrap:wrap;gap:8px;padding:18px 0 0;align-items:center">
+            <sc-for list="{{ chips }}" as="ch" hint-placeholder-count="2">
+              <button type="button" onClick="{{ ch.onRemove }}" style="display:inline-flex;align-items:center;gap:8px;padding:7px 11px;border:1px solid #4a4a4a;background:transparent;color:#fff;cursor:pointer;font-family:var(--font-body,'Nunito',sans-serif);font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase" style-hover="border-color:#ffffff">
+                {{ ch.label }}
+                <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg>
+              </button>
+            </sc-for>
+            <button type="button" onClick="{{ onClearAll }}" style="border:none;background:transparent;color:#c5312d;cursor:pointer;font-family:var(--font-body,'Nunito',sans-serif);font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;padding:7px 4px">Clear all</button>
+          </div>
+        </sc-if>
+
+        <div style="display:grid;grid-template-columns:{{ catLayout }};gap:clamp(20px,3vw,44px);padding:30px 0 0;align-items:start">
+          <sc-if value="{{ railOpen }}" hint-placeholder-val="{{ true }}">
+            <aside style="display:flex;flex-direction:column;gap:2px;position:sticky;top:90px">
+              <sc-for list="{{ filterGroups }}" as="g" hint-placeholder-count="4">
+                <div style="border-bottom:1px solid #1c1c1c;padding:4px 0 14px">
+                  <button type="button" onClick="{{ g.onToggle }}" style="width:100%;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:14px 0;border:none;background:transparent;color:#fff;cursor:pointer">
+                    <span style="font-family:var(--font-display,'Instrument Sans',sans-serif);font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase">{{ g.label }}</span>
+                    <span style="font-family:var(--font-body,'Nunito',sans-serif);font-size:11px;color:#a7a7a7">{{ g.chevron }}</span>
+                  </button>
+                  <sc-if value="{{ g.open }}" hint-placeholder-val="{{ true }}">
+                    <div style="display:flex;flex-direction:column;gap:11px;padding-bottom:6px">
+                      <sc-for list="{{ g.options }}" as="o" hint-placeholder-count="4">
+                        <button type="button" onClick="{{ o.onChange }}" style="display:flex;align-items:center;gap:10px;border:none;background:transparent;padding:0;cursor:pointer;text-align:left">
+                          <span style="width:14px;height:14px;flex:0 0 auto;border:1px solid {{ o.box }};background:{{ o.fill }};display:flex;align-items:center;justify-content:center"></span>
+                          <sc-if value="{{ o.swatch }}" hint-placeholder-val="{{ false }}">
+                            <span style="width:12px;height:12px;border-radius:50%;border:1px solid #4a4a4a;background:{{ o.swatch }};display:block"></span>
+                          </sc-if>
+                          <span style="font-family:var(--font-body,'Nunito',sans-serif);font-size:13px;color:{{ o.color }}">{{ o.label }}</span>
+                          <span style="margin-left:auto;font-family:var(--font-body,'Nunito',sans-serif);font-size:11px;color:#a7a7a7">{{ o.count }}</span>
+                        </button>
+                      </sc-for>
+                    </div>
+                  </sc-if>
+                </div>
+              </sc-for>
+              <div style="padding:18px 0 0">
+                <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;padding-bottom:12px">
+                  <span style="font-family:var(--font-display,'Instrument Sans',sans-serif);font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase">Max price</span>
+                  <span style="font-family:var(--font-body,'Nunito',sans-serif);font-size:12px;font-weight:700;color:#c4c4c4">{{ priceLabel }}</span>
+                </div>
+                <input type="range" min="499" max="5000" step="100" value="{{ priceValue }}" onChange="{{ onPrice }}" style="width:100%;cursor:pointer" />
+              </div>
+            </aside>
+          </sc-if>
+
+          <div>
+            <sc-if value="{{ catEmpty }}" hint-placeholder-val="{{ false }}">
+              <div style="padding:60px 0;display:flex;flex-direction:column;gap:14px;align-items:flex-start">
+                <h2 style="margin:0;font-family:var(--font-display,'Instrument Sans',sans-serif);font-size:24px;font-weight:700;letter-spacing:-.01em;text-transform:uppercase">Nothing matches</h2>
+                <p style="margin:0;font-family:var(--font-body,'Nunito',sans-serif);font-size:14px;color:#a7a7a7">Loosen a filter and the grid will fill back up.</p>
+                <button type="button" onClick="{{ onClearAll }}" style="border:none;background:transparent;padding:0;cursor:pointer;font-family:var(--font-body,'Nunito',sans-serif);font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:#fff;border-bottom:1px solid #4a4a4a;padding-bottom:4px">Clear all filters</button>
+              </div>
+            </sc-if>
+            <div style="display:grid;grid-template-columns:{{ catGridCols }};gap:clamp(14px,1.6vw,26px)">
+              <sc-for list="{{ grid }}" as="c" hint-placeholder-count="8">
+                <dc-import name="ProductCard" c="{{ c }}" hint-size="100%,430px"></dc-import>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+        </div>
+      </section>
+    </sc-if>
+
+    <sc-if value="{{ isProduct }}" hint-placeholder-val="{{ false }}">
+      <section data-screen-label="Product" style="width:100%;max-width:1360px;margin:0 auto;padding:clamp(18px,2.4vw,32px) clamp(16px,3vw,48px) 0">
+        <div style="display:flex;align-items:center;gap:10px;padding-bottom:18px">
+          <button type="button" onClick="{{ p.onBack }}" style="border:none;background:transparent;padding:0;cursor:pointer;font-family:var(--font-body,'Nunito',sans-serif);font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:#a7a7a7" style-hover="color:#ffffff">{{ p.crumb }}</button>
+        </div>
+
+        <div style="display:grid;grid-template-columns:{{ pdpCols }};gap:clamp(22px,3vw,48px);align-items:start">
+          <div style="position:relative;background:#c9c7c4;width:100%;height:min(74vh,760px);min-height:320px;overflow:hidden;user-select:none;touch-action:none" onPointerDown="{{ onViewerDown }}" onWheel="{{ onViewerWheel }}">
+            <span role="img" aria-label="{{ p.name }}" style="position:absolute;inset:0;display:block;background-image:url({{ frameSrc }});background-size:contain;background-position:center;background-repeat:no-repeat;transform:scale({{ pdpZoom }}) translate({{ panX }},{{ panY }});transition:transform 90ms linear;cursor:grab"></span>
+            <sc-if value="{{ frameLoading }}" hint-placeholder-val="{{ true }}">
+              <div style="position:absolute;inset:0;background:#c9c7c4;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px">
+                <span style="font-family:var(--font-body,'Nunito',sans-serif);font-size:10px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:#4a4a4a">Baking turntable</span>
+                <span style="width:180px;height:2px;background:#a7a7a7;display:block;overflow:hidden">
+                  <span style="display:block;height:100%;background:#1c1c1c;width:{{ progressPct }}"></span>
+                </span>
+                <span style="font-family:var(--font-body,'Nunito',sans-serif);font-size:10px;color:#4a4a4a">{{ progressPct }}</span>
+              </div>
+            </sc-if>
+            <div style="position:absolute;top:14px;left:16px;display:flex;flex-direction:column;gap:3px;pointer-events:none">
+              <span style="font-family:var(--font-body,'Nunito',sans-serif);font-size:9px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:#4a4a4a">3D Viewer</span>
+              <span style="font-family:var(--font-display,'Instrument Sans',sans-serif);font-size:13px;font-weight:700;letter-spacing:.02em;text-transform:uppercase;color:#1c1c1c">{{ p.viewerLabel }}</span>
+            </div>
+            <sc-if value="{{ showHint }}" hint-placeholder-val="{{ false }}">
+              <div style="position:absolute;left:50%;bottom:64px;transform:translateX(-50%);display:flex;align-items:center;gap:8px;padding:8px 14px;background:rgba(11,11,11,.82);pointer-events:none">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M9 5 4 12l5 7M15 5l5 7-5 7"></path></svg>
+                <span style="font-family:var(--font-body,'Nunito',sans-serif);font-size:9px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:#fff">Drag to rotate</span>
+              </div>
+            </sc-if>
+            <div style="position:absolute;right:14px;top:14px;display:flex;flex-direction:column;gap:6px">
+              <sc-for list="{{ viewerTools }}" as="t" hint-placeholder-count="4">
+                <button type="button" title="{{ t.label }}" aria-label="{{ t.label }}" onClick="{{ t.onClick }}" style="width:38px;height:38px;display:flex;align-items:center;justify-content:center;border:1px solid {{ t.border }};background:{{ t.bg }};color:{{ t.fg }};cursor:pointer;transition:background 200ms ease">
+                  <span style="font-family:var(--font-body,'Nunito',sans-serif);font-size:9px;font-weight:700;letter-spacing:.06em;text-transform:uppercase">{{ t.short }}</span>
+                </button>
+              </sc-for>
+            </div>
+            <div style="position:absolute;left:0;right:0;bottom:0;display:flex;align-items:center;gap:12px;padding:12px 16px;background:rgba(255,255,255,.55)">
+              <span style="font-family:var(--font-body,'Nunito',sans-serif);font-size:9px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:#4a4a4a">{{ frameLabel }}</span>
+              <input type="range" min="0" max="{{ frameMax }}" value="{{ frameIdx }}" onChange="{{ onFrameSlide }}" style="flex:1;min-width:0;cursor:pointer" />
+            </div>
+          </div>
+
+          <div style="display:flex;flex-direction:column;gap:22px">
+            <div style="display:flex;flex-direction:column;gap:12px">
+              <span style="font-family:var(--font-body,'Nunito',sans-serif);font-size:10px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:#a7a7a7">{{ p.collection }}</span>
+              <h1 style="margin:0;font-family:var(--font-display,'Instrument Sans',sans-serif);font-size:clamp(28px,3.6vw,46px);font-weight:700;letter-spacing:-.02em;line-height:1;text-transform:uppercase">{{ p.name }}</h1>
+              <div style="--gr-ink:#ffffff;--gr-grey-500:#a7a7a7;display:flex;flex-wrap:wrap;gap:16px;align-items:center">
+                <x-import component-from-global-scope="GENRAGEDesignSystem_3c3d93.PriceTag" price="{{ p.price }}" compare-at="{{ p.compareAt }}" size="lg" hint-size="auto,26px"></x-import>
+                <x-import component-from-global-scope="GENRAGEDesignSystem_3c3d93.RatingStars" rating="{{ p.rating }}" count="{{ p.reviewCount }}" show-value="{{ true }}" size="14" hint-size="auto,18px"></x-import>
+              </div>
+            </div>
+
+            <div style="display:flex;flex-direction:column;gap:12px;padding-top:6px;border-top:1px solid #1c1c1c">
+              <span style="font-family:var(--font-body,'Nunito',sans-serif);font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:#a7a7a7;padding-top:16px">Colour — {{ p.colorName }}</span>
+              <div style="display:flex;gap:10px;flex-wrap:wrap">
+                <sc-for list="{{ colorOpts }}" as="c" hint-placeholder-count="3">
+                  <button type="button" title="{{ c.name }}" aria-label="{{ c.name }}" onClick="{{ c.onPick }}" style="width:38px;height:38px;padding:3px;border:1px solid {{ c.border }};background:transparent;cursor:pointer">
+                    <span style="display:block;width:100%;height:100%;background:{{ c.hex }}"></span>
+                  </button>
+                </sc-for>
+              </div>
+            </div>
+
+            <div style="display:flex;flex-direction:column;gap:12px">
+              <div style="display:flex;align-items:center;justify-content:space-between;gap:10px">
+                <span style="font-family:var(--font-body,'Nunito',sans-serif);font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:#a7a7a7">Size</span>
+                <button type="button" onClick="{{ openSizeGuide }}" style="border:none;background:transparent;padding:0;cursor:pointer;font-family:var(--font-body,'Nunito',sans-serif);font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#a7a7a7;border-bottom:1px solid #4a4a4a;padding-bottom:2px" style-hover="color:#ffffff">Size guide</button>
+              </div>
+              <div style="--gr-ink:#ffffff;--gr-white:#0b0b0b;--border-strong:#4a4a4a;--gr-grey-400:#a7a7a7">
+                <x-import component-from-global-scope="GENRAGEDesignSystem_3c3d93.SizeSelector" sizes="{{ p.sizes }}" value="{{ p.size }}" on-change="{{ onSize }}" hint-size="100%,44px"></x-import>
+              </div>
+              <sc-if value="{{ sizeWarning }}" hint-placeholder-val="{{ false }}">
+                <span style="font-family:var(--font-body,'Nunito',sans-serif);font-size:11px;color:#c5312d">Pick a size to continue.</span>
+              </sc-if>
+            </div>
+
+            <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap">
+              <span style="font-family:var(--font-body,'Nunito',sans-serif);font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:#a7a7a7">Qty</span>
+              <div style="--gr-ink:#ffffff;--border-strong:#4a4a4a;color:#fff">
+                <x-import component-from-global-scope="GENRAGEDesignSystem_3c3d93.QuantityStepper" value="{{ p.qty }}" on-change="{{ onQtyChange }}" hint-size="120px,38px"></x-import>
+              </div>
+            </div>
+
+            <div style="display:flex;flex-direction:column;gap:9px;padding-top:4px">
+              <x-import component-from-global-scope="GENRAGEDesignSystem_3c3d93.Button" variant="inverse" size="lg" full-width="{{ true }}" on-click="{{ onAddToCart }}" hint-size="100%,54px">Add to cart</x-import>
+              <button type="button" onClick="{{ onBuyNow }}" style="width:100%;padding:16px;border:1px solid #4a4a4a;background:transparent;color:#fff;cursor:pointer;font-family:var(--font-body,'Nunito',sans-serif);font-size:13px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;border-radius:2px;transition:border-color 200ms ease" style-hover="border-color:#ffffff">Buy it now</button>
+              <button type="button" onClick="{{ onWishPdp }}" style="align-self:flex-start;margin-top:4px;display:inline-flex;align-items:center;gap:8px;border:none;background:transparent;padding:6px 0;cursor:pointer;font-family:var(--font-body,'Nunito',sans-serif);font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#a7a7a7" style-hover="color:#ffffff">
+                <svg viewBox="0 0 24 24" width="15" height="15" fill="{{ p.heartFill }}" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.8 6.6a5 5 0 0 0-7.1 0L12 8.3l-1.7-1.7a5 5 0 0 0-7.1 7.1L12 22l8.8-8.3a5 5 0 0 0 0-7.1Z"></path></svg>
+                {{ p.wishLabel }}
+              </button>
+            </div>
+
+            <div style="display:flex;flex-direction:column;gap:1px;background:#1c1c1c;margin-top:8px">
+              <sc-for list="{{ pdpTabs }}" as="t" hint-placeholder-count="4">
+                <div style="background:#000">
+                  <button type="button" onClick="{{ t.onClick }}" style="width:100%;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:17px 0;border:none;background:transparent;color:#fff;cursor:pointer;text-align:left">
+                    <span style="font-family:var(--font-display,'Instrument Sans',sans-serif);font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase">{{ t.label }}</span>
+                    <span style="font-family:var(--font-body,'Nunito',sans-serif);font-size:13px;color:#a7a7a7">{{ t.sign }}</span>
+                  </button>
+                  <sc-if value="{{ t.open }}" hint-placeholder-val="{{ false }}">
+                    <p style="margin:0;padding:0 0 20px;max-width:56ch;font-family:var(--font-body,'Nunito',sans-serif);font-size:14px;line-height:1.7;color:#c4c4c4;text-wrap:pretty">{{ t.body }}</p>
+                  </sc-if>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+
+        <sc-if value="{{ hasLookbook }}" hint-placeholder-val="{{ false }}">
+          <div style="margin-top:clamp(40px,5vw,72px);position:relative;width:100%;height:{{ lookbookHeight }};overflow:hidden;background:#0b0b0b">
+            <span role="img" aria-label="{{ lookbookLabel }}" style="position:absolute;inset:0;display:block;background-image:url({{ lookbookImg }});background-size:cover;background-position:center 30%"></span>
+            <span style="position:absolute;left:0;bottom:0;display:flex;align-items:center;gap:10px;padding:14px 18px;background:rgba(0,0,0,.72)">
+              <span style="font-family:var(--font-body,'Nunito',sans-serif);font-size:9px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:#ffffff">{{ lookbookLabel }}</span>
+            </span>
+          </div>
+        </sc-if>
+        <div style="padding:clamp(40px,5vw,72px) 0 0">
+          <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:16px;padding-bottom:22px;border-bottom:1px solid #1c1c1c;margin-bottom:26px">
+            <h2 style="margin:0;font-family:var(--font-display,'Instrument Sans',sans-serif);font-size:clamp(22px,2.6vw,32px);font-weight:700;letter-spacing:-.01em;text-transform:uppercase">Reviews</h2>
+            <span style="font-family:var(--font-body,'Nunito',sans-serif);font-size:12px;color:#a7a7a7">{{ p.reviewSummary }}</span>
+          </div>
+          <div style="display:grid;grid-template-columns:{{ reviewCols }};gap:2px;background:#1c1c1c">
+            <sc-for list="{{ reviews }}" as="rv" hint-placeholder-count="3">
+              <div style="background:#000;padding:22px;display:flex;flex-direction:column;gap:12px">
+                <div style="--gr-ink:#ffffff">
+                  <x-import component-from-global-scope="GENRAGEDesignSystem_3c3d93.RatingStars" rating="{{ rv.rating }}" size="13" hint-size="auto,16px"></x-import>
+                </div>
+                <p style="margin:0;font-family:var(--font-body,'Nunito',sans-serif);font-size:14px;line-height:1.65;color:#c4c4c4">{{ rv.body }}</p>
+                <span style="font-family:var(--font-body,'Nunito',sans-serif);font-size:10px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:#a7a7a7">{{ rv.who }}</span>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+
+        <sc-for list="{{ pdpRows }}" as="row" hint-placeholder-count="1">
+          <div style="padding:clamp(40px,5vw,72px) 0 0">
+            <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:16px;padding-bottom:22px;border-bottom:1px solid #1c1c1c;margin-bottom:26px">
+              <h2 style="margin:0;font-family:var(--font-display,'Instrument Sans',sans-serif);font-size:clamp(22px,2.6vw,32px);font-weight:700;letter-spacing:-.01em;text-transform:uppercase">{{ row.title }}</h2>
+            </div>
+            <div style="display:grid;grid-template-columns:{{ gridCols }};gap:clamp(14px,1.6vw,26px)">
+              <sc-for list="{{ row.items }}" as="c" hint-placeholder-count="4">
+                <dc-import name="ProductCard" c="{{ c }}" hint-size="100%,430px"></dc-import>
+              </sc-for>
+            </div>
+          </div>
+        </sc-for>
+      </section>
+    </sc-if>
+
+    <sc-if value="{{ isStudio }}" hint-placeholder-val="{{ false }}">
+      <section data-screen-label="3D Studio" style="width:100%;max-width:1360px;margin:0 auto;padding:clamp(22px,3vw,40px) clamp(16px,3vw,48px) 0">
+        <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:20px;flex-wrap:wrap;padding-bottom:24px;border-bottom:1px solid #1c1c1c">
+          <div style="display:flex;flex-direction:column;gap:10px">
+            <span style="font-family:var(--font-body,'Nunito',sans-serif);font-size:10px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:#a7a7a7">Nexora 3D Studio</span>
+            <h1 style="margin:0;font-family:var(--font-display,'Instrument Sans',sans-serif);font-size:clamp(30px,4.2vw,52px);font-weight:700;letter-spacing:-.02em;line-height:.95;text-transform:uppercase">Photo to garment</h1>
+          </div>
+          <p style="margin:0;max-width:46ch;font-family:var(--font-body,'Nunito',sans-serif);font-size:13px;line-height:1.6;color:#a7a7a7">Colour, silhouette and weave are measured from your pixels; Claude classifies the garment; the block library builds it. The mesh is a parametric twin, not a photogrammetric scan.</p>
+        </div>
+
+        <div style="display:grid;grid-template-columns:{{ studioCols }};gap:clamp(20px,2.6vw,40px);padding:28px 0 0;align-items:start">
+          <div style="display:flex;flex-direction:column;gap:20px">
+            <label style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;min-height:190px;padding:24px;border:1px dashed {{ dropBorder }};background:{{ dropBg }};cursor:pointer;text-align:center;transition:border-color 200ms ease" onDragOver="{{ onDragOver }}" onDragLeave="{{ onDragLeave }}" onDrop="{{ onDrop }}">
+              <sc-if value="{{ hasUpload }}" hint-placeholder-val="{{ false }}">
+                <span role="img" aria-label="Reference photograph" style="width:100%;height:200px;display:block;background-image:url({{ uploadSrc }});background-size:contain;background-position:center;background-repeat:no-repeat"></span>
+              </sc-if>
+              <sc-if value="{{ noUpload }}" hint-placeholder-val="{{ true }}">
+                <span style="display:flex;flex-direction:column;align-items:center;gap:10px">
+                  <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="#a7a7a7" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 16V4m0 0L7 9m5-5 5 5"></path><path d="M4 16v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"></path></svg>
+                  <span style="font-family:var(--font-display,'Instrument Sans',sans-serif);font-size:12px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:#fff">Drop a garment photo</span>
+                  <span style="font-family:var(--font-body,'Nunito',sans-serif);font-size:12px;color:#a7a7a7">or click to choose a file — JPG, PNG, WebP</span>
+                </span>
+              </sc-if>
+              <input type="file" accept="image/*" onChange="{{ onPickFile }}" style="display:none" />
+            </label>
+
+            <div style="display:flex;flex-direction:column;gap:8px">
+              <span style="font-family:var(--font-body,'Nunito',sans-serif);font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:#a7a7a7">Designer note (optional)</span>
+              <input type="text" value="{{ studioNote }}" onChange="{{ onNote }}" placeholder="e.g. cropped, boxy, heavy fleece" style="border:1px solid #262626;background:#0b0b0b;color:#fff;padding:12px;font-family:var(--font-body,'Nunito',sans-serif);font-size:13px;outline:none" />
+            </div>
+
+            <x-import component-from-global-scope="GENRAGEDesignSystem_3c3d93.Button" variant="inverse" size="lg" full-width="{{ true }}" disabled="{{ analyseDisabled }}" on-click="{{ onAnalyse }}" hint-size="100%,54px">{{ analyseLabel }}</x-import>
+
+            <sc-if value="{{ hasLog }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex;flex-direction:column;gap:7px;padding:16px;border:1px solid #1c1c1c;background:#080808">
+                <sc-for list="{{ studioLog }}" as="l" hint-placeholder-count="3">
+                  <span style="font-family:var(--font-body,'Nunito',sans-serif);font-size:11px;line-height:1.5;color:#a7a7a7">{{ l.text }}</span>
+                </sc-for>
+              </div>
+            </sc-if>
+
+            <sc-if value="{{ hasSpec }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex;flex-direction:column;gap:16px;padding-top:6px;border-top:1px solid #1c1c1c">
+                <span style="font-family:var(--font-display,'Instrument Sans',sans-serif);font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:#fff;padding-top:18px">Editable spec</span>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+                  <div style="display:flex;flex-direction:column;gap:7px">
+                    <span style="font-family:var(--font-body,'Nunito',sans-serif);font-size:9px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:#a7a7a7">Garment</span>
+                    <select value="{{ specGarment }}" onChange="{{ onSpecGarment }}" style="background:#0b0b0b;color:#fff;border:1px solid #262626;padding:10px;font-family:var(--font-body,'Nunito',sans-serif);font-size:12px;outline:none;cursor:pointer">
+                      <sc-for list="{{ garmentOptions }}" as="g" hint-placeholder-count="6">
+                        <option value="{{ g.value }}">{{ g.label }}</option>
+                      </sc-for>
+                    </select>
+                  </div>
+                  <div style="display:flex;flex-direction:column;gap:7px">
+                    <span style="font-family:var(--font-body,'Nunito',sans-serif);font-size:9px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:#a7a7a7">Fabric</span>
+                    <select value="{{ specFabric }}" onChange="{{ onSpecFabric }}" style="background:#0b0b0b;color:#fff;border:1px solid #262626;padding:10px;font-family:var(--font-body,'Nunito',sans-serif);font-size:12px;outline:none;cursor:pointer">
+                      <sc-for list="{{ fabricOptions }}" as="f" hint-placeholder-count="6">
+                        <option value="{{ f.value }}">{{ f.label }}</option>
+                      </sc-for>
+                    </select>
+                  </div>
+                  <div style="display:flex;flex-direction:column;gap:7px">
+                    <span style="font-family:var(--font-body,'Nunito',sans-serif);font-size:9px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:#a7a7a7">Name</span>
+                    <input type="text" value="{{ specName }}" onChange="{{ onSpecName }}" style="border:1px solid #262626;background:#0b0b0b;color:#fff;padding:10px;font-family:var(--font-body,'Nunito',sans-serif);font-size:12px;outline:none" />
+                  </div>
+                  <div style="display:flex;flex-direction:column;gap:7px">
+                    <span style="font-family:var(--font-body,'Nunito',sans-serif);font-size:9px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:#a7a7a7">Price (Rs.)</span>
+                    <input type="number" value="{{ specPrice }}" onChange="{{ onSpecPrice }}" style="border:1px solid #262626;background:#0b0b0b;color:#fff;padding:10px;font-family:var(--font-body,'Nunito',sans-serif);font-size:12px;outline:none" />
+                  </div>
+                </div>
+                <div style="display:flex;flex-direction:column;gap:9px">
+                  <span style="font-family:var(--font-body,'Nunito',sans-serif);font-size:9px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:#a7a7a7">Colour read from the photo</span>
+                  <div style="display:flex;gap:8px;flex-wrap:wrap">
+                    <sc-for list="{{ paletteOpts }}" as="c" hint-placeholder-count="3">
+                      <button type="button" title="{{ c.label }}" aria-label="{{ c.label }}" onClick="{{ c.onPick }}" style="width:40px;height:40px;padding:3px;border:1px solid {{ c.border }};background:transparent;cursor:pointer">
+                        <span style="display:block;width:100%;height:100%;background:{{ c.hex }}"></span>
+                      </button>
+                    </sc-for>
+                  </div>
+                </div>
+                <p style="margin:0;font-family:var(--font-body,'Nunito',sans-serif);font-size:12px;line-height:1.6;color:#a7a7a7">{{ specNote }}</p>
+                <x-import component-from-global-scope="GENRAGEDesignSystem_3c3d93.Button" variant="inverse" size="lg" full-width="{{ true }}" on-click="{{ onPublish }}" hint-size="100%,54px">Publish to catalogue</x-import>
+              </div>
+            </sc-if>
+          </div>
+
+          <div style="display:flex;flex-direction:column;gap:2px">
+            <div style="position:relative;background:#c9c7c4;min-height:clamp(420px,64vh,720px);overflow:hidden">
+              <div ref="{{ studioStageRef }}" style="position:absolute;inset:0"></div>
+              <div style="position:absolute;top:16px;left:18px;display:flex;flex-direction:column;gap:3px;pointer-events:none">
+                <span style="font-family:var(--font-body,'Nunito',sans-serif);font-size:9px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:#4a4a4a">3D Viewer</span>
+                <span style="font-family:var(--font-display,'Instrument Sans',sans-serif);font-size:14px;font-weight:700;letter-spacing:.02em;text-transform:uppercase;color:#1c1c1c">{{ stageLabel }}</span>
+              </div>
+              <div style="position:absolute;top:14px;right:16px;display:flex;flex-direction:column;gap:6px">
+                <sc-for list="{{ stageTools }}" as="t" hint-placeholder-count="5">
+                  <button type="button" title="{{ t.label }}" aria-label="{{ t.label }}" onClick="{{ t.onClick }}" style="min-width:74px;height:34px;padding:0 10px;display:flex;align-items:center;justify-content:center;border:1px solid {{ t.border }};background:{{ t.bg }};color:{{ t.fg }};cursor:pointer;font-family:var(--font-body,'Nunito',sans-serif);font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase">{{ t.label }}</button>
+                </sc-for>
+              </div>
+              <div style="position:absolute;bottom:16px;left:18px;display:flex;align-items:center;gap:8px;pointer-events:none">
+                <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="#4a4a4a" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M9 5 4 12l5 7M15 5l5 7-5 7"></path></svg>
+                <span style="font-family:var(--font-body,'Nunito',sans-serif);font-size:9px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:#4a4a4a">Drag to rotate · scroll to zoom</span>
+              </div>
+            </div>
+            <div style="display:grid;grid-template-columns:{{ readoutCols }};gap:2px;background:#1c1c1c">
+              <sc-for list="{{ stageReadout }}" as="r" hint-placeholder-count="4">
+                <div style="background:#080808;padding:16px 18px;display:flex;flex-direction:column;gap:5px">
+                  <span style="font-family:var(--font-body,'Nunito',sans-serif);font-size:9px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:#a7a7a7">{{ r.label }}</span>
+                  <span style="font-family:var(--font-display,'Instrument Sans',sans-serif);font-size:14px;font-weight:700;letter-spacing:.02em;text-transform:uppercase;color:#fff">{{ r.value }}</span>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+      </section>
+    </sc-if>
+
+    <sc-if value="{{ isSearchPage }}" hint-placeholder-val="{{ false }}">
+      <section data-screen-label="Search" style="width:100%;max-width:1360px;margin:0 auto;padding:clamp(22px,3vw,40px) clamp(16px,3vw,48px) 0">
+        <div style="display:flex;flex-direction:column;gap:10px;padding-bottom:22px;border-bottom:1px solid #1c1c1c">
+          <span style="font-family:var(--font-body,'Nunito',sans-serif);font-size:10px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:#a7a7a7">Search results</span>
+          <h1 style="margin:0;font-family:var(--font-display,'Instrument Sans',sans-serif);font-size:clamp(28px,4vw,48px);font-weight:700;letter-spacing:-.02em;line-height:.95;text-transform:uppercase">{{ q }}</h1>
+          <span style="font-family:var(--font-body,'Nunito',sans-serif);font-size:12px;color:#a7a7a7">{{ catCount }}</span>
+        </div>
+        <div style="display:grid;grid-template-columns:{{ gridCols }};gap:clamp(14px,1.6vw,26px);padding:30px 0 0">
+          <sc-for list="{{ grid }}" as="c" hint-placeholder-count="4">
+            <dc-import name="ProductCard" c="{{ c }}" hint-size="100%,430px"></dc-import>
+          </sc-for>
+        </div>
+        <sc-if value="{{ catEmpty }}" hint-placeholder-val="{{ false }}">
+          <div style="padding:50px 0;display:flex;flex-direction:column;gap:14px;align-items:flex-start">
+            <p style="margin:0;font-family:var(--font-body,'Nunito',sans-serif);font-size:14px;color:#a7a7a7">No garment matches that search.</p>
+            <button type="button" onClick="{{ goShopAll }}" style="border:none;background:transparent;padding:0 0 4px;cursor:pointer;font-family:var(--font-body,'Nunito',sans-serif);font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:#fff;border-bottom:1px solid #4a4a4a">Browse everything</button>
+          </div>
+        </sc-if>
+      </section>
+    </sc-if>
+
+    <sc-if value="{{ isWishlist }}" hint-placeholder-val="{{ false }}">
+      <section data-screen-label="Wishlist" style="width:100%;max-width:1360px;margin:0 auto;padding:clamp(22px,3vw,40px) clamp(16px,3vw,48px) 0">
+        <div style="display:flex;flex-direction:column;gap:10px;padding-bottom:22px;border-bottom:1px solid #1c1c1c">
+          <span style="font-family:var(--font-body,'Nunito',sans-serif);font-size:10px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:#a7a7a7">Saved</span>
+          <h1 style="margin:0;font-family:var(--font-display,'Instrument Sans',sans-serif);font-size:clamp(28px,4vw,48px);font-weight:700;letter-spacing:-.02em;line-height:.95;text-transform:uppercase">Wishlist</h1>
+          <span style="font-family:var(--font-body,'Nunito',sans-serif);font-size:12px;color:#a7a7a7">{{ wishSummary }}</span>
+        </div>
+        <div style="display:grid;grid-template-columns:{{ gridCols }};gap:clamp(14px,1.6vw,26px);padding:30px 0 0">
+          <sc-for list="{{ wishGrid }}" as="c" hint-placeholder-count="2">
+            <dc-import name="ProductCard" c="{{ c }}" hint-size="100%,430px"></dc-import>
+          </sc-for>
+        </div>
+        <sc-if value="{{ wishEmpty }}" hint-placeholder-val="{{ false }}">
+          <div style="padding:50px 0;display:flex;flex-direction:column;gap:14px;align-items:flex-start">
+            <p style="margin:0;font-family:var(--font-body,'Nunito',sans-serif);font-size:14px;color:#a7a7a7">Nothing saved yet. Tap the heart on any garment.</p>
+            <button type="button" onClick="{{ goShopAll }}" style="border:none;background:transparent;padding:0 0 4px;cursor:pointer;font-family:var(--font-body,'Nunito',sans-serif);font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:#fff;border-bottom:1px solid #4a4a4a">Shop all</button>
+          </div>
+        </sc-if>
+      </section>
+    </sc-if>
+
+    <sc-if value="{{ isCart }}" hint-placeholder-val="{{ false }}">
+      <section data-screen-label="Cart" style="width:100%;max-width:1360px;margin:0 auto;padding:clamp(22px,3vw,40px) clamp(16px,3vw,48px) 0">
+        <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:16px;padding-bottom:22px;border-bottom:1px solid #1c1c1c">
+          <h1 style="margin:0;font-family:var(--font-display,'Instrument Sans',sans-serif);font-size:clamp(28px,4vw,48px);font-weight:700;letter-spacing:-.02em;line-height:.95;text-transform:uppercase">Your bag</h1>
+          <span style="font-family:var(--font-body,'Nunito',sans-serif);font-size:12px;color:#a7a7a7">{{ cartSummary }}</span>
+        </div>
+        <div style="display:grid;grid-template-columns:{{ cartCols }};gap:clamp(20px,3vw,44px);padding:28px 0 0;align-items:start">
+          <div style="display:flex;flex-direction:column">
+            <sc-for list="{{ cartLines }}" as="l" hint-placeholder-count="2">
+              <div style="display:flex;gap:18px;padding:20px 0;border-bottom:1px solid #1c1c1c">
+                <button type="button" onClick="{{ l.onOpen }}" style="width:110px;height:138px;flex:0 0 auto;border:none;padding:0;background:#c9c7c4;cursor:pointer;overflow:hidden">
+                  <span role="img" aria-label="{{ l.name }}" style="display:block;width:100%;height:100%;background-image:url({{ l.thumb }});background-size:cover;background-position:center"></span>
+                </button>
+                <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:9px">
+                  <span style="font-family:var(--font-display,'Instrument Sans',sans-serif);font-size:15px;font-weight:600;letter-spacing:.02em;text-transform:uppercase;color:#fff">{{ l.name }}</span>
+                  <span style="font-family:var(--font-body,'Nunito',sans-serif);font-size:12px;color:#a7a7a7">{{ l.meta }}</span>
+                  <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-top:4px">
+                    <div style="--gr-ink:#ffffff;--border-strong:#4a4a4a;color:#fff">
+                      <x-import component-from-global-scope="GENRAGEDesignSystem_3c3d93.QuantityStepper" value="{{ l.qty }}" on-change="{{ l.onQty }}" hint-size="120px,38px"></x-import>
+                    </div>
+                    <span style="font-family:var(--font-display,'Instrument Sans',sans-serif);font-size:16px;font-weight:700;letter-spacing:-.01em;color:#fff">{{ l.total }}</span>
+                  </div>
+                  <button type="button" onClick="{{ l.onRemove }}" style="align-self:flex-start;border:none;background:transparent;padding:0;cursor:pointer;font-family:var(--font-body,'Nunito',sans-serif);font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#a7a7a7" style-hover="color:#c5312d">Remove</button>
+                </div>
+              </div>
+            </sc-for>
+            <sc-if value="{{ cartEmpty }}" hint-placeholder-val="{{ false }}">
+              <div style="padding:50px 0;display:flex;flex-direction:column;gap:14px;align-items:flex-start">
+                <p style="margin:0;font-family:var(--font-body,'Nunito',sans-serif);font-size:14px;color:#a7a7a7">Your bag is empty.</p>
+                <button type="button" onClick="{{ goShopAll }}" style="border:none;background:transparent;padding:0 0 4px;cursor:pointer;font-family:var(--font-body,'Nunito',sans-serif);font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:#fff;border-bottom:1px solid #4a4a4a">Shop all</button>
+              </div>
+            </sc-if>
+            <sc-if value="{{ cartAny }}" hint-placeholder-val="{{ false }}">
+              <button type="button" onClick="{{ goShopAll }}" style="align-self:flex-start;margin-top:22px;border:none;background:transparent;padding:0 0 4px;cursor:pointer;font-family:var(--font-body,'Nunito',sans-serif);font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:#a7a7a7;border-bottom:1px solid #4a4a4a" style-hover="color:#ffffff">Continue shopping</button>
+            </sc-if>
+          </div>
+          <sc-if value="{{ cartAny }}" hint-placeholder-val="{{ false }}">
+            <aside style="border:1px solid #1c1c1c;background:#080808;padding:24px;display:flex;flex-direction:column;gap:16px;position:sticky;top:90px">
+              <span style="font-family:var(--font-display,'Instrument Sans',sans-serif);font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase">Summary</span>
+              <sc-for list="{{ totals }}" as="t" hint-placeholder-count="3">
+                <div style="display:flex;align-items:baseline;justify-content:space-between;gap:12px">
+                  <span style="font-family:var(--font-body,'Nunito',sans-serif);font-size:13px;color:{{ t.color }}">{{ t.label }}</span>
+                  <span style="font-family:var(--font-body,'Nunito',sans-serif);font-size:14px;font-weight:700;color:{{ t.color }}">{{ t.value }}</span>
+                </div>
+              </sc-for>
+              <div style="display:flex;align-items:baseline;justify-content:space-between;gap:12px;padding-top:14px;border-top:1px solid #262626">
+                <span style="font-family:var(--font-display,'Instrument Sans',sans-serif);font-size:12px;font-weight:700;letter-spacing:.16em;text-transform:uppercase">Total</span>
+                <span style="font-family:var(--font-display,'Instrument Sans',sans-serif);font-size:22px;font-weight:700;letter-spacing:-.01em">{{ grandTotal }}</span>
+              </div>
+              <x-import component-from-global-scope="GENRAGEDesignSystem_3c3d93.Button" variant="inverse" size="lg" full-width="{{ true }}" on-click="{{ goCheckout }}" hint-size="100%,54px">Proceed to checkout</x-import>
+              <span style="font-family:var(--font-body,'Nunito',sans-serif);font-size:11px;line-height:1.5;color:#a7a7a7">Checkout is simulated for this build — no card is charged and no payment is processed.</span>
+            </aside>
+          </sc-if>
+        </div>
+      </section>
+    </sc-if>
+
+    <sc-if value="{{ isCheckout }}" hint-placeholder-val="{{ false }}">
+      <section data-screen-label="Checkout" style="width:100%;max-width:1100px;margin:0 auto;padding:clamp(22px,3vw,40px) clamp(16px,3vw,48px) 0">
+        <div style="display:flex;flex-direction:column;gap:18px;padding-bottom:24px;border-bottom:1px solid #1c1c1c">
+          <h1 style="margin:0;font-family:var(--font-display,'Instrument Sans',sans-serif);font-size:clamp(26px,3.6vw,42px);font-weight:700;letter-spacing:-.02em;line-height:.95;text-transform:uppercase">{{ coTitle }}</h1>
+          <div style="display:flex;flex-wrap:wrap;gap:10px">
+            <sc-for list="{{ coSteps }}" as="st" hint-placeholder-count="5">
+              <span style="display:inline-flex;align-items:center;gap:8px;padding:7px 12px;border:1px solid {{ st.border }};color:{{ st.color }};font-family:var(--font-body,'Nunito',sans-serif);font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase">{{ st.label }}</span>
+            </sc-for>
+          </div>
+        </div>
+
+        <sc-if value="{{ coDone }}" hint-placeholder-val="{{ false }}">
+          <div style="padding:44px 0;display:flex;flex-direction:column;gap:18px;align-items:flex-start;max-width:56ch">
+            <span style="font-family:var(--font-body,'Nunito',sans-serif);font-size:10px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:#47a730">Order confirmed</span>
+            <h2 style="margin:0;font-family:var(--font-display,'Instrument Sans',sans-serif);font-size:clamp(26px,3.4vw,40px);font-weight:700;letter-spacing:-.02em;line-height:1;text-transform:uppercase">Order {{ coOrderId }}</h2>
+            <p style="margin:0;font-family:var(--font-body,'Nunito',sans-serif);font-size:15px;line-height:1.7;color:#c4c4c4">This is a simulated checkout — nothing was charged and no payment was processed. In production you would get a confirmation email and a tracking link here.</p>
+            <div style="display:flex;gap:12px;flex-wrap:wrap;padding-top:6px">
+              <x-import component-from-global-scope="GENRAGEDesignSystem_3c3d93.Button" variant="inverse" size="lg" on-click="{{ goShopAll }}" hint-size="180px,54px">Keep shopping</x-import>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ coActive }}" hint-placeholder-val="{{ false }}">
+          <div style="display:grid;grid-template-columns:{{ coCols }};gap:clamp(20px,3vw,44px);padding:28px 0 0;align-items:start">
+            <div style="display:flex;flex-direction:column;gap:20px">
+              <sc-if value="{{ coHasFields }}" hint-placeholder-val="{{ true }}">
+                <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px">
+                  <sc-for list="{{ coFields }}" as="f" hint-placeholder-count="4">
+                    <div style="display:flex;flex-direction:column;gap:7px;grid-column:{{ f.span }}">
+                      <span style="font-family:var(--font-body,'Nunito',sans-serif);font-size:9px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:#a7a7a7">{{ f.label }}</span>
+                      <input type="{{ f.type }}" value="{{ f.value }}" onChange="{{ f.onInput }}" placeholder="{{ f.placeholder }}" style="border:1px solid {{ f.border }};background:#0b0b0b;color:#fff;padding:13px;font-family:var(--font-body,'Nunito',sans-serif);font-size:13px;outline:none" />
+                      <sc-if value="{{ f.error }}" hint-placeholder-val="{{ false }}">
+                        <span style="font-family:var(--font-body,'Nunito',sans-serif);font-size:11px;color:#c5312d">{{ f.error }}</span>
+                      </sc-if>
+                    </div>
+                  </sc-for>
+                </div>
+              </sc-if>
+              <sc-if value="{{ coIsDelivery }}" hint-placeholder-val="{{ false }}">
+                <div style="display:flex;flex-direction:column;gap:10px">
+                  <sc-for list="{{ deliveryOptions }}" as="d" hint-placeholder-count="2">
+                    <button type="button" onClick="{{ d.onPick }}" style="display:flex;align-items:center;justify-content:space-between;gap:14px;padding:18px;border:1px solid {{ d.border }};background:{{ d.bg }};cursor:pointer;text-align:left">
+                      <span style="display:flex;flex-direction:column;gap:5px">
+                        <span style="font-family:var(--font-display,'Instrument Sans',sans-serif);font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#fff">{{ d.label }}</span>
+                        <span style="font-family:var(--font-body,'Nunito',sans-serif);font-size:12px;color:#a7a7a7">{{ d.detail }}</span>
+                      </span>
+                      <span style="font-family:var(--font-body,'Nunito',sans-serif);font-size:13px;font-weight:700;color:#fff;white-space:nowrap">{{ d.price }}</span>
+                    </button>
+                  </sc-for>
+                </div>
+              </sc-if>
+              <sc-if value="{{ coIsPayment }}" hint-placeholder-val="{{ false }}">
+                <p style="margin:0;padding:14px;border:1px solid #262626;background:#080808;font-family:var(--font-body,'Nunito',sans-serif);font-size:12px;line-height:1.6;color:#a7a7a7">Simulated payment step. Type any well-formed numbers — nothing is sent anywhere and no card is charged.</p>
+              </sc-if>
+              <div style="display:flex;gap:12px;flex-wrap:wrap;padding-top:6px">
+                <x-import component-from-global-scope="GENRAGEDesignSystem_3c3d93.Button" variant="inverse" size="lg" on-click="{{ coNextClick }}" hint-size="190px,54px">{{ coNextLabel }}</x-import>
+                <sc-if value="{{ coCanBack }}" hint-placeholder-val="{{ false }}">
+                  <button type="button" onClick="{{ coBackClick }}" style="padding:17px 26px;border:1px solid #4a4a4a;background:transparent;color:#fff;cursor:pointer;font-family:var(--font-body,'Nunito',sans-serif);font-size:13px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;border-radius:2px" style-hover="border-color:#ffffff">Back</button>
+                </sc-if>
+              </div>
+            </div>
+            <aside style="border:1px solid #1c1c1c;background:#080808;padding:24px;display:flex;flex-direction:column;gap:14px">
+              <span style="font-family:var(--font-display,'Instrument Sans',sans-serif);font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase">Order</span>
+              <sc-for list="{{ coLines }}" as="l" hint-placeholder-count="2">
+                <div style="display:flex;gap:12px;align-items:center">
+                  <span style="width:44px;height:56px;flex:0 0 auto;background:#c9c7c4;display:block;background-image:url({{ l.thumb }});background-size:cover;background-position:center"></span>
+                  <span style="display:flex;flex-direction:column;gap:3px;min-width:0;flex:1">
+                    <span style="font-family:var(--font-display,'Instrument Sans',sans-serif);font-size:11px;font-weight:600;letter-spacing:.03em;text-transform:uppercase;color:#fff">{{ l.name }}</span>
+                    <span style="font-family:var(--font-body,'Nunito',sans-serif);font-size:11px;color:#a7a7a7">{{ l.meta }}</span>
+                  </span>
+                  <span style="font-family:var(--font-body,'Nunito',sans-serif);font-size:12px;font-weight:700;color:#c4c4c4">{{ l.total }}</span>
+                </div>
+              </sc-for>
+              <sc-for list="{{ totals }}" as="t" hint-placeholder-count="2">
+                <div style="display:flex;align-items:baseline;justify-content:space-between;gap:12px;padding-top:4px">
+                  <span style="font-family:var(--font-body,'Nunito',sans-serif);font-size:12px;color:{{ t.color }}">{{ t.label }}</span>
+                  <span style="font-family:var(--font-body,'Nunito',sans-serif);font-size:13px;font-weight:700;color:{{ t.color }}">{{ t.value }}</span>
+                </div>
+              </sc-for>
+              <div style="display:flex;align-items:baseline;justify-content:space-between;gap:12px;padding-top:12px;border-top:1px solid #262626">
+                <span style="font-family:var(--font-display,'Instrument Sans',sans-serif);font-size:12px;font-weight:700;letter-spacing:.16em;text-transform:uppercase">Total</span>
+                <span style="font-family:var(--font-display,'Instrument Sans',sans-serif);font-size:20px;font-weight:700;letter-spacing:-.01em">{{ grandTotal }}</span>
+              </div>
+            </aside>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ coNoItems }}" hint-placeholder-val="{{ false }}">
+          <div style="padding:44px 0;display:flex;flex-direction:column;gap:14px;align-items:flex-start">
+            <p style="margin:0;font-family:var(--font-body,'Nunito',sans-serif);font-size:14px;color:#a7a7a7">There is nothing to check out yet.</p>
+            <button type="button" onClick="{{ goShopAll }}" style="border:none;background:transparent;padding:0 0 4px;cursor:pointer;font-family:var(--font-body,'Nunito',sans-serif);font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:#fff;border-bottom:1px solid #4a4a4a">Shop all</button>
+          </div>
+        </sc-if>
+      </section>
+    </sc-if>
+
+    <sc-if value="{{ isLogin }}" hint-placeholder-val="{{ false }}">
+      <section data-screen-label="Log in" style="width:100%;max-width:460px;margin:0 auto;padding:clamp(30px,5vw,70px) clamp(16px,3vw,48px) 0">
+        <h1 style="margin:0 0 8px;font-family:var(--font-display,'Instrument Sans',sans-serif);font-size:clamp(26px,3.4vw,40px);font-weight:700;letter-spacing:-.02em;line-height:1;text-transform:uppercase">{{ loginTitle }}</h1>
+        <p style="margin:0 0 26px;font-family:var(--font-body,'Nunito',sans-serif);font-size:13px;line-height:1.6;color:#a7a7a7">Accounts are local to this build — your details stay in this browser.</p>
+        <div style="display:flex;flex-direction:column;gap:14px">
+          <div style="display:flex;flex-direction:column;gap:7px">
+            <span style="font-family:var(--font-body,'Nunito',sans-serif);font-size:9px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:#a7a7a7">Email</span>
+            <input type="email" value="{{ loginEmail }}" onChange="{{ onLoginEmail }}" placeholder="you@email.com" style="border:1px solid #262626;background:#0b0b0b;color:#fff;padding:13px;font-family:var(--font-body,'Nunito',sans-serif);font-size:13px;outline:none" />
+          </div>
+          <div style="display:flex;flex-direction:column;gap:7px">
+            <span style="font-family:var(--font-body,'Nunito',sans-serif);font-size:9px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:#a7a7a7">Password</span>
+            <input type="password" value="{{ loginPassword }}" onChange="{{ onLoginPassword }}" onKeyDown="{{ onLoginKey }}" placeholder="At least 6 characters" style="border:1px solid #262626;background:#0b0b0b;color:#fff;padding:13px;font-family:var(--font-body,'Nunito',sans-serif);font-size:13px;outline:none" />
+          </div>
+          <sc-if value="{{ loginError }}" hint-placeholder-val="{{ false }}">
+            <span style="font-family:var(--font-body,'Nunito',sans-serif);font-size:12px;color:#c5312d">{{ loginError }}</span>
+          </sc-if>
+          <x-import component-from-global-scope="GENRAGEDesignSystem_3c3d93.Button" variant="inverse" size="lg" full-width="{{ true }}" on-click="{{ onLoginSubmit }}" hint-size="100%,54px">{{ loginCta }}</x-import>
+          <button type="button" onClick="{{ onLoginToggle }}" style="align-self:flex-start;border:none;background:transparent;padding:6px 0;cursor:pointer;font-family:var(--font-body,'Nunito',sans-serif);font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#a7a7a7;border-bottom:1px solid #4a4a4a" style-hover="color:#ffffff">{{ loginAlt }}</button>
+        </div>
+      </section>
+    </sc-if>
+
+    <sc-if value="{{ isAccount }}" hint-placeholder-val="{{ false }}">
+      <section data-screen-label="Account" style="width:100%;max-width:700px;margin:0 auto;padding:clamp(30px,5vw,70px) clamp(16px,3vw,48px) 0">
+        <span style="font-family:var(--font-body,'Nunito',sans-serif);font-size:10px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:#a7a7a7">Account</span>
+        <h1 style="margin:14px 0 26px;font-family:var(--font-display,'Instrument Sans',sans-serif);font-size:clamp(26px,3.4vw,42px);font-weight:700;letter-spacing:-.02em;line-height:1;text-transform:uppercase">{{ accountName }}</h1>
+        <div style="display:flex;flex-direction:column;gap:1px;background:#1c1c1c;margin-bottom:26px">
+          <sc-for list="{{ accountRows }}" as="r" hint-placeholder-count="3">
+            <div style="background:#080808;padding:18px 20px;display:flex;align-items:baseline;justify-content:space-between;gap:14px">
+              <span style="font-family:var(--font-body,'Nunito',sans-serif);font-size:10px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:#a7a7a7">{{ r.label }}</span>
+              <span style="font-family:var(--font-body,'Nunito',sans-serif);font-size:14px;color:#fff">{{ r.value }}</span>
+            </div>
+          </sc-for>
+        </div>
+        <div style="display:flex;gap:12px;flex-wrap:wrap">
+          <x-import component-from-global-scope="GENRAGEDesignSystem_3c3d93.Button" variant="inverse" size="lg" on-click="{{ goWishlist }}" hint-size="150px,54px">Wishlist</x-import>
+          <button type="button" onClick="{{ onLogout }}" style="padding:17px 26px;border:1px solid #4a4a4a;background:transparent;color:#fff;cursor:pointer;font-family:var(--font-body,'Nunito',sans-serif);font-size:13px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;border-radius:2px" style-hover="border-color:#ffffff">Sign out</button>
+        </div>
+      </section>
+    </sc-if>
+
+    <sc-if value="{{ isCollections }}" hint-placeholder-val="{{ false }}">
+      <section data-screen-label="Collections">
+        <div style="width:100%;max-width:1360px;margin:0 auto;padding:clamp(22px,3vw,40px) clamp(16px,3vw,48px) 0">
+          <div style="display:flex;flex-direction:column;gap:10px;padding-bottom:22px;border-bottom:1px solid #1c1c1c">
+            <span style="font-family:var(--font-body,'Nunito',sans-serif);font-size:10px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:#a7a7a7">Lookbook</span>
+            <h1 style="margin:0;font-family:var(--font-display,'Instrument Sans',sans-serif);font-size:clamp(30px,4.2vw,52px);font-weight:700;letter-spacing:-.02em;line-height:.95;text-transform:uppercase">Collections</h1>
+            <p style="margin:0;max-width:52ch;font-family:var(--font-body,'Nunito',sans-serif);font-size:14px;line-height:1.65;color:#c4c4c4">Shot on location, then patterned in 3D. Every campaign below opens the garments it was shot in.</p>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:2px;padding-top:24px">
+          <sc-for list="{{ collectionRows }}" as="c" hint-placeholder-count="4">
+            <button type="button" data-nx="tile" onClick="{{ c.onClick }}" style="position:relative;width:100%;height:{{ c.height }};border:none;padding:0;background:#0b0b0b;overflow:hidden;cursor:pointer;display:block">
+              <span role="img" data-nx="media" aria-label="{{ c.title }}" style="position:absolute;inset:0;display:block;background-image:url({{ c.img }});background-size:cover;background-position:center 34%;transition:transform 600ms ease" style-hover="transform:scale(1.02)"></span>
+              <span style="position:absolute;inset:0;display:block;background:linear-gradient(to top,rgba(0,0,0,.68),rgba(0,0,0,.04) 62%)"></span>
+              <span style="position:absolute;left:0;right:0;bottom:0;display:flex;flex-direction:column;gap:10px;align-items:{{ c.align }};text-align:left;padding:clamp(20px,3vw,46px)">
+                <span style="font-family:var(--font-body,'Nunito',sans-serif);font-size:10px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:#ffffff">{{ c.eyebrow }}</span>
+                <span style="font-family:var(--font-display,'Instrument Sans',sans-serif);font-size:clamp(28px,4vw,56px);font-weight:700;letter-spacing:-.02em;line-height:.92;text-transform:uppercase;color:#ffffff">{{ c.title }}</span>
+                <span style="max-width:38ch;font-family:var(--font-body,'Nunito',sans-serif);font-size:14px;line-height:1.6;color:#ffffff">{{ c.copy }}</span>
+                <span style="font-family:var(--font-body,'Nunito',sans-serif);font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:#ffffff;border-bottom:1px solid rgba(255,255,255,.6);padding-bottom:4px">Shop {{ c.count }}</span>
+              </span>
+            </button>
+          </sc-for>
+        </div>
+      </section>
+    </sc-if>
+
+  </main>
+
+  <footer style="margin-top:clamp(56px,7vw,110px);border-top:1px solid #262626;background:#050505">
+    <div style="width:100%;max-width:1360px;margin:0 auto;padding:clamp(40px,5vw,66px) clamp(16px,3vw,48px)">
+      <div style="display:grid;grid-template-columns:{{ footCols }};gap:clamp(28px,3vw,54px)">
+        <div style="display:flex;flex-direction:column;gap:16px">
+          <span style="font-family:var(--font-display,'Instrument Sans',sans-serif);font-size:22px;font-weight:700;letter-spacing:.02em;text-transform:uppercase">NEXORA</span>
+          <p style="margin:0;max-width:34ch;font-family:var(--font-body,'Nunito',sans-serif);font-size:13px;line-height:1.6;color:#a7a7a7">Proudly homegrown in India. Every garment ships with its 3D twin.</p>
+          <div style="display:flex;gap:10px;padding-top:4px">
+            <sc-for list="{{ socials }}" as="s" hint-placeholder-count="3">
+              <a href="{{ s.href }}" title="{{ s.label }}" style="width:34px;height:34px;border:1px solid #262626;display:flex;align-items:center;justify-content:center;font-family:var(--font-body,'Nunito',sans-serif);font-size:10px;font-weight:700;letter-spacing:.08em;color:#a7a7a7">{{ s.short }}</a>
+            </sc-for>
+          </div>
+        </div>
+        <sc-for list="{{ footCols3 }}" as="col" hint-placeholder-count="3">
+          <div style="display:flex;flex-direction:column;gap:14px">
+            <span style="font-family:var(--font-display,'Instrument Sans',sans-serif);font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:#fff">{{ col.title }}</span>
+            <sc-for list="{{ col.links }}" as="l" hint-placeholder-count="4">
+              <button type="button" onClick="{{ l.onClick }}" style="border:none;background:transparent;padding:0;text-align:left;cursor:pointer;font-family:var(--font-body,'Nunito',sans-serif);font-size:13px;color:#a7a7a7;transition:color 200ms ease" style-hover="color:#ffffff">{{ l.label }}</button>
+            </sc-for>
+          </div>
+        </sc-for>
+        <div style="display:flex;flex-direction:column;gap:14px">
+          <span style="font-family:var(--font-display,'Instrument Sans',sans-serif);font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:#fff">Newsletter</span>
+          <p style="margin:0;font-family:var(--font-body,'Nunito',sans-serif);font-size:13px;line-height:1.6;color:#a7a7a7">Drop alerts and studio notes. No noise.</p>
+          <div style="display:flex;border:1px solid #262626">
+            <input type="email" value="{{ newsletter }}" onChange="{{ onNewsletter }}" placeholder="you@email.com" style="flex:1;min-width:0;border:none;background:transparent;color:#fff;padding:12px;font-family:var(--font-body,'Nunito',sans-serif);font-size:13px;outline:none" />
+            <button type="button" onClick="{{ onJoin }}" style="border:none;background:#fff;color:#000;padding:0 16px;cursor:pointer;font-family:var(--font-body,'Nunito',sans-serif);font-size:10px;font-weight:700;letter-spacing:.16em;text-transform:uppercase">Join</button>
+          </div>
+        </div>
+      </div>
+      <div style="margin-top:44px;padding-top:22px;border-top:1px solid #1c1c1c;display:flex;flex-wrap:wrap;gap:14px;justify-content:space-between;align-items:center">
+        <span style="font-family:var(--font-body,'Nunito',sans-serif);font-size:11px;color:#a7a7a7">© 2026 NEXORA. All rights reserved.</span>
+        <span style="font-family:var(--font-body,'Nunito',sans-serif);font-size:11px;color:#a7a7a7">3D twins rendered live in your browser. Checkout is a simulation — no payment is processed.</span>
+      </div>
+    </div>
+  </footer>
+
+  <sc-if value="{{ drawerOpen }}" hint-placeholder-val="{{ false }}">
+    <div style="position:fixed;inset:0;z-index:100;background:rgba(0,0,0,.4);animation:nx-in 180ms ease both" onClick="{{ closeDrawer }}">
+      <aside style="position:absolute;top:0;right:0;bottom:0;width:min(420px,100%);background:#0b0b0b;border-left:1px solid #262626;box-shadow:0 5px 15px rgb(0 0 0 / .05);display:flex;flex-direction:column;animation:nx-drawer 260ms ease both" onClick="{{ stop }}">
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:22px;border-bottom:1px solid #1c1c1c">
+          <span style="font-family:var(--font-display,'Instrument Sans',sans-serif);font-size:13px;font-weight:700;letter-spacing:.16em;text-transform:uppercase">{{ drawerTitle }}</span>
+          <button type="button" aria-label="Close bag" onClick="{{ closeDrawer }}" style="width:32px;height:32px;border:none;background:transparent;color:#a7a7a7;cursor:pointer;display:flex;align-items:center;justify-content:center">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg>
+          </button>
+        </div>
+        <div style="flex:1;overflow-y:auto;padding:10px 22px">
+          <sc-for list="{{ cartLines }}" as="l" hint-placeholder-count="1">
+            <div style="display:flex;gap:14px;padding:18px 0;border-bottom:1px solid #1c1c1c">
+              <button type="button" onClick="{{ l.onOpen }}" style="width:74px;height:92px;flex:0 0 auto;border:none;padding:0;background:#c9c7c4;cursor:pointer;overflow:hidden">
+                <span role="img" aria-label="{{ l.name }}" style="display:block;width:100%;height:100%;background-image:url({{ l.thumb }});background-size:cover;background-position:center"></span>
+              </button>
+              <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:7px">
+                <span style="font-family:var(--font-display,'Instrument Sans',sans-serif);font-size:13px;font-weight:600;letter-spacing:.02em;text-transform:uppercase;color:#fff">{{ l.name }}</span>
+                <span style="font-family:var(--font-body,'Nunito',sans-serif);font-size:11px;color:#a7a7a7">{{ l.meta }}</span>
+                <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:2px">
+                  <div style="--gr-ink:#ffffff;--border-strong:#4a4a4a;color:#fff">
+                    <x-import component-from-global-scope="GENRAGEDesignSystem_3c3d93.QuantityStepper" value="{{ l.qty }}" on-change="{{ l.onQty }}" hint-size="120px,38px"></x-import>
+                  </div>
+                  <span style="font-family:var(--font-body,'Nunito',sans-serif);font-size:13px;font-weight:700;color:#fff">{{ l.total }}</span>
+                </div>
+                <button type="button" onClick="{{ l.onRemove }}" style="align-self:flex-start;border:none;background:transparent;padding:0;cursor:pointer;font-family:var(--font-body,'Nunito',sans-serif);font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#a7a7a7;transition:color 200ms ease" style-hover="color:#c5312d">Remove</button>
+              </div>
+            </div>
+          </sc-for>
+          <sc-if value="{{ cartEmpty }}" hint-placeholder-val="{{ false }}">
+            <div style="padding:60px 0;display:flex;flex-direction:column;gap:16px;align-items:flex-start">
+              <p style="margin:0;font-family:var(--font-body,'Nunito',sans-serif);font-size:14px;color:#a7a7a7">Your bag is empty.</p>
+              <button type="button" onClick="{{ goShopAll }}" style="border:none;background:transparent;padding:0;cursor:pointer;font-family:var(--font-body,'Nunito',sans-serif);font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:#fff;border-bottom:1px solid #4a4a4a;padding-bottom:4px">Shop all</button>
+            </div>
+          </sc-if>
+        </div>
+        <sc-if value="{{ cartAny }}" hint-placeholder-val="{{ false }}">
+          <div style="padding:20px 22px;border-top:1px solid #1c1c1c;display:flex;flex-direction:column;gap:14px">
+            <div style="display:flex;justify-content:space-between;align-items:baseline">
+              <span style="font-family:var(--font-body,'Nunito',sans-serif);font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:#a7a7a7">Subtotal</span>
+              <span style="font-family:var(--font-display,'Instrument Sans',sans-serif);font-size:20px;font-weight:700;letter-spacing:-.01em">{{ subtotal }}</span>
+            </div>
+            <span style="font-family:var(--font-body,'Nunito',sans-serif);font-size:11px;color:#a7a7a7">Shipping and taxes calculated at checkout.</span>
+            <div style="display:flex;flex-direction:column;gap:8px">
+              <x-import component-from-global-scope="GENRAGEDesignSystem_3c3d93.Button" variant="inverse" size="lg" full-width="{{ true }}" on-click="{{ goCheckout }}" hint-size="100%,54px">Checkout</x-import>
+              <button type="button" onClick="{{ goCart }}" style="width:100%;padding:15px;border:1px solid #4a4a4a;background:transparent;color:#fff;cursor:pointer;font-family:var(--font-body,'Nunito',sans-serif);font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;border-radius:2px" style-hover="border-color:#ffffff">View bag</button>
+            </div>
+          </div>
+        </sc-if>
+      </aside>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ loadFailed }}" hint-placeholder-val="{{ false }}">
+    <div style="position:fixed;inset:0;z-index:200;background:#000;display:flex;align-items:center;justify-content:center;padding:24px">
+      <div style="width:min(620px,100%);border:1px solid #262626;background:#080808;animation:nx-pop 320ms cubic-bezier(.22,.8,.28,1) both;padding:clamp(24px,4vw,40px);display:flex;flex-direction:column;gap:18px">
+        <span style="font-family:var(--font-body,'Nunito',sans-serif);font-size:10px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:#c5312d">Cannot start</span>
+        <h1 style="margin:0;font-family:var(--font-display,'Instrument Sans',sans-serif);font-size:clamp(24px,3.4vw,36px);font-weight:700;letter-spacing:-.02em;line-height:1.02;text-transform:uppercase;color:#fff">{{ loadTitle }}</h1>
+        <p style="margin:0;max-width:56ch;font-family:var(--font-body,'Nunito',sans-serif);font-size:14px;line-height:1.7;color:#c4c4c4;text-wrap:pretty">{{ loadBody }}</p>
+        <div style="display:flex;flex-direction:column;gap:1px;background:#1c1c1c">
+          <sc-for list="{{ loadStepList }}" as="s" hint-placeholder-count="3">
+            <div style="background:#000;padding:14px 16px;display:flex;gap:12px;align-items:baseline">
+              <span style="font-family:var(--font-display,'Instrument Sans',sans-serif);font-size:11px;font-weight:700;letter-spacing:.1em;color:#4a4a4a;flex:0 0 auto">{{ s.n }}</span>
+              <span style="font-family:var(--font-body,'Nunito',sans-serif);font-size:13px;line-height:1.6;color:#e9e5dd">{{ s.text }}</span>
+            </div>
+          </sc-for>
+        </div>
+        <button type="button" onClick="{{ onReload }}" style="align-self:flex-start;padding:15px 24px;border:1px solid #4a4a4a;background:transparent;color:#fff;cursor:pointer;font-family:var(--font-body,'Nunito',sans-serif);font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;border-radius:2px" style-hover="border-color:#ffffff">Reload</button>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ pdpFull }}" hint-placeholder-val="{{ false }}">
+    <div style="position:fixed;inset:0;z-index:110;background:#c9c7c4;animation:nx-in 180ms ease both;touch-action:none" onPointerDown="{{ onViewerDown }}" onWheel="{{ onViewerWheel }}">
+      <span role="img" aria-label="{{ p.name }}" style="position:absolute;inset:0;display:block;background-image:url({{ frameSrc }});background-size:contain;background-position:center;background-repeat:no-repeat;transform:scale({{ pdpZoom }}) translate({{ panX }},{{ panY }});cursor:grab"></span>
+      <div style="position:absolute;top:18px;left:20px;display:flex;flex-direction:column;gap:3px">
+        <span style="font-family:var(--font-body,'Nunito',sans-serif);font-size:9px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:#4a4a4a">3D Viewer — fullscreen</span>
+        <span style="font-family:var(--font-display,'Instrument Sans',sans-serif);font-size:15px;font-weight:700;letter-spacing:.02em;text-transform:uppercase;color:#1c1c1c">{{ p.viewerLabel }}</span>
+      </div>
+      <button type="button" onClick="{{ closeFull }}" style="position:absolute;top:16px;right:18px;width:42px;height:42px;display:flex;align-items:center;justify-content:center;border:1px solid #1c1c1c;background:transparent;color:#1c1c1c;cursor:pointer">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg>
+      </button>
+      <div style="position:absolute;left:50%;bottom:24px;transform:translateX(-50%);display:flex;align-items:center;gap:14px;padding:12px 18px;background:rgba(255,255,255,.6)">
+        <span style="font-family:var(--font-body,'Nunito',sans-serif);font-size:9px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:#4a4a4a">{{ frameLabel }}</span>
+        <input type="range" min="0" max="{{ frameMax }}" value="{{ frameIdx }}" onChange="{{ onFrameSlide }}" style="width:min(46vw,420px);cursor:pointer" />
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ sizeGuideOpen }}" hint-placeholder-val="{{ false }}">
+    <div style="position:fixed;inset:0;z-index:115;background:rgba(0,0,0,.4);display:flex;align-items:center;justify-content:center;padding:20px;animation:nx-in 160ms ease both" onClick="{{ closeSizeGuide }}">
+      <div style="width:min(520px,100%);background:#0b0b0b;border:1px solid #262626;box-shadow:0 5px 15px rgb(0 0 0 / .3);animation:nx-pop 300ms cubic-bezier(.22,.8,.28,1) both" onClick="{{ stop }}">
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:20px 22px;border-bottom:1px solid #1c1c1c">
+          <span style="font-family:var(--font-display,'Instrument Sans',sans-serif);font-size:13px;font-weight:700;letter-spacing:.16em;text-transform:uppercase">Size guide</span>
+          <button type="button" aria-label="Close size guide" onClick="{{ closeSizeGuide }}" style="width:32px;height:32px;border:none;background:transparent;color:#a7a7a7;cursor:pointer;display:flex;align-items:center;justify-content:center">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg>
+          </button>
+        </div>
+        <div style="padding:8px 22px 22px">
+          <div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0;padding:14px 0;border-bottom:1px solid #262626">
+            <span style="font-family:var(--font-body,'Nunito',sans-serif);font-size:9px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:#a7a7a7">Size</span>
+            <span style="font-family:var(--font-body,'Nunito',sans-serif);font-size:9px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:#a7a7a7">Chest</span>
+            <span style="font-family:var(--font-body,'Nunito',sans-serif);font-size:9px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:#a7a7a7">Waist</span>
+            <span style="font-family:var(--font-body,'Nunito',sans-serif);font-size:9px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:#a7a7a7">Length</span>
+          </div>
+          <sc-for list="{{ sizeGuideRows }}" as="r" hint-placeholder-count="6">
+            <div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0;padding:12px 0;border-bottom:1px solid #151515">
+              <span style="font-family:var(--font-display,'Instrument Sans',sans-serif);font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#fff">{{ r.size }}</span>
+              <span style="font-family:var(--font-body,'Nunito',sans-serif);font-size:13px;color:#c4c4c4">{{ r.chest }} cm</span>
+              <span style="font-family:var(--font-body,'Nunito',sans-serif);font-size:13px;color:#c4c4c4">{{ r.waist }} cm</span>
+              <span style="font-family:var(--font-body,'Nunito',sans-serif);font-size:13px;color:#c4c4c4">{{ r.length }} cm</span>
+            </div>
+          </sc-for>
+          <p style="margin:16px 0 0;font-family:var(--font-body,'Nunito',sans-serif);font-size:12px;line-height:1.6;color:#a7a7a7">Garment measurements, flat and unstretched. Our blocks are boxy — if you are between sizes, size down for a regular fit.</p>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ toast }}" hint-placeholder-val="{{ false }}">
+    <div style="position:fixed;left:50%;bottom:26px;transform:translateX(-50%);z-index:120;background:#fff;color:#000;padding:13px 22px;animation:nx-up 240ms ease both;box-shadow:0 5px 15px rgb(0 0 0 / .25)">
+      <span style="font-family:var(--font-body,'Nunito',sans-serif);font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase">{{ toast }}</span>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;announcementBar&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Shell&quot;,&quot;label&quot;:&quot;Announcement bar&quot;},&quot;renderQuality&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;Draft&quot;,&quot;Standard&quot;,&quot;High&quot;],&quot;default&quot;:&quot;Standard&quot;,&quot;tsType&quot;:&quot;'Draft'|'Standard'|'High'&quot;,&quot;section&quot;:&quot;3D&quot;,&quot;label&quot;:&quot;Render quality&quot;},&quot;turntableFrames&quot;:{&quot;editor&quot;:&quot;int&quot;,&quot;default&quot;:36,&quot;min&quot;:16,&quot;max&quot;:64,&quot;step&quot;:4,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;3D&quot;,&quot;label&quot;:&quot;Turntable frames&quot;},&quot;autoSpin&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;3D&quot;,&quot;label&quot;:&quot;Idle auto-spin&quot;}}">
+const BLANK = "data:image/gif;base64,R0lGODlhAQABAIAAAMzMzAAAACwAAAAAAQABAAACAkQBADs=";
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.thumbs = new Map();
+    this.frameCache = new Map();
+    this.heroStageRef = React.createRef();
+    this.studioStageRef = React.createRef();
+    this.state = {
+      ready: false, route: { name: "home" }, w: typeof window !== "undefined" ? window.innerWidth : 1440,
+      cart: [], wishlist: [], recent: [], extra: [], user: null,
+      annIdx: 0, menuOpen: false, navOpen: false, searchOpen: false, q: "", drawerOpen: false,
+      toast: null, hoverId: null, newsletter: "",
+      sort: "featured",
+      filters: { gender: [], type: [], fabric: [], size: [], color: [], collection: [], maxPrice: 5000 },
+      openF: { gender: true, type: true, fabric: true, size: false, color: false, collection: false },
+      pdp: { color: 0, size: null, qty: 1, frame: 0, progress: 0, zoom: 1, pan: [0, 0], full: false, mode: "rotate", tab: "description", sizeGuide: false },
+      studio: { img: null, spec: null, metrics: null, status: "idle", note: "", log: [], wire: false, anim: false },
+      co: { step: 0, form: { delivery: "standard" }, errors: {}, orderId: null },
+      login: { email: "", password: "", mode: "login", error: "" },
+    };
+  }
+
+  /* ----------------------------------------------------------- lifecycle */
+
+  componentDidMount() {
+    this.mounted = true;
+    this.restore();
+    this.onHash = () => this.applyHash();
+    this.onResize = () => this.setState({ w: window.innerWidth });
+    window.addEventListener("hashchange", this.onHash);
+    window.addEventListener("resize", this.onResize);
+    this.annTimer = setInterval(() => this.setState((s) => ({ annIdx: s.annIdx + 1 })), 4200);
+    Promise.all([import("./nexora-data.js"), import("./nexora-3d.js"), import("./nexora-ai.js")])
+      .then(([d, m3, ai]) => {
+        if (!this.mounted) return;
+        this.D = d; this.M = m3; this.AI = ai;
+        this.applyHash();
+        this.setState({ ready: true }, () => { this.pumpThumbs(); this.syncStages(); });
+      })
+      .catch((e) => {
+        const isFile = location.protocol === "file:";
+        this.setState({
+          loadFailed: true,
+          loadTitle: isFile ? "Run this from a local server" : "Could not load the 3D modules",
+          loadBody: isFile
+            ? "Browsers block JavaScript modules on file:// URLs, so opening NEXORA.dc.html by double-click shows nothing. Serve the folder over http:// and it runs — no build step."
+            : "nexora-data.js, nexora-3d.js and nexora-ai.js must sit next to NEXORA.dc.html. " + String(e && e.message ? e.message : e),
+          loadSteps: isFile
+            ? [
+                "VS Code: install the Live Server extension, then right-click NEXORA.dc.html → Open with Live Server.",
+                "Or in a terminal, from this folder: python3 -m http.server 8080",
+                "Then open http://localhost:8080/NEXORA.dc.html",
+              ]
+            : ["Check that the four .js files and the _ds folder were unzipped together.", "Reload the page."],
+        });
+      });
+  }
+
+  componentWillUnmount() {
+    this.mounted = false;
+    window.removeEventListener("hashchange", this.onHash);
+    window.removeEventListener("resize", this.onResize);
+    clearInterval(this.annTimer);
+    if (this.heroStage) this.heroStage.dispose();
+    if (this.studioStage) this.studioStage.dispose();
+  }
+
+  componentDidUpdate() {
+    this.syncStages();
+    // Scroll to top only when the route genuinely changes. Comparing by value:
+    // the runtime hands componentDidUpdate prevProps, not prevState, so an
+    // identity check on state.route fired on every re-render (the announcement
+    // rotator alone yanked the page back up every few seconds).
+    const r = this.state.route || {};
+    const key = [r.name, r.cat, r.sub, r.id, r.campaign, r.q].join("|");
+    if (this.routeKey === undefined) { this.routeKey = key; return; }
+    if (this.routeKey !== key) {
+      this.routeKey = key;
+      window.scrollTo(0, 0);
+      // flip between two identical keyframes so the page transition replays
+      this.setState((s) => ({ pageTick: (s.pageTick || 0) + 1 }));
+    }
+  }
+
+  /* ------------------------------------------------------------- storage */
+
+  restore() {
+    try {
+      const raw = localStorage.getItem("nexora.v1");
+      if (!raw) return;
+      const s = JSON.parse(raw);
+      this.setState({
+        cart: Array.isArray(s.cart) ? s.cart : [], wishlist: Array.isArray(s.wishlist) ? s.wishlist : [],
+        recent: Array.isArray(s.recent) ? s.recent : [], extra: Array.isArray(s.extra) ? s.extra : [], user: s.user || null,
+      });
+    } catch (e) {}
+  }
+
+  persist() {
+    try {
+      const { cart, wishlist, recent, extra, user } = this.state;
+      localStorage.setItem("nexora.v1", JSON.stringify({ cart, wishlist, recent, extra, user }));
+    } catch (e) {}
+  }
+
+  /* -------------------------------------------------------------- router */
+
+  go = (hash) => { if (location.hash === hash) this.applyHash(hash); else location.hash = hash; };
+
+  applyHash(force) {
+    const h = (force || location.hash || "#/").replace(/^#/, "");
+    const parts = h.split("?")[0].split("/").filter(Boolean);
+    const qs = new URLSearchParams((h.split("?")[1] || ""));
+    let route = { name: "home" };
+    if (parts[0] === "c") route = { name: "category", cat: parts[1] || "all", sub: parts[2] ? decodeURIComponent(parts[2]) : null };
+    else if (parts[0] === "p") route = { name: "product", id: parts[1] };
+    else if (parts[0] === "k") route = { name: "category", cat: "all", sub: null, campaign: parts[1] };
+    else if (parts[0] === "new") route = { name: "category", cat: "new", sub: null };
+    else if (parts[0] === "sale") route = { name: "category", cat: "sale", sub: null };
+    else if (parts[0] === "collections") route = { name: "collections" };
+    else if (parts[0]) route = { name: parts[0], q: qs.get("q") || "" };
+    if (route.name === "search") this.setState({ q: route.q || this.state.q });
+    if (route.name === "product") this.openProduct(route.id);
+    this.setState({ route, menuOpen: false, navOpen: false, searchOpen: false });
+  }
+
+  /* ------------------------------------------------------------ catalog */
+
+  get products() { return [...(this.state.extra || []), ...(this.D ? this.D.PRODUCTS : [])]; }
+
+  find(id) { return this.products.find((p) => p.id === id); }
+
+  money(v) { return this.D ? this.D.CURRENCY.format(v) : "Rs. " + v; }
+
+  quality() {
+    const q = this.props.renderQuality || "Standard";
+    if (q === "Draft") return { w: 300, h: 375, frames: 24, fw: 420, fh: 525 };
+    if (q === "High") return { w: 560, h: 700, frames: 48, fw: 700, fh: 875 };
+    return { w: 420, h: 525, frames: 36, fw: 560, fh: 700 };
+  }
+
+  tkey(p, ci, suffix) {
+    const c = (p.colors && p.colors[ci]) || { hex: "#1c1c1c" };
+    return [p.garment, c.hex, p.fabric, suffix || ""].join("|");
+  }
+
+  spec(p, ci) {
+    const c = (p.colors && p.colors[ci]) || { hex: "#1c1c1c" };
+    return { garment: p.garment, color: c.hex, fabric: p.fabric };
+  }
+
+  async pumpThumbs() {
+    if (this.pumping || !this.M || !this.M.supported()) return;
+    this.pumping = true;
+    const dim = this.quality();
+    const jobs = [];
+    this.products.forEach((p) => jobs.push([this.tkey(p, 0), this.spec(p, 0), -0.42, dim.w, dim.h]));
+    this.products.forEach((p) => jobs.push([this.tkey(p, 0, "alt"), this.spec(p, 0), 0.9, dim.w, dim.h]));
+    for (const [k, spec, angle, w, h] of jobs) {
+      if (!this.mounted) break;
+      if (this.thumbs.has(k)) continue;
+      try { this.thumbs.set(k, await this.M.renderThumb(spec, { w, h, angle })); }
+      catch (e) { this.thumbs.set(k, null); }
+      this.forceUpdate();
+      await new Promise((r) => setTimeout(r, 0));
+    }
+    this.pumping = false;
+  }
+
+  async ensureThumb(p, ci) {
+    const k = this.tkey(p, ci);
+    if (this.thumbs.has(k) || !this.M || !this.M.supported()) return;
+    const dim = this.quality();
+    this.thumbs.set(k, null);
+    try { this.thumbs.set(k, await this.M.renderThumb(this.spec(p, ci), { w: dim.w, h: dim.h, angle: -0.42 })); } catch (e) {}
+    this.forceUpdate();
+  }
+
+  thumbFor(p, ci, alt) {
+    const k = this.tkey(p, ci, alt ? "alt" : "");
+    const v = this.thumbs.get(k);
+    if (v) return v;
+    return this.thumbs.get(this.tkey(p, ci)) || null;
+  }
+
+  thumbSrc(p, ci, alt) { return this.thumbFor(p, ci, alt) || BLANK; }
+
+  /* --------------------------------------------------------- turntable */
+
+  async loadFrames(p, ci) {
+    if (!this.M || !this.M.supported()) return;
+    const key = this.tkey(p, ci, "frames");
+    if (this.frameCache.has(key)) { this.setState((s) => ({ pdp: { ...s.pdp, progress: 1 } })); return; }
+    const dim = this.quality();
+    const count = this.props.turntableFrames || dim.frames;
+    this.setState((s) => ({ pdp: { ...s.pdp, progress: 0 } }));
+    this.frameCache.set(key, null);
+    try {
+      const frames = await this.M.bakeFrames(this.spec(p, ci), {
+        count, w: dim.fw, h: dim.fh,
+        onProgress: (v) => { if (this.mounted) this.setState((s) => ({ pdp: { ...s.pdp, progress: v } })); },
+      });
+      this.frameCache.set(key, frames);
+      if (this.mounted) this.forceUpdate();
+    } catch (e) { this.frameCache.delete(key); }
+  }
+
+  frames() {
+    const p = this.find(this.state.route.id);
+    if (!p) return null;
+    return this.frameCache.get(this.tkey(p, this.state.pdp.color, "frames")) || null;
+  }
+
+  openProduct(id) {
+    const p = this.find(id);
+    if (!p) return;
+    const recent = [id, ...this.state.recent.filter((x) => x !== id)].slice(0, 8);
+    this.setState({ recent, pdp: { ...this.state.pdp, color: 0, size: null, qty: 1, frame: 0, progress: 0, zoom: 1, pan: [0, 0], full: false, tab: "description" } }, () => {
+      this.persist();
+      this.loadFrames(p, 0);
+    });
+  }
+
+  viewerDrag = (e) => {
+    const el = e.currentTarget;
+    el.setPointerCapture && el.setPointerCapture(e.pointerId);
+    const frames = this.frames();
+    const n = frames ? frames.length : 36;
+    const start = { x: e.clientX, y: e.clientY, frame: this.state.pdp.frame, pan: this.state.pdp.pan };
+    const move = (ev) => {
+      const dx = ev.clientX - start.x, dy = ev.clientY - start.y;
+      if (this.state.pdp.mode === "pan" && this.state.pdp.zoom > 1) {
+        const lim = 120 * (this.state.pdp.zoom - 1);
+        this.setState((s) => ({ pdp: { ...s.pdp, pan: [Math.max(-lim, Math.min(lim, start.pan[0] + dx)), Math.max(-lim, Math.min(lim, start.pan[1] + dy))] } }));
+      } else {
+        const f = ((Math.round(start.frame + dx / 9) % n) + n) % n;
+        this.setState((s) => ({ pdp: { ...s.pdp, frame: f } }));
+      }
+    };
+    const up = () => { window.removeEventListener("pointermove", move); window.removeEventListener("pointerup", up); };
+    window.addEventListener("pointermove", move);
+    window.addEventListener("pointerup", up);
+  };
+
+  viewerWheel = (e) => {
+    e.preventDefault();
+    this.setState((s) => ({ pdp: { ...s.pdp, zoom: Math.max(1, Math.min(3, s.pdp.zoom * (e.deltaY > 0 ? 0.9 : 1.1))) } }));
+  };
+
+  /* -------------------------------------------------------------- stages */
+
+  syncStages() {
+    if (!this.M || !this.M.supported()) return;
+    const heroEl = this.heroStageRef.current;
+    if (heroEl && !this.heroStage) {
+      const p = this.find("orbital-hood") || this.products[0];
+      if (p) {
+        this.heroStage = this.M.createStage(heroEl, this.spec(p, 0), { bg: this.M.BG });
+        this.heroStage.setSpin(this.props.autoSpin === false ? 0 : -0.0022);
+      }
+    } else if (!heroEl && this.heroStage) { this.heroStage.dispose(); this.heroStage = null; }
+
+    const stEl = this.studioStageRef.current;
+    if (stEl && !this.studioStage) {
+      const sp = this.state.studio.spec || { garment: "hoodie", color: "#c4c4c4", fabric: "Fleece" };
+      this.studioStage = this.M.createStage(stEl, sp, { bg: this.M.BG });
+      this.studioStage.setSpin(this.props.autoSpin === false ? 0 : -0.0016);
+    } else if (!stEl && this.studioStage) { this.studioStage.dispose(); this.studioStage = null; }
+  }
+
+  /* ----------------------------------------------------------- cart etc */
+
+  flash(msg) {
+    clearTimeout(this.toastTimer);
+    this.setState({ toast: msg });
+    this.toastTimer = setTimeout(() => this.mounted && this.setState({ toast: null }), 2400);
+  }
+
+  addToCart(p, ci, size, qty, opts) {
+    const sizes = p.sizes || [];
+    const chosen = size || (sizes.length === 1 ? sizes[0] : null);
+    if (!chosen) { this.flash("Pick a size first"); return; }
+    const color = (p.colors[ci] || p.colors[0]).name;
+    const key = p.id + "|" + color + "|" + chosen;
+    const cart = [...this.state.cart];
+    const i = cart.findIndex((l) => l.key === key);
+    if (i >= 0) cart[i] = { ...cart[i], qty: cart[i].qty + (qty || 1) };
+    else cart.push({ key, id: p.id, ci, color, size: chosen, qty: qty || 1 });
+    this.setState({ cart, drawerOpen: !(opts && opts.silent) }, () => this.persist());
+    if (opts && opts.silent) this.flash("Added to bag");
+  }
+
+  setQty(key, qty) {
+    const cart = this.state.cart.map((l) => (l.key === key ? { ...l, qty } : l)).filter((l) => l.qty > 0);
+    this.setState({ cart }, () => this.persist());
+  }
+
+  removeLine(key) { this.setState({ cart: this.state.cart.filter((l) => l.key !== key) }, () => this.persist()); }
+
+  toggleWish(id) {
+    const w = this.state.wishlist.includes(id) ? this.state.wishlist.filter((x) => x !== id) : [...this.state.wishlist, id];
+    this.setState({ wishlist: w }, () => this.persist());
+    this.flash(w.includes(id) ? "Saved to wishlist" : "Removed from wishlist");
+  }
+
+  subtotalValue() {
+    return this.state.cart.reduce((n, l) => { const p = this.find(l.id); return n + (p ? p.price * l.qty : 0); }, 0);
+  }
+
+  shippingValue() {
+    if (!this.state.cart.length) return 0;
+    return this.state.co.form.delivery === "express" ? 199 : 0;
+  }
+
+  /* ------------------------------------------------------------ filters */
+
+  toggleFilter(group, value) {
+    const cur = this.state.filters[group] || [];
+    const next = cur.includes(value) ? cur.filter((v) => v !== value) : [...cur, value];
+    this.setState({ filters: { ...this.state.filters, [group]: next } });
+  }
+
+  clearFilters() {
+    this.setState({ filters: { gender: [], type: [], fabric: [], size: [], color: [], collection: [], maxPrice: 5000 } });
+  }
+
+  visible() {
+    const r = this.state.route, f = this.state.filters;
+    let list = this.products.slice();
+    if (r.name === "category") {
+      if (r.cat === "new") list = list.filter((p) => p.isNew);
+      else if (r.cat === "sale") list = list.filter((p) => p.onSale);
+      else if (r.cat !== "all") list = list.filter((p) => p.category === r.cat);
+      if (r.sub) list = list.filter((p) => p.subCategory === r.sub);
+      if (r.campaign && this.D) {
+        const camp = this.D.findCampaign(r.campaign);
+        if (camp) list = list.filter((p) => p.campaign === r.campaign || p.collection === camp.collection);
+      }
+    }
+    if (r.name === "search") {
+      const q = (this.state.q || "").toLowerCase().trim();
+      if (q) list = list.filter((p) => (p.name + " " + p.category + " " + p.subCategory + " " + p.collection + " " + p.fabric).toLowerCase().includes(q));
+    }
+    if (f.gender.length) list = list.filter((p) => f.gender.includes(p.category));
+    if (f.type.length) list = list.filter((p) => f.type.includes(p.subCategory));
+    if (f.fabric.length) list = list.filter((p) => f.fabric.includes(p.fabric));
+    if (f.collection.length) list = list.filter((p) => f.collection.includes(p.collection));
+    if (f.size.length) list = list.filter((p) => (p.sizes || []).some((s) => f.size.includes(s)));
+    if (f.color.length) list = list.filter((p) => (p.colors || []).some((c) => f.color.includes(c.name)));
+    list = list.filter((p) => p.price <= f.maxPrice);
+    const s = this.state.sort;
+    if (s === "newest") list.sort((a, b) => (b.isNew ? 1 : 0) - (a.isNew ? 1 : 0));
+    else if (s === "priceAsc") list.sort((a, b) => a.price - b.price);
+    else if (s === "priceDesc") list.sort((a, b) => b.price - a.price);
+    else if (s === "popular") list.sort((a, b) => b.reviewCount - a.reviewCount);
+    else list.sort((a, b) => (b.isBestSeller ? 1 : 0) - (a.isBestSeller ? 1 : 0));
+    return list;
+  }
+
+  /* -------------------------------------------------------------- studio */
+
+  onStudioFile = async (file) => {
+    if (!file || !this.AI) return;
+    if (!/^image\//.test(file.type)) { this.flash("That is not an image"); return; }
+    const img = await this.AI.readFileAsDataURL(file);
+    this.setState((s) => ({ studio: { ...s.studio, img, status: "ready", log: ["Loaded " + file.name] } }));
+  };
+
+  analyse = async () => {
+    const st = this.state.studio;
+    if (!st.img || !this.AI) return;
+    this.setState((s) => ({ studio: { ...s.studio, status: "working", log: [...s.studio.log, "Measuring colour and silhouette…"] } }));
+    const { spec, metrics } = await this.AI.analyseGarment(st.img, st.note);
+    if (!this.mounted) return;
+    const log = [
+      "Dominant colour " + spec.color + " (" + spec.colorName + ")",
+      spec.source === "claude" ? "Claude classified it as a " + spec.garment : "Classified locally as a " + spec.garment,
+      "Building parametric block…",
+    ];
+    this.setState((s) => ({ studio: { ...s.studio, spec, metrics, status: "done", log: [...s.studio.log, ...log] } }), () => {
+      if (this.studioStage) this.studioStage.setSpec(spec);
+    });
+  };
+
+  patchSpec = (patch) => {
+    this.setState((s) => ({ studio: { ...s.studio, spec: { ...s.studio.spec, ...patch } } }), () => {
+      if (this.studioStage && this.state.studio.spec) this.studioStage.setSpec(this.state.studio.spec);
+    });
+  };
+
+  publish = () => {
+    const sp = this.state.studio.spec;
+    if (!sp) return;
+    const id = "studio-" + Date.now().toString(36);
+    const product = {
+      id, name: sp.name, price: sp.price, category: sp.category, subCategory: sp.subCategory,
+      collection: "Studio Lab", garment: sp.garment, fabric: sp.fabric,
+      colors: [{ name: sp.colorName, hex: sp.color }],
+      sizes: sp.garment === "cap" || sp.garment === "bag" ? ["OS"] : (this.D ? this.D.SIZES : ["S", "M", "L"]),
+      rating: 4.5, reviewCount: 0, inStock: true, isNew: true,
+      description: sp.description, material: sp.material, fit: sp.fit, studioBuilt: true,
+    };
+    this.setState({ extra: [product, ...this.state.extra] }, () => {
+      this.persist();
+      this.pumpThumbs();
+      this.flash("Published to catalogue");
+      this.go("#/p/" + id);
+    });
+  };
+
+  /* ------------------------------------------------------------ checkout */
+
+  coField = (k) => (e) => {
+    const v = e.target.value;
+    this.setState((s) => ({ co: { ...s.co, form: { ...s.co.form, [k]: v }, errors: { ...s.co.errors, [k]: null } } }));
+  };
+
+  coValidate() {
+    const f = this.state.co.form, step = this.state.co.step, err = {};
+    const need = (k, msg) => { if (!(f[k] || "").toString().trim()) err[k] = msg || "Required"; };
+    if (step === 0) {
+      need("name", "Enter your name"); need("email", "Enter your email");
+      if (f.email && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(f.email)) err.email = "That email looks wrong";
+      if (f.phone && !/^[0-9+\s-]{7,15}$/.test(f.phone)) err.phone = "Check the number";
+      need("phone", "Enter a phone number");
+    }
+    if (step === 1) {
+      need("address"); need("city"); need("state");
+      if (!/^[0-9]{6}$/.test(f.pin || "")) err.pin = "6-digit PIN code";
+    }
+    if (step === 3) {
+      if (!/^[0-9\s]{12,19}$/.test(f.card || "")) err.card = "Enter a card number";
+      if (!/^[0-9]{2}\/?[0-9]{2}$/.test(f.exp || "")) err.exp = "MM/YY";
+      if (!/^[0-9]{3,4}$/.test(f.cvv || "")) err.cvv = "CVV";
+      need("cardName", "Name on card");
+    }
+    return err;
+  }
+
+  coNext = () => {
+    const err = this.coValidate();
+    if (Object.keys(err).length) { this.setState((s) => ({ co: { ...s.co, errors: err } })); return; }
+    const step = this.state.co.step;
+    if (step === 3) {
+      const orderId = "NX" + Math.random().toString(36).slice(2, 8).toUpperCase();
+      this.setState((s) => ({ co: { ...s.co, step: 4, orderId }, cart: [] }), () => this.persist());
+      return;
+    }
+    this.setState((s) => ({ co: { ...s.co, step: step + 1, errors: {} } }));
+  };
+
+  coBack = () => this.setState((s) => ({ co: { ...s.co, step: Math.max(0, s.co.step - 1), errors: {} } }));
+
+  /* ---------------------------------------------------------------- auth */
+
+  doLogin = () => {
+    const l = this.state.login;
+    if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(l.email)) { this.setState({ login: { ...l, error: "Enter a valid email" } }); return; }
+    if ((l.password || "").length < 6) { this.setState({ login: { ...l, error: "Password needs 6+ characters" } }); return; }
+    const name = l.email.split("@")[0];
+    this.setState({ user: { name, email: l.email }, login: { ...l, error: "", password: "" } }, () => { this.persist(); this.flash("Signed in as " + name); this.go("#/"); });
+  };
+
+  logout = () => this.setState({ user: null }, () => { this.persist(); this.flash("Signed out"); });
+
+  /* ------------------------------------------------------------- view VM */
+
+  card = (p) => {
+    const hovered = this.state.hoverId === p.id;
+    const badges = [];
+    if (p.onSale && p.compareAt) badges.push({ label: "Save " + Math.round((1 - p.price / p.compareAt) * 100) + "%", tone: "sale" });
+    if (p.isNew) badges.push({ label: "New", tone: "custom" });
+    if (p.studioBuilt) badges.push({ label: "Studio built", tone: "custom" });
+    return {
+      id: p.id, name: p.name, sub: p.subCategory, price: p.price, compareAt: p.compareAt || null,
+      rating: p.rating, reviewCount: p.reviewCount, badges,
+      colors: (p.colors || []).slice(0, 4),
+      thumb: hovered && p.lifestyle ? p.lifestyle : this.thumbSrc(p, 0, hovered),
+      loading: !this.thumbFor(p, 0, false),
+      wished: this.state.wishlist.includes(p.id),
+      heartFill: this.state.wishlist.includes(p.id) ? "#1c1c1c" : "none",
+      quickLabel: (p.sizes || []).length > 1 ? "View" : "Quick add",
+      onOpen: () => this.go("#/p/" + p.id),
+      onEnter: () => this.setState({ hoverId: p.id }),
+      onLeave: () => this.setState({ hoverId: null }),
+      onWish: (e) => { e.stopPropagation(); this.toggleWish(p.id); },
+      onQuick: (e) => {
+        e.stopPropagation();
+        if ((p.sizes || []).length > 1) this.go("#/p/" + p.id);
+        else this.addToCart(p, 0, (p.sizes || [])[0], 1, { silent: true });
+      },
+    };
+  };
+
+  shellVals() {
+    const s = this.state, w = s.w;
+    const boot = {
+      loadFailed: !!s.loadFailed, loadTitle: s.loadTitle || "", loadBody: s.loadBody || "",
+      loadStepList: (s.loadSteps || []).map((t, i) => ({ n: (i + 1 < 10 ? "0" : "") + (i + 1), text: t })),
+      onReload: () => location.reload(),
+    };
+    const anns = this.D ? this.D.ANNOUNCEMENTS : ["FREE DOORSTEP DELIVERY IN INDIA"];
+    const cats = this.D ? this.D.CATEGORIES : [];
+    const nav = [
+      { label: "New in", hash: "#/new", on: s.route.cat === "new" },
+      { label: "Clothing", hash: null, on: s.route.name === "category" && s.route.cat !== "new" && s.route.cat !== "sale" },
+      { label: "Collections", hash: "#/collections", on: s.route.name === "collections" },
+      { label: "3D Studio", hash: "#/studio", on: s.route.name === "studio" },
+      { label: "Sale", hash: "#/sale", on: s.route.cat === "sale" },
+      { label: "About", hash: "#/about", on: s.route.name === "about" },
+    ];
+    const q = (s.q || "").toLowerCase().trim();
+    const sugg = q ? this.products.filter((p) => (p.name + " " + p.category + " " + p.subCategory + " " + p.collection).toLowerCase().includes(q)).slice(0, 6) : this.products.filter((p) => p.isTrending || p.isBestSeller).slice(0, 4);
+    const cartLines = s.cart.map((l) => {
+      const p = this.find(l.id) || { name: "Item", price: 0, colors: [] };
+      return {
+        key: l.key, name: p.name, meta: l.color + " · Size " + l.size, qty: l.qty,
+        total: this.money(p.price * l.qty), thumb: this.thumbSrc(p, l.ci || 0, false),
+        onQty: (n) => this.setQty(l.key, n), onRemove: () => this.removeLine(l.key), onOpen: () => { this.setState({ drawerOpen: false }); this.go("#/p/" + l.id); },
+      };
+    });
+    return {
+      ready: s.ready, isMobile: w < 1060, isDesktop: w >= 1060,
+      annVisible: this.props.announcementBar !== false,
+      annText: anns[s.annIdx % anns.length],
+      isHome: s.route.name === "home", isAbout: s.route.name === "about",
+      isCategory: s.route.name === "category", isProduct: s.route.name === "product",
+      isStudio: s.route.name === "studio", isSearchPage: s.route.name === "search",
+      isCollections: s.route.name === "collections",
+      isWishlist: s.route.name === "wishlist", isCart: s.route.name === "cart",
+      isCheckout: s.route.name === "checkout", isLogin: s.route.name === "login",
+      noWebgl: !!this.M && !this.M.supported(),
+      navItems: nav.map((n) => ({
+        label: n.label, color: n.on ? "#ffffff" : "#a7a7a7", underline: n.on ? "#ffffff" : "transparent",
+        onClick: () => (n.hash ? this.go(n.hash) : this.setState({ navOpen: !this.state.navOpen })),
+      })),
+      navOpen: s.navOpen, menuOpen: s.menuOpen,
+      menuCols: w < 700 ? "1fr" : "repeat(4,minmax(0,1fr))",
+      catMenu: cats.map((c) => ({
+        label: c.label, onClick: () => this.go("#/c/" + c.id),
+        subs: c.subs.map((sub) => ({ label: sub, onClick: () => this.go("#/c/" + c.id + "/" + encodeURIComponent(sub)) })),
+      })),
+      toggleMenu: () => this.setState({ menuOpen: !s.menuOpen, navOpen: false }),
+      openSearch: () => this.setState({ searchOpen: true }),
+      closeSearch: () => this.setState({ searchOpen: false }),
+      searchOpen: s.searchOpen, q: s.q, hasQuery: !!q, noResults: !!q && sugg.length === 0,
+      searchAllLabel: "See all results for “" + s.q + "”",
+      onQ: (e) => this.setState({ q: e.target.value }),
+      onSearchKey: (e) => { if (e.key === "Enter") { this.setState({ searchOpen: false }); this.go("#/search?q=" + encodeURIComponent(this.state.q)); } if (e.key === "Escape") this.setState({ searchOpen: false }); },
+      submitSearch: () => { this.setState({ searchOpen: false }); this.go("#/search?q=" + encodeURIComponent(s.q)); },
+      suggestions: sugg.map((p) => ({
+        name: p.name, meta: p.subCategory + " · " + p.collection, price: this.money(p.price),
+        thumb: this.thumbSrc(p, 0, false), onClick: () => { this.setState({ searchOpen: false }); this.go("#/p/" + p.id); },
+      })),
+      ...boot,
+      pageAnim: ((s.pageTick || 0) % 2 ? "nx-page-b" : "nx-page") + " 400ms cubic-bezier(.22,.8,.28,1) both",
+      stop: (e) => e.stopPropagation(),
+      cartCount: s.cart.reduce((n, l) => n + l.qty, 0), hasCart: s.cart.length > 0,
+      wishCount: s.wishlist.length, hasWish: s.wishlist.length > 0,
+      accountLabel: s.user ? s.user.name : "Log in",
+      goLogin: () => this.go(s.user ? "#/account" : "#/login"),
+      goWishlist: () => this.go("#/wishlist"), goCart: () => { this.setState({ drawerOpen: false }); this.go("#/cart"); },
+      goCheckout: () => { this.setState({ drawerOpen: false }); this.go("#/checkout"); },
+      goCollections: () => this.go("#/collections"),
+      goStudio: () => this.go("#/studio"), goShopAll: () => { this.setState({ drawerOpen: false }); this.go("#/c/all"); },
+      openDrawer: () => this.setState({ drawerOpen: true }), closeDrawer: () => this.setState({ drawerOpen: false }),
+      drawerOpen: s.drawerOpen, drawerTitle: s.cart.length ? "Added to bag" : "Your bag",
+      cartLines, cartEmpty: !s.cart.length, cartAny: s.cart.length > 0,
+      subtotal: this.money(this.subtotalValue()),
+      toast: s.toast,
+      gridCols: w < 620 ? "repeat(2,minmax(0,1fr))" : w < 1000 ? "repeat(3,minmax(0,1fr))" : "repeat(4,minmax(0,1fr))",
+      footCols: w < 760 ? "1fr" : "1.4fr repeat(3,1fr) 1.2fr",
+      footCols3: [
+        { title: "Shop", links: [{ label: "Men", h: "#/c/men" }, { label: "Women", h: "#/c/women" }, { label: "Kids", h: "#/c/kids" }, { label: "New in", h: "#/new" }, { label: "Sale", h: "#/sale" }] },
+        { title: "Help", links: [{ label: "Shipping", h: "#/about" }, { label: "Returns", h: "#/about" }, { label: "Size guide", h: "#/about" }, { label: "Track order", h: "#/account" }] },
+        { title: "Company", links: [{ label: "About", h: "#/about" }, { label: "3D Studio", h: "#/studio" }, { label: "Wishlist", h: "#/wishlist" }, { label: "Account", h: "#/login" }] },
+      ].map((c) => ({ title: c.title, links: c.links.map((l) => ({ label: l.label, onClick: () => this.go(l.h) })) })),
+      socials: [{ label: "Instagram", short: "IG", href: "#/about" }, { label: "TikTok", short: "TT", href: "#/about" }, { label: "YouTube", short: "YT", href: "#/about" }],
+      newsletter: s.newsletter,
+      onNewsletter: (e) => this.setState({ newsletter: e.target.value }),
+      onJoin: () => { if (/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(s.newsletter)) { this.setState({ newsletter: "" }); this.flash("You are on the list"); } else this.flash("Enter a valid email"); },
+    };
+  }
+
+  homeVals() {
+    const s = this.state, w = s.w;
+    const all = this.products;
+    const pick = (fn, n) => all.filter(fn).slice(0, n).map(this.card);
+    const hero = this.find("orbital-hood") || all[0];
+    const camps = this.D ? this.D.CAMPAIGNS : [];
+    const band = camps.find((c) => c.id === "fresh") || camps[0];
+    return {
+      hasBand: !!band,
+      bandImg: band ? (w < 760 ? band.tall : band.wide) : "",
+      bandHeight: w < 760 ? "min(130vw,620px)" : "min(46vw,560px)",
+      bandEyebrow: band ? band.eyebrow : "", bandTitle: band ? band.title : "", bandCopy: band ? band.copy : "",
+      bandOnClick: () => this.go(band ? "#/k/" + band.id : "#/c/all"),
+      heroStageRef: this.heroStageRef,
+      heroCols: w < 940 ? "1fr" : "0.92fr 1.08fr",
+      heroLookLabel: hero ? hero.name.toUpperCase() : "LOADING",
+      heroStats: [{ value: "16", label: "Blocks in 3D" }, { value: "36", label: "Frames per turn" }, { value: "48h", label: "Studio to door" }],
+      stripCols: w < 620 ? "repeat(2,minmax(0,1fr))" : "repeat(4,minmax(0,1fr))",
+      tileCols: w < 620 ? "repeat(2,minmax(0,1fr))" : w < 1000 ? "repeat(3,minmax(0,1fr))" : "repeat(4,minmax(0,1fr))",
+      promoCols: w < 940 ? "1fr" : "1fr 1fr",
+      heroStrip: all.filter((p) => p.isTrending || p.isBestSeller).slice(0, 4).map((p) => ({
+        name: p.name.toUpperCase(), price: this.money(p.price), thumb: this.thumbSrc(p, 0, false),
+        onClick: () => this.go("#/p/" + p.id), onEnter: () => this.setState({ hoverId: p.id }),
+      })),
+      marquee: [1, 2].flatMap(() => [{ text: "Proudly homegrown in India" }, { text: "Every garment ships with its 3D twin" }, { text: "Free doorstep delivery" }, { text: "Render 01 is live" }]),
+      homeRows: [
+        { eyebrow: "Just dropped", title: "New arrivals", items: pick((p) => p.isNew, 4), onAll: () => this.go("#/new") },
+        { eyebrow: "Loved most", title: "Best sellers", items: pick((p) => p.isBestSeller, 4), onAll: () => this.go("#/c/all") },
+        { eyebrow: "Moving fast", title: "Trending now", items: pick((p) => p.isTrending, 4), onAll: () => this.go("#/c/all") },
+      ],
+      catTiles: camps.map((c) => ({
+        label: c.title, count: c.eyebrow, thumb: c.tile, onClick: () => this.go("#/k/" + c.id),
+      })),
+      collectionRows: camps.map((c, i) => ({
+        title: c.title, eyebrow: c.eyebrow, copy: c.copy,
+        img: w < 760 || c.portrait ? c.tall : c.wide,
+        height: w < 760 ? "min(130vw,600px)" : c.portrait ? "min(64vw,700px)" : "min(42vw,520px)",
+        count: all.filter((p) => p.campaign === c.id || p.collection === c.collection).length + " pieces",
+        align: i % 2 ? "flex-end" : "flex-start",
+        onClick: () => this.go("#/k/" + c.id),
+      })),
+      studioSteps: [
+        { n: "01", title: "Drop a photograph", body: "Any clothing shot — flat-lay, on-body, a screenshot." },
+        { n: "02", title: "We measure it", body: "Dominant colour, silhouette profile and weave variance, read off the pixels." },
+        { n: "03", title: "Claude classifies it", body: "Garment type, fabric and fit come back as a structured spec." },
+        { n: "04", title: "The block builds", body: "A parametric 3D twin you can turn, wireframe, animate and publish." },
+      ],
+    };
+  }
+
+  catalogVals() {
+    const s = this.state, w = s.w, r = s.route;
+    const list = this.visible();
+    const cats = this.D ? this.D.CATEGORIES : [];
+    const label = { all: "All garments", new: "New arrivals", sale: "Sale", men: "Men", women: "Women", kids: "Kids", unisex: "Unisex" };
+    const all = this.products;
+    const count = (fn) => all.filter(fn).length;
+    const uniq = (arr) => [...new Set(arr)];
+    const group = (id, lbl, values, swatches) => ({
+      id, label: lbl, open: s.openF[id] !== false, chevron: s.openF[id] !== false ? "–" : "+",
+      onToggle: () => this.setState({ openF: { ...s.openF, [id]: !(s.openF[id] !== false) } }),
+      options: values.map((v) => {
+        const on = (s.filters[id] || []).includes(v.value);
+        return {
+          label: v.label, count: v.count, swatch: swatches ? v.swatch : null,
+          box: on ? "#ffffff" : "#4a4a4a", fill: on ? "#ffffff" : "transparent", color: on ? "#ffffff" : "#a7a7a7",
+          onChange: () => this.toggleFilter(id, v.value),
+        };
+      }),
+    });
+    const colorList = [];
+    all.forEach((p) => (p.colors || []).forEach((c) => { if (!colorList.some((x) => x.name === c.name)) colorList.push(c); }));
+    const chips = [];
+    ["gender", "type", "fabric", "size", "color", "collection"].forEach((g) => (s.filters[g] || []).forEach((v) => chips.push({ label: v, onRemove: () => this.toggleFilter(g, v) })));
+    if (s.filters.maxPrice < 5000) chips.push({ label: "Under " + this.money(s.filters.maxPrice), onRemove: () => this.setState({ filters: { ...s.filters, maxPrice: 5000 } }) });
+    const railOpen = w >= 900 ? true : !!s.railOpen;
+    const camp = r.campaign && this.D ? this.D.findCampaign(r.campaign) : null;
+    return {
+      hasCatHero: !!camp,
+      catHeroImg: camp ? (w < 760 ? camp.tall : camp.wide) : "",
+      catHeroTitle: camp ? camp.title : "", catHeroEyebrow: camp ? camp.eyebrow : "", catHeroCopy: camp ? camp.copy : "",
+      catHeroHeight: w < 760 ? "min(120vw,560px)" : "min(48vw,520px)",
+      catCrumb: camp ? "Collections / " + camp.title : r.sub ? (label[r.cat] || r.cat) + " / " + r.sub : "Shop",
+      catTitle: camp ? camp.title : r.sub || label[r.cat] || "All garments",
+      catCount: list.length + (list.length === 1 ? " piece" : " pieces"),
+      catLayout: w < 900 ? "1fr" : railOpen ? "230px minmax(0,1fr)" : "minmax(0,1fr)",
+      catGridCols: w < 620 ? "repeat(2,minmax(0,1fr))" : w < 1000 ? "repeat(2,minmax(0,1fr))" : "repeat(3,minmax(0,1fr))",
+      catEmpty: list.length === 0,
+      grid: list.map(this.card),
+      railOpen, railLabel: s.railOpen ? "Hide filters" : "Filters",
+      toggleRail: () => this.setState({ railOpen: !s.railOpen }),
+      sortValue: s.sort,
+      sortOptions: [
+        { value: "featured", label: "Featured" }, { value: "newest", label: "Newest" },
+        { value: "priceAsc", label: "Price: low to high" }, { value: "priceDesc", label: "Price: high to low" },
+        { value: "popular", label: "Most reviewed" },
+      ],
+      onSort: (e) => this.setState({ sort: e.target.value }),
+      filterGroups: [
+        group("gender", "Gender", cats.map((c) => ({ value: c.id, label: c.label, count: count((p) => p.category === c.id) }))),
+        group("type", "Type", uniq(all.map((p) => p.subCategory)).sort().map((t) => ({ value: t, label: t, count: count((p) => p.subCategory === t) }))),
+        group("fabric", "Fabric", uniq(all.map((p) => p.fabric)).sort().map((f) => ({ value: f, label: f, count: count((p) => p.fabric === f) }))),
+        group("size", "Size", (this.D ? this.D.SIZES : []).map((z) => ({ value: z, label: z, count: count((p) => (p.sizes || []).includes(z)) }))),
+        group("color", "Colour", colorList.map((c) => ({ value: c.name, label: c.name, swatch: c.hex, count: count((p) => (p.colors || []).some((x) => x.name === c.name)) })), true),
+        group("collection", "Collection", uniq(all.map((p) => p.collection)).map((c) => ({ value: c, label: c, count: count((p) => p.collection === c) }))),
+      ],
+      chips, hasChips: chips.length > 0, onClearAll: () => this.clearFilters(),
+      priceValue: s.filters.maxPrice, priceLabel: this.money(s.filters.maxPrice),
+      onPrice: (e) => this.setState({ filters: { ...s.filters, maxPrice: +e.target.value } }),
+    };
+  }
+
+  productVals() {
+    const s = this.state, w = s.w, d = s.pdp;
+    const p = this.find(s.route.id);
+    if (!p) return { p: {}, viewerTools: [], colorOpts: [], pdpTabs: [], reviews: [], pdpRows: [] };
+    const frames = this.frames();
+    const ci = Math.min(d.color, (p.colors || []).length - 1);
+    const colour = (p.colors || [])[ci] || { name: "—", hex: "#1c1c1c" };
+    const wished = s.wishlist.includes(p.id);
+    const tool = (short, label, on, fn) => ({
+      short, label, onClick: fn,
+      border: on ? "#1c1c1c" : "rgba(28,28,28,.35)", bg: on ? "#1c1c1c" : "rgba(255,255,255,.5)", fg: on ? "#ffffff" : "#1c1c1c",
+    });
+    const setPdp = (patch) => this.setState((st) => ({ pdp: { ...st.pdp, ...patch } }));
+    const related = this.products.filter((x) => x.id !== p.id && (x.subCategory === p.subCategory || x.collection === p.collection)).slice(0, 4).map(this.card);
+    const recent = s.recent.filter((id) => id !== p.id).map((id) => this.find(id)).filter(Boolean).slice(0, 4).map(this.card);
+    const rows = [];
+    if (related.length) rows.push({ title: "Wears well with", items: related });
+    if (recent.length) rows.push({ title: "Recently viewed", items: recent });
+    const tabs = [
+      { id: "description", label: "Description", body: p.description },
+      { id: "material", label: "Material", body: p.material + ". Machine wash cold, dry flat, no tumble." },
+      { id: "fit", label: "Fit", body: p.fit + ". Modelled at 5'9\" wearing size M. The 3D twin above is the production pattern, not a stylised render." },
+      { id: "shipping", label: "Shipping & returns", body: "Free doorstep delivery across India in 4–6 working days; express in 2. Returns and exchanges accepted within 14 days on unworn pieces with tags." },
+    ];
+    return {
+      p: {
+        name: p.name, collection: p.collection + " · " + p.subCategory, price: p.price, compareAt: p.compareAt || null,
+        rating: p.rating, reviewCount: p.reviewCount, sizes: p.sizes || [], size: d.size, qty: d.qty,
+        colorName: colour.name, crumb: "← Back to " + (p.subCategory || "shop"),
+        viewerLabel: p.name.toUpperCase() + " — " + colour.name.toUpperCase(),
+        heartFill: wished ? "currentColor" : "none", wishLabel: wished ? "Saved" : "Save to wishlist",
+        reviewSummary: p.rating.toFixed(1) + " out of 5 · " + p.reviewCount + " reviews",
+        onBack: () => this.go("#/c/" + p.category),
+      },
+      pdpCols: w < 940 ? "1fr" : "1.05fr 0.95fr",
+      hasLookbook: !!p.lifestyle,
+      lookbookImg: (function () { if (!p.lifestyle) return ""; const c = p.campaign && this.D ? this.D.findCampaign(p.campaign) : null; return w < 760 ? p.lifestyle : (c ? c.wide : p.lifestyle); }).call(this),
+      lookbookHeight: w < 760 ? "min(130vw,620px)" : "min(44vw,560px)",
+      lookbookLabel: p.campaign && this.D && this.D.findCampaign(p.campaign) ? this.D.findCampaign(p.campaign).title + " campaign" : "In the campaign",
+      pdpAspect: w < 940 ? "1 / 1" : "4 / 5",
+      reviewCols: w < 760 ? "1fr" : "repeat(3,minmax(0,1fr))",
+      frameSrc: frames ? frames[Math.min(d.frame, frames.length - 1)] : BLANK,
+      frameLoading: !frames,
+      progressPct: Math.round((d.progress || 0) * 100) + "%",
+      frameIdx: d.frame, frameMax: frames ? frames.length - 1 : 35,
+      frameLabel: "Frame " + (d.frame + 1) + " / " + (frames ? frames.length : 36),
+      onFrameSlide: (e) => setPdp({ frame: +e.target.value }),
+      showHint: !!frames && d.frame === 0 && d.zoom === 1,
+      pdpZoom: d.zoom, panX: d.pan[0] + "px", panY: d.pan[1] + "px",
+      onViewerDown: this.viewerDrag, onViewerWheel: this.viewerWheel,
+      viewerTools: [
+        tool("360", "Rotate", d.mode === "rotate", () => setPdp({ mode: "rotate" })),
+        tool("PAN", "Pan while zoomed", d.mode === "pan", () => setPdp({ mode: "pan", zoom: Math.max(1.4, d.zoom) })),
+        tool("+", "Zoom in", false, () => setPdp({ zoom: Math.min(3, d.zoom * 1.25) })),
+        tool("–", "Zoom out", false, () => setPdp({ zoom: Math.max(1, d.zoom / 1.25) })),
+        tool("RST", "Reset view", false, () => setPdp({ zoom: 1, pan: [0, 0], frame: 0, mode: "rotate" })),
+        tool("FULL", "Fullscreen", false, () => setPdp({ full: true })),
+      ],
+      pdpFull: d.full, closeFull: () => setPdp({ full: false }),
+      colorOpts: (p.colors || []).map((c, i) => ({
+        name: c.name, hex: c.hex, border: i === ci ? "#1c1c1c" : "rgba(28,28,28,.3)",
+        onPick: () => { setPdp({ color: i, frame: 0, progress: 0, zoom: 1, pan: [0, 0] }); this.ensureThumb(p, i); this.loadFrames(p, i); },
+      })),
+      onSize: (z) => setPdp({ size: z }),
+      sizeWarning: s.sizeWarning === p.id,
+      onQtyChange: (n) => setPdp({ qty: n }),
+      onAddToCart: () => { if (!d.size && (p.sizes || []).length > 1) { this.setState({ sizeWarning: p.id }); this.flash("Pick a size first"); return; } this.setState({ sizeWarning: null }); this.addToCart(p, ci, d.size, d.qty); },
+      onBuyNow: () => { if (!d.size && (p.sizes || []).length > 1) { this.setState({ sizeWarning: p.id }); this.flash("Pick a size first"); return; } this.addToCart(p, ci, d.size, d.qty, { silent: true }); this.go("#/checkout"); },
+      onWishPdp: () => this.toggleWish(p.id),
+      openSizeGuide: () => setPdp({ sizeGuide: true }),
+      closeSizeGuide: () => setPdp({ sizeGuide: false }),
+      sizeGuideOpen: d.sizeGuide,
+      sizeGuideRows: [
+        { size: "XS", chest: "96", waist: "76", length: "64" }, { size: "S", chest: "102", waist: "82", length: "66" },
+        { size: "M", chest: "108", waist: "88", length: "68" }, { size: "L", chest: "116", waist: "96", length: "70" },
+        { size: "XL", chest: "124", waist: "104", length: "72" }, { size: "XXL", chest: "132", waist: "112", length: "74" },
+      ],
+      pdpTabs: tabs.map((t) => ({
+        label: t.label, body: t.body, open: d.tab === t.id, sign: d.tab === t.id ? "–" : "+",
+        onClick: () => setPdp({ tab: d.tab === t.id ? null : t.id }),
+      })),
+      reviews: [
+        { rating: 5, body: "The 3D view is the reason I bought it — the volume is exactly what showed up. Boxy without swallowing me.", who: "Aarav, Pune" },
+        { rating: 4, body: "Heavier than I expected in the best way. Sized down one and it sits perfectly.", who: "Ishita, Bengaluru" },
+        { rating: 5, body: "Third NEXORA piece. Stitching and fabric hold up after a month of daily wear.", who: "Rohan, Delhi" },
+      ],
+      pdpRows: rows,
+    };
+  }
+
+  studioVals() {
+    const s = this.state, w = s.w, st = s.studio, sp = st.spec;
+    const stage = this.studioStage;
+    const tool = (label, on, fn) => ({
+      label, onClick: fn,
+      border: on ? "#1c1c1c" : "rgba(28,28,28,.35)", bg: on ? "#1c1c1c" : "rgba(255,255,255,.5)", fg: on ? "#ffffff" : "#1c1c1c",
+    });
+    const G = [["hoodie", "Hoodie"], ["jacket", "Jacket"], ["tee", "Boxy tee"], ["vest", "Vest"], ["pants", "Baggy pants"], ["skirt", "Pleat skirt"], ["dress", "Column dress"], ["cap", "Cap"], ["bag", "Tote"]];
+    const palette = (st.metrics && st.metrics.palette) || [];
+    return {
+      studioStageRef: this.studioStageRef,
+      studioCols: w < 1000 ? "1fr" : "380px minmax(0,1fr)",
+      readoutCols: w < 620 ? "repeat(2,minmax(0,1fr))" : "repeat(4,minmax(0,1fr))",
+      hasUpload: !!st.img, noUpload: !st.img, uploadSrc: st.img || BLANK,
+      dropBorder: s.dragging ? "#ffffff" : "#4a4a4a", dropBg: s.dragging ? "#101010" : "#080808",
+      onDragOver: (e) => { e.preventDefault(); if (!s.dragging) this.setState({ dragging: true }); },
+      onDragLeave: () => this.setState({ dragging: false }),
+      onDrop: (e) => { e.preventDefault(); this.setState({ dragging: false }); const f = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0]; if (f) this.onStudioFile(f); },
+      onPickFile: (e) => { const f = e.target.files && e.target.files[0]; if (f) this.onStudioFile(f); },
+      studioNote: st.note, onNote: (e) => this.setState({ studio: { ...st, note: e.target.value } }),
+      analyseDisabled: !st.img || st.status === "working",
+      analyseLabel: st.status === "working" ? "Reading the photo…" : sp ? "Re-analyse" : "Analyse and build",
+      onAnalyse: this.analyse,
+      hasLog: st.log.length > 0, studioLog: st.log.map((t, i) => ({ text: (i + 1 < 10 ? "0" : "") + (i + 1) + " · " + t })),
+      hasSpec: !!sp,
+      specGarment: sp ? sp.garment : "hoodie", specFabric: sp ? sp.fabric : "Cotton",
+      specName: sp ? sp.name : "", specPrice: sp ? sp.price : 0,
+      specNote: sp ? (sp.note || (sp.source === "claude" ? "Claude classified this garment from the photograph. Every field is editable before you publish." : "Classified from local image measurements. Every field is editable before you publish.")) : "",
+      garmentOptions: G.map(([v, l]) => ({ value: v, label: l })),
+      fabricOptions: (this.D ? this.D.FABRICS : []).map((f) => ({ value: f, label: f })),
+      onSpecGarment: (e) => this.patchSpec({ garment: e.target.value }),
+      onSpecFabric: (e) => this.patchSpec({ fabric: e.target.value }),
+      onSpecName: (e) => this.patchSpec({ name: e.target.value }),
+      onSpecPrice: (e) => this.patchSpec({ price: Math.max(0, +e.target.value || 0) }),
+      paletteOpts: palette.map((c) => ({
+        hex: c.hex, label: c.hex + " · " + Math.round(c.share * 100) + "%",
+        border: sp && sp.color === c.hex ? "#1c1c1c" : "rgba(28,28,28,.3)",
+        onPick: () => this.patchSpec({ color: c.hex }),
+      })),
+      onPublish: this.publish,
+      stageLabel: sp ? (sp.name || "Untitled").toUpperCase() : "SAMPLE BLOCK — ORBITAL HOODIE",
+      stageTools: [
+        tool("Rotate", true, () => { if (stage) stage.reset(); }),
+        tool("Zoom in", false, () => { if (stage) stage.zoomBy(1.2); }),
+        tool("Zoom out", false, () => { if (stage) stage.zoomBy(0.83); }),
+        tool("Wireframe", st.wire, () => { if (stage) { const on = !st.wire; stage.setWireframe(on); this.setState({ studio: { ...st, wire: on } }); } }),
+        tool("Animate", st.anim, () => { if (stage) { const on = stage.toggleAnimate(); this.setState({ studio: { ...st, anim: on } }); } }),
+      ],
+      stageReadout: [
+        { label: "Model", value: sp ? (sp.name || "—").split(" ")[0] : "Orbital" },
+        { label: "Garment", value: sp ? sp.garment : "hoodie" },
+        { label: "Fabric", value: sp ? sp.fabric : "Fleece" },
+        { label: "Price", value: sp ? this.money(sp.price) : this.money(1899) },
+      ],
+    };
+  }
+
+  bagVals() {
+    const s = this.state, w = s.w;
+    const sub = this.subtotalValue(), ship = this.shippingValue();
+    const wish = s.wishlist.map((id) => this.find(id)).filter(Boolean).map(this.card);
+    return {
+      cartCols: w < 900 ? "1fr" : "minmax(0,1fr) 330px",
+      cartSummary: s.cart.reduce((n, l) => n + l.qty, 0) + " items · " + this.money(sub),
+      totals: [
+        { label: "Subtotal", value: this.money(sub), color: "#c4c4c4" },
+        { label: s.co.form.delivery === "express" ? "Express delivery" : "Standard delivery", value: ship ? this.money(ship) : "Free", color: "#c4c4c4" },
+        { label: "GST included", value: "—", color: "#4a4a4a" },
+      ],
+      grandTotal: this.money(sub + ship),
+      wishGrid: wish, wishEmpty: wish.length === 0,
+      wishSummary: wish.length + (wish.length === 1 ? " garment saved" : " garments saved"),
+    };
+  }
+
+  checkoutVals() {
+    const s = this.state, w = s.w, co = s.co;
+    const names = ["Customer", "Address", "Delivery", "Payment", "Done"];
+    const field = (id, label, opts) => ({
+      label, type: (opts && opts.type) || "text", value: co.form[id] || "", placeholder: (opts && opts.placeholder) || "",
+      span: (opts && opts.span) || "span 1", error: co.errors[id] || null,
+      border: co.errors[id] ? "#c5312d" : "#262626", onInput: this.coField(id),
+    });
+    let fields = [];
+    if (co.step === 0) fields = [field("name", "Full name", { span: "span 2", placeholder: "Aarav Sharma" }), field("email", "Email", { type: "email", placeholder: "you@email.com" }), field("phone", "Phone", { placeholder: "+91 98765 43210" })];
+    if (co.step === 1) fields = [field("address", "Address", { span: "span 2", placeholder: "Flat, street, area" }), field("city", "City", { placeholder: "Mumbai" }), field("state", "State", { placeholder: "Maharashtra" }), field("pin", "PIN code", { placeholder: "400001" }), field("landmark", "Landmark (optional)", { placeholder: "Near…" })];
+    if (co.step === 3) fields = [field("card", "Card number", { span: "span 2", placeholder: "4242 4242 4242 4242" }), field("exp", "Expiry", { placeholder: "04/29" }), field("cvv", "CVV", { placeholder: "123" }), field("cardName", "Name on card", { span: "span 2", placeholder: "As printed" })];
+    const lines = s.cart.map((l) => {
+      const p = this.find(l.id) || { name: "Item", price: 0 };
+      return { name: p.name, meta: l.color + " · " + l.size + " · x" + l.qty, total: this.money(p.price * l.qty), thumb: this.thumbSrc(p, l.ci || 0, false) };
+    });
+    return {
+      coTitle: co.step === 4 ? "Thank you" : "Checkout",
+      coSteps: names.map((n, i) => ({
+        label: (i + 1) + " " + n,
+        border: i === co.step ? "#ffffff" : "#262626",
+        color: i === co.step ? "#ffffff" : i < co.step ? "#47a730" : "#4a4a4a",
+      })),
+      coActive: co.step < 4 && s.cart.length > 0,
+      coDone: co.step === 4,
+      coNoItems: co.step < 4 && s.cart.length === 0,
+      coCols: w < 900 ? "1fr" : "minmax(0,1fr) 300px",
+      coFields: fields, coHasFields: fields.length > 0,
+      coIsDelivery: co.step === 2, coIsPayment: co.step === 3,
+      coNextLabel: co.step === 3 ? "Pay " + this.money(this.subtotalValue() + this.shippingValue()) : "Continue",
+      coNextClick: this.coNext, coBackClick: this.coBack, coCanBack: co.step > 0,
+      coOrderId: co.orderId || "—", coLines: lines,
+      deliveryOptions: [
+        { id: "standard", label: "Standard", detail: "4–6 working days, doorstep across India", price: "Free" },
+        { id: "express", label: "Express", detail: "2 working days, metro cities", price: this.money(199) },
+      ].map((d) => ({
+        ...d, border: co.form.delivery === d.id ? "#ffffff" : "#262626", bg: co.form.delivery === d.id ? "#101010" : "transparent",
+        onPick: () => this.setState({ co: { ...co, form: { ...co.form, delivery: d.id } } }),
+      })),
+    };
+  }
+
+  accountVals() {
+    const s = this.state, l = s.login;
+    return {
+      isAccount: s.route.name === "account" && !!s.user,
+      loginTitle: l.mode === "login" ? "Log in" : "Create account",
+      loginCta: l.mode === "login" ? "Log in" : "Create account",
+      loginAlt: l.mode === "login" ? "Need an account?" : "Already have one? Log in",
+      loginEmail: l.email, loginPassword: l.password, loginError: l.error,
+      onLoginEmail: (e) => this.setState({ login: { ...l, email: e.target.value, error: "" } }),
+      onLoginPassword: (e) => this.setState({ login: { ...l, password: e.target.value, error: "" } }),
+      onLoginKey: (e) => { if (e.key === "Enter") this.doLogin(); },
+      onLoginSubmit: this.doLogin,
+      onLoginToggle: () => this.setState({ login: { ...l, mode: l.mode === "login" ? "signup" : "login", error: "" } }),
+      accountName: s.user ? s.user.name : "Account",
+      accountRows: [
+        { label: "Email", value: s.user ? s.user.email : "—" },
+        { label: "Saved garments", value: s.wishlist.length },
+        { label: "Bag", value: s.cart.reduce((n, x) => n + x.qty, 0) + " items" },
+      ],
+      onLogout: () => { this.logout(); this.go("#/login"); },
+    };
+  }
+
+  renderVals() {
+    return { ...this.shellVals(), ...this.homeVals(), ...this.catalogVals(), ...this.productVals(), ...this.studioVals(), ...this.bagVals(), ...this.checkoutVals(), ...this.accountVals() };
+  }
+  /* --- more --- */
+}
+</script>
+</body>
+</html>
