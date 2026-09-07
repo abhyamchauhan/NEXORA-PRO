@@ -4,7 +4,7 @@
 
 export const SUPPORT = {
   // WhatsApp fallback — digits only, with country code, NO "+" or spaces.
-  whatsappNumber: "919999999999",
+  whatsappNumber: "8595417996",
   brand: "NEXORA",
 };
 
