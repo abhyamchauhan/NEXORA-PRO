@@ -126,7 +126,8 @@ model Variant {
   colorHex    String?
   stock       Int         @default(0)
   displayMode DisplayMode @default(static)
-  images      String[] // ordered: 12-16 for rotation360, 4-6 for static
+  images      String[] // ordered image URLs: 12-16 for rotation360, 4-6 for static
+  imageLabels String[]  @default([]) // parallel to images; free-form captions for static mode
 
   product    Product     @relation(fields: [productId], references: [id], onDelete: Cascade)
   cartItems  CartItem[]
