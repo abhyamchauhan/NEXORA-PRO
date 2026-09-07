@@ -1,5 +1,6 @@
 import { SiteHeader } from "@/components/store/SiteHeader";
 import { SiteFooter } from "@/components/store/SiteFooter";
+import { SupportWidget } from "@/components/store/SupportWidget";
 
 export default function StoreLayout({
   children,
@@ -11,6 +12,7 @@ export default function StoreLayout({
       <SiteHeader />
       <div className="flex-1">{children}</div>
       <SiteFooter />
+      <SupportWidget />
     </div>
   );
 }
