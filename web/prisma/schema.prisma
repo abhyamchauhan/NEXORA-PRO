@@ -1,0 +1,212 @@
+// NEXORA — Prisma schema (PostgreSQL / Neon)
+// Provider is Postgres from the start. Never SQLite.
+// String[] scalar lists (Variant.images) rely on Postgres array support.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  // Neon pooled connection (pgbouncer) for the app; direct URL for migrations.
+  directUrl = env("DIRECT_URL")
+}
+
+// ---------------------------------------------------------------------------
+// Enums
+// ---------------------------------------------------------------------------
+
+enum Role {
+  customer
+  admin
+}
+
+enum Category {
+  men
+  women
+  kids
+}
+
+enum DisplayMode {
+  rotation360
+  static
+}
+
+enum OrderStatus {
+  pending
+  paid
+  processing
+  shipped
+  delivered
+  cancelled
+}
+
+// ---------------------------------------------------------------------------
+// Auth (single User table, differentiated by `role`). NextAuth adapter tables
+// (Account/Session/VerificationToken) are included now so Step 2 needs no
+// schema churn; they are inert until auth is wired up.
+// ---------------------------------------------------------------------------
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  name         String?
+  passwordHash String? // null for OAuth-only accounts
+  role         Role     @default(customer)
+  createdAt    DateTime @default(now())
+
+  cart     Cart?
+  orders   Order[]
+  accounts Account[]
+  sessions Session[]
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+// ---------------------------------------------------------------------------
+// Catalogue
+// ---------------------------------------------------------------------------
+
+model Product {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  name        String
+  description String
+  price       Int // whole rupees (INR)
+  category    Category
+  featured    Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  variants Variant[]
+
+  @@index([category])
+}
+
+model Variant {
+  id          String      @id @default(cuid())
+  productId   String
+  size        String
+  color       String
+  colorHex    String?
+  stock       Int         @default(0)
+  displayMode DisplayMode @default(static)
+  images      String[] // ordered: 12-16 for rotation360, 4-6 for static
+
+  product    Product     @relation(fields: [productId], references: [id], onDelete: Cascade)
+  cartItems  CartItem[]
+  orderItems OrderItem[]
+
+  @@index([productId])
+}
+
+// ---------------------------------------------------------------------------
+// Cart (DB-backed, one per user)
+// ---------------------------------------------------------------------------
+
+model Cart {
+  id        String     @id @default(cuid())
+  userId    String     @unique
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  items     CartItem[]
+}
+
+model CartItem {
+  id        String @id @default(cuid())
+  cartId    String
+  variantId String
+  quantity  Int    @default(1)
+
+  cart    Cart    @relation(fields: [cartId], references: [id], onDelete: Cascade)
+  variant Variant @relation(fields: [variantId], references: [id], onDelete: Cascade)
+
+  @@unique([cartId, variantId])
+  @@index([cartId])
+}
+
+// ---------------------------------------------------------------------------
+// Orders (line items snapshot product data so history survives edits/deletes)
+// ---------------------------------------------------------------------------
+
+model Order {
+  id     String      @id @default(cuid())
+  userId String
+  total  Int
+  status OrderStatus @default(pending)
+
+  // Shipping details
+  shippingName    String
+  shippingPhone   String
+  shippingAddress String
+  shippingCity    String
+  shippingState   String
+  shippingPincode String
+
+  // Payment (Razorpay test mode)
+  razorpayOrderId   String?
+  razorpayPaymentId String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user  User        @relation(fields: [userId], references: [id])
+  items OrderItem[]
+
+  @@index([userId])
+}
+
+model OrderItem {
+  id        String   @id @default(cuid())
+  orderId   String
+  variantId String?
+
+  // Snapshot at purchase time
+  productName String
+  color       String
+  size        String
+  price       Int
+  quantity    Int
+  image       String?
+
+  order   Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  variant Variant? @relation(fields: [variantId], references: [id], onDelete: SetNull)
+
+  @@index([orderId])
+}
