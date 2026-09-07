@@ -22,10 +22,10 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug } = await params;
   const product = await getProduct(slug);
-  if (!product) return { title: "Not found — NEXORA" };
+  if (!product) return { title: "Not found" };
   const image = product.variants.flatMap((v) => v.images)[0];
   return {
-    title: `${product.name} — NEXORA`,
+    title: product.name,
     description: product.description.slice(0, 160),
     openGraph: {
       title: product.name,

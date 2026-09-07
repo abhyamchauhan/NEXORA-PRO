@@ -6,6 +6,16 @@ import { CATEGORY_LABELS } from "@/lib/format";
 
 export const dynamic = "force-dynamic";
 
+export async function generateMetadata({ searchParams }: { searchParams: SP }) {
+  const { category } = await searchParams;
+  const label =
+    category && CATEGORY_LABELS[category] ? CATEGORY_LABELS[category] : "Shop all";
+  return {
+    title: label,
+    description: `Shop ${label} at NEXORA — premium streetwear. Free doorstep delivery in India.`,
+  };
+}
+
 type SP = Promise<{
   category?: string;
   size?: string;

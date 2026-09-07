@@ -15,10 +15,23 @@ const body = Nunito({
   variable: "--font-body",
 });
 
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+
 export const metadata: Metadata = {
-  title: "NEXORA — Premium Streetwear",
+  metadataBase: new URL(siteUrl),
+  title: {
+    default: "NEXORA — Premium Streetwear",
+    template: "%s — NEXORA",
+  },
   description:
     "NEXORA — premium streetwear and fashion. Men, Women and Kids. Free doorstep delivery in India.",
+  keywords: ["streetwear", "fashion", "men", "women", "kids", "India", "NEXORA"],
+  openGraph: {
+    siteName: "NEXORA",
+    type: "website",
+    locale: "en_IN",
+  },
+  twitter: { card: "summary_large_image" },
 };
 
 export default function RootLayout({
