@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Instrument_Sans, Nunito } from "next/font/google";
 import "./globals.css";
+import { Providers } from "./providers";
 
 const display = Instrument_Sans({
   subsets: ["latin"],
@@ -27,7 +28,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={`${display.variable} ${body.variable}`}>
-      <body>{children}</body>
+      <body>
+        <Providers>{children}</Providers>
+      </body>
     </html>
   );
 }

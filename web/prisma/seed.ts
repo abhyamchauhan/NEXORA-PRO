@@ -1,6 +1,14 @@
 import { PrismaClient, Category, DisplayMode } from "@prisma/client";
+import bcrypt from "bcryptjs";
 
 const prisma = new PrismaClient();
+
+// Demo accounts for verifying auth + role-based access. Change these before
+// any real deployment.
+const ADMIN_EMAIL = "admin@nexora.test";
+const ADMIN_PASSWORD = "admin1234";
+const CUSTOMER_EMAIL = "customer@nexora.test";
+const CUSTOMER_PASSWORD = "customer1234";
 
 // A small starter catalogue adapted from the NEXORA mockup (nexora-data.js).
 // Images are placeholder paths for now — real uploads land via Cloudinary in
@@ -87,7 +95,34 @@ const products = [
   },
 ];
 
+async function seedUsers() {
+  await prisma.user.upsert({
+    where: { email: ADMIN_EMAIL },
+    update: {},
+    create: {
+      email: ADMIN_EMAIL,
+      name: "NEXORA Admin",
+      role: "admin",
+      passwordHash: await bcrypt.hash(ADMIN_PASSWORD, 12),
+    },
+  });
+  await prisma.user.upsert({
+    where: { email: CUSTOMER_EMAIL },
+    update: {},
+    create: {
+      email: CUSTOMER_EMAIL,
+      name: "Test Customer",
+      role: "customer",
+      passwordHash: await bcrypt.hash(CUSTOMER_PASSWORD, 12),
+    },
+  });
+  console.log(`  ✓ admin:    ${ADMIN_EMAIL} / ${ADMIN_PASSWORD}`);
+  console.log(`  ✓ customer: ${CUSTOMER_EMAIL} / ${CUSTOMER_PASSWORD}`);
+}
+
 async function main() {
+  console.log("Seeding NEXORA users…");
+  await seedUsers();
   console.log("Seeding NEXORA catalogue…");
   for (const p of products) {
     const { variants, ...data } = p;
