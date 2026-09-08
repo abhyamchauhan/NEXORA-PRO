@@ -4,6 +4,7 @@ import { CATEGORY_LABELS } from "@/lib/format";
 import { ProductCard } from "@/components/store/ProductCard";
 import { ProductImage } from "@/components/store/ProductImage";
 import { Reveal } from "@/components/store/Reveal";
+import { Magnetic } from "@/components/store/Magnetic";
 
 export function SectionRenderer({ section }: { section: HydratedSection }) {
   switch (section.type) {
@@ -36,25 +37,27 @@ function HeroSection({ s }: { s: HydratedSection }) {
   return (
     <section className="relative bg-black text-white overflow-hidden">
       {s.image && (
-        <div className="absolute inset-0">
+        <div className="absolute inset-0 anim-img-in">
           <ProductImage src={s.image} alt={s.heading ?? "NEXORA"} sizes="100vw" priority />
           <div className="absolute inset-0 bg-black/50" />
         </div>
       )}
       <div className="relative max-w-container mx-auto px-6 py-28 sm:py-36">
         {s.subtext && (
-          <p className="font-display text-xs sm:text-sm tracking-label text-concrete mb-5">
+          <p className="font-display text-xs sm:text-sm tracking-label text-concrete mb-5 anim-fade-up anim-delay-1">
             {s.subtext}
           </p>
         )}
         {s.heading && (
-          <h1 className="font-display hero-wobble text-5xl sm:text-7xl lg:text-8xl leading-[0.95] max-w-4xl">
+          <h1 className="font-display text-5xl sm:text-7xl lg:text-8xl leading-[0.95] max-w-4xl anim-fade-up anim-delay-2">
             {s.heading}
           </h1>
         )}
         {s.buttonText && (
-          <div className="mt-8">
-            <Cta text={s.buttonText} link={s.buttonLink} />
+          <div className="mt-8 anim-fade-up anim-delay-3">
+            <Magnetic strength={6}>
+              <Cta text={s.buttonText} link={s.buttonLink} />
+            </Magnetic>
           </div>
         )}
       </div>

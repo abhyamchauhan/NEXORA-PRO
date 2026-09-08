@@ -87,15 +87,86 @@ a {
   transform: translateY(16px);
 }
 
+/* Premium entrance animations (hero, staggered reveals). */
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(22px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes img-in {
+  from {
+    transform: scale(1.035);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+.anim-fade-up {
+  animation: fade-up 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.anim-img-in {
+  animation: img-in 1.3s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.anim-delay-1 {
+  animation-delay: 0.08s;
+}
+.anim-delay-2 {
+  animation-delay: 0.2s;
+}
+.anim-delay-3 {
+  animation-delay: 0.34s;
+}
+
+/* Rolling-text nav hover: two stacked copies, the lower rolls up on hover. */
+.roll {
+  position: relative;
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: bottom;
+}
+.roll > span {
+  display: block;
+  transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.roll > span:last-child {
+  position: absolute;
+  left: 0;
+  top: 100%;
+}
+.group\/roll:hover .roll > span,
+.roll:hover > span {
+  transform: translateY(-100%);
+}
+
 /* Respect users who prefer reduced motion — show everything, animate nothing. */
 @media (prefers-reduced-motion: reduce) {
   .hero-wobble,
-  .reveal {
+  .reveal,
+  .anim-fade-up,
+  .anim-img-in {
     animation: none !important;
     transition: none !important;
+    opacity: 1 !important;
+    transform: none !important;
   }
   .reveal[data-reveal="hidden"] {
     opacity: 1 !important;
     transform: none !important;
   }
+  .roll > span {
+    transition: none !important;
+  }
+  html {
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Smooth in-page scrolling. */
+html {
+  scroll-behavior: smooth;
 }
