@@ -11,6 +11,7 @@ const LINKS = [
   { href: "/admin/coupons", label: "Coupons" },
   { href: "/admin/size-charts", label: "Size charts" },
   { href: "/admin/homepage", label: "Homepage" },
+  { href: "/admin/email-preview", label: "Emails" },
 ];
 
 export function AdminNav({ email }: { email: string }) {

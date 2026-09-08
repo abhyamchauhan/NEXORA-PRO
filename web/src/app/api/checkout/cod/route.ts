@@ -7,6 +7,7 @@ import {
   type LineInput,
 } from "@/lib/place-order";
 import { parseGuestEmail, parseItems, parseCouponCode } from "@/lib/checkout-input";
+import { sendOrderConfirmation } from "@/lib/email";
 
 // Cash on Delivery — works for logged-in customers and guests.
 export async function POST(req: Request) {
@@ -40,6 +41,8 @@ export async function POST(req: Request) {
       couponCode,
       payment: { status: "pending" },
     });
+    // Confirmation email — best-effort; never blocks or rolls back the order.
+    await sendOrderConfirmation(order.id);
     return Response.json({ orderId: order.id });
   } catch (e) {
     const msg = e instanceof OrderError ? e.message : "Could not place order.";
