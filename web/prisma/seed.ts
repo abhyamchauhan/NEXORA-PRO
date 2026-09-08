@@ -172,6 +172,21 @@ const DETAILS: Record<
   "lumen-kids-hoodie": { material: "320 GSM cotton fleece", care: "Machine wash cold, tumble dry low.", rating: 4.6, reviewCount: 88 },
 };
 
+async function seedCoupons() {
+  await prisma.coupon.upsert({
+    where: { code: "WELCOME10" },
+    update: {},
+    create: {
+      code: "WELCOME10",
+      type: "percentage",
+      value: 10,
+      minOrder: 999,
+      active: true,
+    },
+  });
+  console.log("  ✓ coupon WELCOME10 (10% off orders over Rs. 999)");
+}
+
 async function main() {
   console.log("Seeding NEXORA users…");
   await seedUsers();
@@ -193,6 +208,8 @@ async function main() {
   }
   console.log("Seeding NEXORA homepage…");
   await seedHomepage();
+  console.log("Seeding NEXORA coupons…");
+  await seedCoupons();
   const total = await prisma.product.count();
   console.log(`Done. ${total} products in the catalogue.`);
 }

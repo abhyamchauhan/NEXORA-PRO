@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { notFound, redirect } from "next/navigation";
+import { notFound } from "next/navigation";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import { inr } from "@/lib/format";
@@ -13,15 +13,19 @@ export default async function OrderConfirmation({
 }) {
   const { id } = await params;
   const session = await auth();
-  if (!session?.user) redirect(`/login?callbackUrl=/order/${id}`);
 
   const order = await prisma.order.findUnique({
     where: { id },
     include: { items: true },
   });
+  if (!order) notFound();
 
-  // A customer can only ever view their own order.
-  if (!order || order.userId !== session.user.id) notFound();
+  // Visible to the owning customer, or to anyone with the (unguessable) id for
+  // a guest order they just placed. A logged-in user cannot view someone
+  // else's account order.
+  const isOwner = !!session?.user && order.userId === session.user.id;
+  const isGuestOrder = order.userId === null;
+  if (!isOwner && !isGuestOrder) notFound();
 
   const paid = order.status !== "pending";
 
@@ -57,6 +61,12 @@ export default async function OrderConfirmation({
             </li>
           ))}
         </ul>
+        {order.discount > 0 && (
+          <div className="px-5 pt-3 flex justify-between text-sm text-rating">
+            <span>Discount{order.couponCode ? ` (${order.couponCode})` : ""}</span>
+            <span>− {inr(order.discount)}</span>
+          </div>
+        )}
         <div className="px-5 py-4 border-t border-grey-200 flex justify-between font-display">
           <span>Total</span>
           <span>{inr(order.total)}</span>

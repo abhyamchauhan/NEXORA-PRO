@@ -1,9 +1,17 @@
 import bcrypt from "bcryptjs";
 import { prisma } from "@/lib/prisma";
+import { rateLimit, clientIp } from "@/lib/rate-limit";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export async function POST(req: Request) {
+  // Throttle signups per IP to curb abuse.
+  if (!rateLimit(`register:${clientIp(req)}`, 10, 60_000).ok)
+    return Response.json(
+      { error: "Too many attempts. Please try again in a minute." },
+      { status: 429 },
+    );
+
   let body: unknown;
   try {
     body = await req.json();

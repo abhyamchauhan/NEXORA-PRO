@@ -1,15 +1,20 @@
-import { getUserSession, unauthorized } from "@/lib/auth-guard";
+import { auth } from "@/auth";
 import { parseShipping } from "@/lib/shipping";
 import { verifyRazorpaySignature, isRazorpayConfigured } from "@/lib/razorpay";
-import { placeOrderFromCart, OrderError } from "@/lib/place-order";
+import {
+  placeOrder,
+  userCartInputs,
+  OrderError,
+  type LineInput,
+} from "@/lib/place-order";
+import { parseGuestEmail, parseItems, parseCouponCode } from "@/lib/checkout-input";
 
-// Verifies the Razorpay signature, then places the order from the DB cart.
+// Verifies the Razorpay signature, then places the order (guest or logged-in).
 export async function POST(req: Request) {
-  const session = await getUserSession();
-  if (!session) return unauthorized();
   if (!isRazorpayConfigured())
     return Response.json({ error: "Payment not configured." }, { status: 503 });
 
+  const session = await auth();
   const body = await req.json().catch(() => ({}));
   const {
     razorpay_order_id,
@@ -21,25 +26,38 @@ export async function POST(req: Request) {
   if (!razorpay_order_id || !razorpay_payment_id || !razorpay_signature)
     return Response.json({ error: "Missing payment fields." }, { status: 400 });
 
-  const ok = verifyRazorpaySignature(
-    razorpay_order_id,
-    razorpay_payment_id,
-    razorpay_signature,
-  );
-  if (!ok)
-    return Response.json(
-      { error: "Payment verification failed." },
-      { status: 400 },
-    );
+  if (!verifyRazorpaySignature(razorpay_order_id, razorpay_payment_id, razorpay_signature))
+    return Response.json({ error: "Payment verification failed." }, { status: 400 });
 
   const shipping = parseShipping(rawShipping);
   if (!shipping.ok) return Response.json({ error: shipping.error }, { status: 400 });
+  const couponCode = parseCouponCode(body?.couponCode);
+
+  let userId: string | null = null;
+  let guestEmail: string | null = null;
+  let items: LineInput[];
+  if (session?.user) {
+    userId = session.user.id;
+    items = await userCartInputs(userId);
+  } else {
+    guestEmail = parseGuestEmail(body?.email);
+    if (!guestEmail)
+      return Response.json({ error: "Enter a valid email address." }, { status: 400 });
+    items = parseItems(body?.items);
+  }
 
   try {
-    const order = await placeOrderFromCart(session.user.id, shipping.data, {
-      status: "paid",
-      razorpayOrderId: razorpay_order_id,
-      razorpayPaymentId: razorpay_payment_id,
+    const order = await placeOrder({
+      userId,
+      guestEmail,
+      shipping: shipping.data,
+      items,
+      couponCode,
+      payment: {
+        status: "paid",
+        razorpayOrderId: razorpay_order_id,
+        razorpayPaymentId: razorpay_payment_id,
+      },
     });
     return Response.json({ orderId: order.id });
   } catch (e) {

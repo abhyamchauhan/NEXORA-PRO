@@ -5,6 +5,7 @@ import { useRef, useState } from "react";
 import type { Product, Variant } from "@prisma/client";
 import { inr } from "@/lib/format";
 import { ProductImage } from "./ProductImage";
+import { WishlistButton } from "./WishlistButton";
 
 type CardProduct = Product & { variants: Variant[] };
 
@@ -34,9 +35,15 @@ export function ProductCard({ product }: { product: CardProduct }) {
   const transform = `translateY(${hover ? -8 : 0}px) rotateX(${tilt.rx}deg) rotateY(${tilt.ry}deg) scale(${hover ? 1.01 : 1})`;
 
   return (
-    <Link
-      ref={ref}
-      href={`/product/${product.slug}`}
+    <div className="relative">
+      <WishlistButton
+        productId={product.id}
+        className="absolute top-2 right-2 z-20 w-9 h-9 rounded-pill bg-white/85 backdrop-blur text-ink shadow-sm"
+        size={18}
+      />
+      <Link
+        ref={ref}
+        href={`/product/${product.slug}`}
       onMouseEnter={() => setHover(true)}
       onMouseMove={onMove}
       onMouseLeave={() => {
@@ -65,7 +72,7 @@ export function ProductCard({ product }: { product: CardProduct }) {
             </span>
           )}
           {totalStock === 0 && (
-            <span className="absolute top-2 right-2 bg-grey-100 text-grey-500 text-[10px] font-display tracking-button px-2 py-1">
+            <span className="absolute bottom-2 left-2 bg-grey-100 text-grey-500 text-[10px] font-display tracking-button px-2 py-1">
               SOLD OUT
             </span>
           )}
@@ -80,6 +87,7 @@ export function ProductCard({ product }: { product: CardProduct }) {
           </p>
         </div>
       </div>
-    </Link>
+      </Link>
+    </div>
   );
 }

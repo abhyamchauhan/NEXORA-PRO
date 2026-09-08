@@ -41,8 +41,13 @@ export default async function AdminOrders() {
                     })}
                   </p>
                   <p className="text-xs text-grey-500 mt-1">
-                    {o.user.name ? `${o.user.name} · ` : ""}
-                    {o.user.email}
+                    {o.user?.name ? `${o.user.name} · ` : ""}
+                    {o.user?.email ?? o.guestEmail ?? "Guest"}
+                    {!o.userId && (
+                      <span className="ml-2 text-[10px] uppercase tracking-label text-grey-400">
+                        Guest
+                      </span>
+                    )}
                   </p>
                 </div>
                 <div className="text-right">

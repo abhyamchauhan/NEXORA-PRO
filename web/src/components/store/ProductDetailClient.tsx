@@ -7,6 +7,7 @@ import { useCart } from "./CartProvider";
 import { Rotation360Viewer } from "./Rotation360Viewer";
 import { ProductGallery } from "./ProductGallery";
 import { Stars } from "./Stars";
+import { WishlistButton } from "./WishlistButton";
 
 export type ClientVariant = {
   id: string;
@@ -113,9 +114,12 @@ export function ProductDetailClient({ product }: { product: ClientProduct }) {
           <p className="font-display text-sm tracking-label text-grey-500">
             {CATEGORY_LABELS[product.category] ?? product.category}
           </p>
-          <h1 className="font-display text-3xl sm:text-4xl mt-2 leading-tight">
-            {product.name}
-          </h1>
+          <div className="flex items-start justify-between gap-4 mt-2">
+            <h1 className="font-display text-3xl sm:text-4xl leading-tight">
+              {product.name}
+            </h1>
+            <WishlistButton productId={product.id} className="mt-1 text-ink shrink-0" size={26} />
+          </div>
 
           {product.rating != null && (
             <div className="mt-3">

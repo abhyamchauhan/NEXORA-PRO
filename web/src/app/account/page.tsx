@@ -46,6 +46,16 @@ export default async function AccountPage() {
             </p>
             <p className="text-sm">View your order history →</p>
           </Link>
+
+          <Link
+            href="/account/wishlist"
+            className="bg-white border border-grey-200 p-6 hover:border-ink transition-colors"
+          >
+            <p className="font-display text-xs tracking-label text-grey-500 mb-3">
+              Wishlist
+            </p>
+            <p className="text-sm">View saved products →</p>
+          </Link>
         </div>
       </div>
     </main>

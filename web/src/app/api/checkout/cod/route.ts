@@ -1,19 +1,44 @@
-import { getUserSession, unauthorized } from "@/lib/auth-guard";
+import { auth } from "@/auth";
 import { parseShipping } from "@/lib/shipping";
-import { placeOrderFromCart, OrderError } from "@/lib/place-order";
+import {
+  placeOrder,
+  userCartInputs,
+  OrderError,
+  type LineInput,
+} from "@/lib/place-order";
+import { parseGuestEmail, parseItems, parseCouponCode } from "@/lib/checkout-input";
 
-// Cash on Delivery — places the order immediately with status "pending".
+// Cash on Delivery — works for logged-in customers and guests.
 export async function POST(req: Request) {
-  const session = await getUserSession();
-  if (!session) return unauthorized();
-
+  const session = await auth();
   const body = await req.json().catch(() => ({}));
+
   const shipping = parseShipping(body?.shipping);
   if (!shipping.ok) return Response.json({ error: shipping.error }, { status: 400 });
+  const couponCode = parseCouponCode(body?.couponCode);
+
+  let userId: string | null = null;
+  let guestEmail: string | null = null;
+  let items: LineInput[];
+
+  if (session?.user) {
+    userId = session.user.id;
+    items = await userCartInputs(userId);
+  } else {
+    guestEmail = parseGuestEmail(body?.email);
+    if (!guestEmail)
+      return Response.json({ error: "Enter a valid email address." }, { status: 400 });
+    items = parseItems(body?.items);
+  }
 
   try {
-    const order = await placeOrderFromCart(session.user.id, shipping.data, {
-      status: "pending",
+    const order = await placeOrder({
+      userId,
+      guestEmail,
+      shipping: shipping.data,
+      items,
+      couponCode,
+      payment: { status: "pending" },
     });
     return Response.json({ orderId: order.id });
   } catch (e) {

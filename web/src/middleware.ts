@@ -12,6 +12,6 @@ export const config = {
     "/api/admin/:path*",
     "/account/:path*",
     "/orders/:path*",
-    "/checkout/:path*",
+    // /checkout intentionally NOT protected — guest checkout is allowed.
   ],
 };

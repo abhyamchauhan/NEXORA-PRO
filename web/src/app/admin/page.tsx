@@ -54,7 +54,7 @@ export default async function AdminHome() {
                   #{o.id.slice(-8).toUpperCase()}
                 </span>
                 <span className="text-grey-500 hidden sm:block">
-                  {o.user.email}
+                  {o.user?.email ?? o.guestEmail ?? "Guest"}
                 </span>
                 <span className="uppercase tracking-label text-xs text-grey-500">
                   {o.status}
