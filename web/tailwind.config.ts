@@ -32,6 +32,22 @@ const config: Config = {
         display: ["var(--font-display)", "Instrument Sans", "sans-serif"],
         body: ["var(--font-body)", "Nunito", "sans-serif"],
       },
+      // Modern e-commerce type scale (larger + comfortable). Headings 28–96px,
+      // body 16–18px. [size, line-height].
+      fontSize: {
+        xs: ["0.75rem", "1rem"], // 12 — micro labels only
+        sm: ["0.9375rem", "1.5rem"], // 15 — secondary text
+        base: ["1rem", "1.65rem"], // 16 — body minimum
+        lg: ["1.125rem", "1.7rem"], // 18 — lead body
+        xl: ["1.375rem", "1.85rem"], // 22
+        "2xl": ["1.75rem", "1.2"], // 28 — section headings
+        "3xl": ["2.125rem", "1.12"], // 34 — page titles
+        "4xl": ["2.75rem", "1.06"], // 44
+        "5xl": ["3.25rem", "1.03"], // 52
+        "6xl": ["4rem", "1.0"], // 64
+        "7xl": ["4.75rem", "0.98"], // 76
+        "8xl": ["6rem", "0.95"], // 96
+      },
       borderRadius: {
         none: "0px",
         button: "2px",

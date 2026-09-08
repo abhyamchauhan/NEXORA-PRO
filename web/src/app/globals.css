@@ -16,14 +16,29 @@ body {
   font-family: var(--font-body), "Nunito", ui-sans-serif, system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
   letter-spacing: -0.01em;
+  /* Body minimum 16px, comfortable leading (also prevents iOS input zoom). */
+  font-size: 16px;
+  line-height: 1.65;
 }
 
-/* Display type: Instrument Sans, uppercase, tight tracking — the loud voice. */
+/* Display type: Instrument Sans, uppercase, tight tracking, bold — the loud
+   voice. Weight 600 gives headings and labels real presence. */
 .font-display {
   font-family: var(--font-display), "Instrument Sans", sans-serif;
   text-transform: uppercase;
   letter-spacing: -0.01em;
-  line-height: 1.02;
+  line-height: 1.05;
+  font-weight: 600;
+}
+
+/* Large display headings read bolder still. */
+h1.font-display,
+.font-display.text-4xl,
+.font-display.text-5xl,
+.font-display.text-6xl,
+.font-display.text-7xl,
+.font-display.text-8xl {
+  font-weight: 700;
 }
 
 * {

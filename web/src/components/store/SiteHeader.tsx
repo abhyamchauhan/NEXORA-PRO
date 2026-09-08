@@ -56,14 +56,14 @@ export function SiteHeader() {
               <Link
                 key={n.label}
                 href={n.href}
-                className="font-display text-xs tracking-button text-ink hover:text-grey-500 transition-colors"
+                className="font-display text-sm tracking-button text-ink hover:text-grey-500 transition-colors"
               >
                 {n.label}
               </Link>
             ))}
           </nav>
 
-          <div className="flex items-center gap-4 text-xs font-display tracking-button">
+          <div className="flex items-center gap-4 text-sm font-display tracking-button">
             {session?.user?.role === "admin" && (
               <Link href="/admin" className="hover:text-grey-500 hidden sm:inline">
                 Admin

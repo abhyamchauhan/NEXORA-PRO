@@ -31,11 +31,11 @@ export function ProductCard({ product }: { product: CardProduct }) {
         )}
       </div>
       <div className="pt-3">
-        <p className="font-display text-sm tracking-button group-hover:text-grey-500 transition-colors">
+        <p className="font-display text-base tracking-button group-hover:text-grey-500 transition-colors">
           {product.name}
         </p>
-        <p className="text-sm mt-1">{inr(product.price)}</p>
-        <p className="text-xs text-grey-400 mt-0.5">
+        <p className="text-base mt-1">{inr(product.price)}</p>
+        <p className="text-sm text-grey-400 mt-0.5">
           {colours} colour{colours !== 1 ? "s" : ""}
         </p>
       </div>
