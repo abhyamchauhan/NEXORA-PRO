@@ -12,12 +12,16 @@ export function ProductCard({ product }: { product: CardProduct }) {
   const has360 = product.variants.some((v) => v.displayMode === "rotation360");
 
   return (
-    <Link href={`/product/${product.slug}`} className="group block">
-      <div className="relative aspect-[4/5] bg-grey-50 overflow-hidden">
+    <Link
+      href={`/product/${product.slug}`}
+      className="group block transition-transform duration-300 ease-out hover:-translate-y-1"
+    >
+      <div className="relative aspect-[4/5] bg-grey-50 overflow-hidden transition-shadow duration-300 group-hover:shadow-card">
         <ProductImage
           src={firstImage}
           alt={product.name}
           sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+          className="transition-transform duration-500 ease-out group-hover:scale-105"
         />
         {has360 && (
           <span className="absolute top-2 left-2 bg-ink text-white text-[10px] font-display tracking-button px-2 py-1">

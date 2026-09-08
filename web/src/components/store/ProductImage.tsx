@@ -11,11 +11,13 @@ export function ProductImage({
   alt,
   sizes,
   priority,
+  className = "",
 }: {
   src?: string | null;
   alt: string;
   sizes?: string;
   priority?: boolean;
+  className?: string;
 }) {
   const [error, setError] = useState(false);
   const resolved = !src || error ? PLACEHOLDER_IMG : src;
@@ -28,7 +30,7 @@ export function ProductImage({
       sizes={sizes ?? "(max-width: 768px) 50vw, 25vw"}
       priority={priority}
       onError={() => setError(true)}
-      className="object-cover"
+      className={`object-cover ${className}`}
     />
   );
 }
