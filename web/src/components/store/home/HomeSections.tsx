@@ -5,6 +5,7 @@ import { ProductCard } from "@/components/store/ProductCard";
 import { ProductImage } from "@/components/store/ProductImage";
 import { Reveal } from "@/components/store/Reveal";
 import { Magnetic } from "@/components/store/Magnetic";
+import { HeroParallax } from "@/components/store/HeroParallax";
 
 export function SectionRenderer({ section }: { section: HydratedSection }) {
   switch (section.type) {
@@ -26,7 +27,7 @@ function Cta({ text, link }: { text?: string | null; link?: string | null }) {
   return (
     <Link
       href={link || "/shop"}
-      className="inline-block font-display text-sm tracking-button bg-white text-ink px-7 py-3.5 rounded-button hover:bg-concrete transition-colors"
+      className="inline-block font-display text-sm tracking-button bg-white text-ink px-7 py-3.5 rounded-button transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] hover:bg-ink hover:text-white active:scale-95"
     >
       {text}
     </Link>
@@ -36,12 +37,7 @@ function Cta({ text, link }: { text?: string | null; link?: string | null }) {
 function HeroSection({ s }: { s: HydratedSection }) {
   return (
     <section className="relative bg-black text-white overflow-hidden">
-      {s.image && (
-        <div className="absolute inset-0 anim-img-in">
-          <ProductImage src={s.image} alt={s.heading ?? "NEXORA"} sizes="100vw" priority />
-          <div className="absolute inset-0 bg-black/50" />
-        </div>
-      )}
+      {s.image && <HeroParallax src={s.image} alt={s.heading ?? "NEXORA"} />}
       <div className="relative max-w-container mx-auto px-6 py-28 sm:py-36">
         {s.subtext && (
           <p className="font-display text-xs sm:text-sm tracking-label text-concrete mb-5 anim-fade-up anim-delay-1">

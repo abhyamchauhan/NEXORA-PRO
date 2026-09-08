@@ -50,7 +50,7 @@ export function ProductCard({ product }: { product: CardProduct }) {
         className="transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] will-change-transform [transform-style:preserve-3d]"
       >
         <div
-          className="relative aspect-[4/5] bg-grey-50 overflow-hidden transition-shadow duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]"
+          className="relative aspect-[4/5] bg-grey-50 overflow-hidden transition-[box-shadow,transform] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] active:scale-[0.98]"
           style={hover ? { boxShadow: "0 24px 50px -12px rgb(0 0 0 / 0.28)" } : undefined}
         >
           <ProductImage
