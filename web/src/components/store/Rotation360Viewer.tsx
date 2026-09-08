@@ -7,9 +7,11 @@ import { useEffect, useRef, useState } from "react";
 export function Rotation360Viewer({
   images,
   alt,
+  bgColor,
 }: {
   images: string[];
   alt: string;
+  bgColor: string;
 }) {
   const [frame, setFrame] = useState(0);
   const [loaded, setLoaded] = useState(0);
@@ -68,7 +70,8 @@ export function Rotation360Viewer({
 
   return (
     <div
-      className="relative aspect-[4/5] bg-grey-50 select-none touch-none cursor-grab active:cursor-grabbing overflow-hidden"
+      className="relative aspect-[4/5] select-none touch-none cursor-grab active:cursor-grabbing overflow-hidden"
+      style={{ backgroundColor: bgColor }}
       onPointerDown={onDown}
       onPointerMove={onMove}
       onPointerUp={onUp}
@@ -83,11 +86,14 @@ export function Rotation360Viewer({
         src={images[frame]}
         alt={alt}
         draggable={false}
-        className="w-full h-full object-cover pointer-events-none"
+        className="w-full h-full object-contain pointer-events-none"
       />
 
       {!ready && (
-        <div className="absolute inset-0 grid place-items-center bg-grey-50">
+        <div
+          className="absolute inset-0 grid place-items-center"
+          style={{ backgroundColor: bgColor }}
+        >
           <div className="text-center">
             <div className="font-display text-2xl">{pct}%</div>
             <div className="text-xs text-grey-500 tracking-label mt-1">

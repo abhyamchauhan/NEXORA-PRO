@@ -8,8 +8,14 @@ export type VariantInput = {
   stock: number;
   displayMode: DisplayMode;
   images: string[];
+  imagesOriginal: string[];
   imageLabels: string[];
 };
+
+const HEX_RE = /^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/;
+export function parseHexColor(v: unknown): string | null {
+  return typeof v === "string" && HEX_RE.test(v.trim()) ? v.trim() : null;
+}
 
 export type ProductInput = {
   name: string;
@@ -17,6 +23,7 @@ export type ProductInput = {
   price: number;
   category: Category;
   featured: boolean;
+  bgColor: string | null;
   material: string | null;
   care: string | null;
   rating: number | null;
@@ -47,6 +54,9 @@ export function parseVariantInput(
   const images = Array.isArray(v.images)
     ? v.images.filter((x): x is string => typeof x === "string" && !!x)
     : [];
+  const imagesOriginal = Array.isArray(v.imagesOriginal)
+    ? v.imagesOriginal.filter((x): x is string => typeof x === "string" && !!x)
+    : [];
   const imageLabels = Array.isArray(v.imageLabels)
     ? v.imageLabels.map((x) => (typeof x === "string" ? x : ""))
     : [];
@@ -63,7 +73,16 @@ export function parseVariantInput(
 
   return {
     ok: true,
-    data: { size, color, colorHex, stock: Math.round(stock), displayMode, images, imageLabels },
+    data: {
+      size,
+      color,
+      colorHex,
+      stock: Math.round(stock),
+      displayMode,
+      images,
+      imagesOriginal: imagesOriginal.length ? imagesOriginal : images,
+      imageLabels,
+    },
   };
 }
 
@@ -94,6 +113,7 @@ export function parseProductFields(
   if (!CATEGORIES.includes(category as (typeof CATEGORIES)[number]))
     return { ok: false, error: "Category must be men, women or kids." };
 
+  const bgColor = parseHexColor(b.bgColor);
   const material =
     typeof b.material === "string" && b.material.trim() ? b.material.trim() : null;
   const care = typeof b.care === "string" && b.care.trim() ? b.care.trim() : null;
@@ -112,6 +132,7 @@ export function parseProductFields(
       price: Math.round(price),
       category,
       featured: Boolean(b.featured),
+      bgColor,
       material,
       care,
       rating,
@@ -134,6 +155,7 @@ export function parseProductInput(raw: unknown): ParseResult {
   const price = Number(b.price);
   const category = b.category as Category;
   const featured = Boolean(b.featured);
+  const bgColor = parseHexColor(b.bgColor);
   const material =
     typeof b.material === "string" && b.material.trim() ? b.material.trim() : null;
   const care =
@@ -177,6 +199,9 @@ export function parseProductInput(raw: unknown): ParseResult {
     const images = Array.isArray(v.images)
       ? v.images.filter((x): x is string => typeof x === "string" && !!x)
       : [];
+    const imagesOriginal = Array.isArray(v.imagesOriginal)
+      ? v.imagesOriginal.filter((x): x is string => typeof x === "string" && !!x)
+      : [];
     const imageLabels = Array.isArray(v.imageLabels)
       ? v.imageLabels.map((x) => (typeof x === "string" ? x : ""))
       : [];
@@ -206,6 +231,7 @@ export function parseProductInput(raw: unknown): ParseResult {
       stock: Math.round(stock),
       displayMode,
       images,
+      imagesOriginal: imagesOriginal.length ? imagesOriginal : images,
       imageLabels,
     });
   }
@@ -218,6 +244,7 @@ export function parseProductInput(raw: unknown): ParseResult {
       price: Math.round(price),
       category,
       featured,
+      bgColor,
       material,
       care,
       rating,

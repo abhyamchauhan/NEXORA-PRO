@@ -48,6 +48,7 @@ export async function PATCH(req: Request, { params }: Ctx) {
       price: data.price,
       category: data.category,
       featured: data.featured,
+      bgColor: data.bgColor,
       material: data.material,
       care: data.care,
       rating: data.rating,

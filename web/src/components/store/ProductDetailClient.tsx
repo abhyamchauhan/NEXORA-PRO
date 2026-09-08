@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
-import { inr, CATEGORY_LABELS } from "@/lib/format";
+import { inr, CATEGORY_LABELS, DEFAULT_PRODUCT_BG } from "@/lib/format";
 import { useCart } from "./CartProvider";
 import { Rotation360Viewer } from "./Rotation360Viewer";
 import { ProductGallery } from "./ProductGallery";
@@ -29,6 +29,7 @@ export type ClientProduct = {
   description: string;
   price: number;
   category: string;
+  bgColor: string | null;
   material: string | null;
   care: string | null;
   rating: number | null;
@@ -89,6 +90,7 @@ export function ProductDetailClient({
 
   const swatch = (v: ClientVariant) => v.colorHex || "#c4c4c4";
   const stock = selected?.stock ?? 0;
+  const displayBg = product.bgColor || DEFAULT_PRODUCT_BG;
 
   return (
     <div className="max-w-container mx-auto px-6 py-10">
@@ -107,12 +109,13 @@ export function ProductDetailClient({
         {/* Viewer */}
         <div>
           {selected?.displayMode === "rotation360" && selected.images.length ? (
-            <Rotation360Viewer images={selected.images} alt={product.name} />
+            <Rotation360Viewer images={selected.images} alt={product.name} bgColor={displayBg} />
           ) : (
             <ProductGallery
               images={selected?.images ?? []}
               labels={selected?.imageLabels ?? []}
               alt={product.name}
+              bgColor={displayBg}
             />
           )}
         </div>

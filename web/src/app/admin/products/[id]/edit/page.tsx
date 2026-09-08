@@ -24,6 +24,7 @@ export default async function EditProductPage({
     price: product.price,
     category: product.category,
     featured: product.featured,
+    bgColor: product.bgColor,
     material: product.material,
     care: product.care,
     rating: product.rating,
@@ -36,6 +37,7 @@ export default async function EditProductPage({
       stock: v.stock,
       displayMode: v.displayMode,
       images: v.images,
+      imagesOriginal: v.imagesOriginal,
       imageLabels: v.imageLabels,
     })),
   };

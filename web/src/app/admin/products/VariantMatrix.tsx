@@ -11,6 +11,7 @@ export type VariantRow = {
   stock: number;
   displayMode: "static" | "rotation360";
   images: string[];
+  imagesOriginal: string[];
   imageLabels: string[];
   _busy?: boolean;
   _dirty?: boolean;
@@ -71,6 +72,7 @@ export function VariantMatrix({
             stock: 0,
             displayMode: "static",
             images: [],
+            imagesOriginal: [],
             imageLabels: [],
             _dirty: true,
           });
@@ -100,6 +102,7 @@ export function VariantMatrix({
       stock: r.stock,
       displayMode: r.displayMode,
       images: r.images,
+      imagesOriginal: r.imagesOriginal,
       imageLabels: r.imageLabels,
     };
     const res = r.id
@@ -248,8 +251,11 @@ export function VariantMatrix({
               <ImageUploader
                 mode={r.displayMode}
                 images={r.images}
+                imagesOriginal={r.imagesOriginal}
                 labels={r.imageLabels}
-                onChange={(images, imageLabels) => patchRow(i, { images, imageLabels })}
+                onChange={(images, imagesOriginal, imageLabels) =>
+                  patchRow(i, { images, imagesOriginal, imageLabels })
+                }
               />
             </div>
 

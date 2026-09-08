@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useRef, useState } from "react";
 import type { Product, Variant } from "@prisma/client";
-import { inr } from "@/lib/format";
+import { inr, DEFAULT_PRODUCT_BG } from "@/lib/format";
 import { ProductImage } from "./ProductImage";
 import { WishlistButton } from "./WishlistButton";
 
@@ -57,12 +57,16 @@ export function ProductCard({ product }: { product: CardProduct }) {
         className="transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] will-change-transform [transform-style:preserve-3d]"
       >
         <div
-          className="relative aspect-[4/5] bg-grey-50 overflow-hidden transition-[box-shadow,transform] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] active:scale-[0.98]"
-          style={hover ? { boxShadow: "0 24px 50px -12px rgb(0 0 0 / 0.28)" } : undefined}
+          className="relative aspect-[4/5] overflow-hidden transition-[box-shadow,transform] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] active:scale-[0.98]"
+          style={{
+            backgroundColor: product.bgColor || DEFAULT_PRODUCT_BG,
+            ...(hover ? { boxShadow: "0 24px 50px -12px rgb(0 0 0 / 0.28)" } : {}),
+          }}
         >
           <ProductImage
             src={firstImage}
             alt={product.name}
+            fit="contain"
             sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
             className="transition-[transform,filter] duration-[600ms] ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.05] group-hover:brightness-[1.04]"
           />

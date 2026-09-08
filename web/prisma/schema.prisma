@@ -151,6 +151,9 @@ model Product {
   category    Category
   featured    Boolean  @default(false)
 
+  // Display background colour behind the (transparent) product photos.
+  bgColor     String? // hex, e.g. "#f5f5f5"; null uses the site default
+
   // Product detail content (all optional)
   material    String? // e.g. "380 GSM brushed cotton fleece"
   care        String? // care instructions
@@ -193,7 +196,8 @@ model Variant {
   colorHex    String?
   stock       Int         @default(0)
   displayMode DisplayMode @default(static)
-  images      String[] // ordered image URLs: 12-16 for rotation360, 4-6 for static
+  images      String[] // ordered display URLs (bg-removed when successful): 12-16 rotation360 / 4-6 static
+  imagesOriginal String[] @default([]) // parallel backup of the raw upload (fallback / retry)
   imageLabels String[]  @default([]) // parallel to images; free-form captions for static mode
 
   product    Product     @relation(fields: [productId], references: [id], onDelete: Cascade)
