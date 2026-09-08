@@ -158,17 +158,34 @@ async function seedHomepage() {
   console.log("  ✓ created 3 default homepage sections");
 }
 
+// Extra detail content per product (material/care/rating) so the product page
+// shows review stars and a Product Details block on the demo catalogue.
+const DETAILS: Record<
+  string,
+  { material: string; care: string; rating: number; reviewCount: number }
+> = {
+  "orbital-hoodie": { material: "380 GSM brushed cotton fleece", care: "Machine wash cold, tumble dry low, do not bleach.", rating: 4.8, reviewCount: 412 },
+  "vector-jacket": { material: "Cotton twill shell, taffeta lining", care: "Dry clean only.", rating: 4.9, reviewCount: 96 },
+  "luna-column-dress": { material: "Matte satin, bias panels", care: "Hand wash cold, hang to dry, cool iron.", rating: 4.8, reviewCount: 74 },
+  "flow-pleat-skirt": { material: "Recycled poly-twill, pressed pleats", care: "Machine wash cold, hang dry to hold the pleats.", rating: 4.7, reviewCount: 208 },
+  "echo-kids-tee": { material: "200 GSM combed cotton", care: "Machine wash warm, tumble dry low.", rating: 4.7, reviewCount: 121 },
+  "lumen-kids-hoodie": { material: "320 GSM cotton fleece", care: "Machine wash cold, tumble dry low.", rating: 4.6, reviewCount: 88 },
+};
+
 async function main() {
   console.log("Seeding NEXORA users…");
   await seedUsers();
   console.log("Seeding NEXORA catalogue…");
   for (const p of products) {
     const { variants, ...data } = p;
+    const details = DETAILS[p.slug] ?? {};
     await prisma.product.upsert({
       where: { slug: p.slug },
-      update: {},
+      // Backfill detail fields on re-seed without disturbing name/price/variants.
+      update: details,
       create: {
         ...data,
+        ...details,
         variants: { create: variants },
       },
     });

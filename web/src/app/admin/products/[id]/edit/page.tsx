@@ -23,6 +23,10 @@ export default async function EditProductPage({
     price: product.price,
     category: product.category,
     featured: product.featured,
+    material: product.material,
+    care: product.care,
+    rating: product.rating,
+    reviewCount: product.reviewCount,
     variants: product.variants.map((v) => ({
       id: v.id,
       size: v.size,

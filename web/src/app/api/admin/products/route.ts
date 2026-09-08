@@ -63,6 +63,10 @@ export async function POST(req: Request) {
       price: data.price,
       category: data.category,
       featured: data.featured,
+      material: data.material,
+      care: data.care,
+      rating: data.rating,
+      reviewCount: data.reviewCount,
       variants: {
         create: data.variants.map((v) => ({
           size: v.size,

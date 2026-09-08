@@ -25,6 +25,10 @@ export type ProductInitial = {
   price: number;
   category: "men" | "women" | "kids";
   featured: boolean;
+  material: string | null;
+  care: string | null;
+  rating: number | null;
+  reviewCount: number;
   variants: VariantState[];
 };
 
@@ -51,6 +55,14 @@ export function ProductForm({ initial }: { initial?: ProductInitial }) {
     initial?.category ?? "men",
   );
   const [featured, setFeatured] = useState(initial?.featured ?? false);
+  const [material, setMaterial] = useState(initial?.material ?? "");
+  const [care, setCare] = useState(initial?.care ?? "");
+  const [rating, setRating] = useState<string>(
+    initial?.rating != null ? String(initial.rating) : "",
+  );
+  const [reviewCount, setReviewCount] = useState<string>(
+    initial?.reviewCount ? String(initial.reviewCount) : "",
+  );
   const [variants, setVariants] = useState<VariantState[]>(
     initial?.variants?.length ? initial.variants : [blankVariant()],
   );
@@ -73,6 +85,10 @@ export function ProductForm({ initial }: { initial?: ProductInitial }) {
       price: Number(price),
       category,
       featured,
+      material,
+      care,
+      rating: rating ? Number(rating) : null,
+      reviewCount: reviewCount ? Number(reviewCount) : 0,
       variants,
     };
 
@@ -158,6 +174,48 @@ export function ProductForm({ initial }: { initial?: ProductInitial }) {
           />
           Feature on homepage
         </label>
+
+        <Labeled label="Material (optional)">
+          <input
+            value={material}
+            onChange={(e) => setMaterial(e.target.value)}
+            className="input"
+            placeholder="380 GSM brushed cotton fleece"
+          />
+        </Labeled>
+        <Labeled label="Care instructions (optional)">
+          <textarea
+            value={care}
+            onChange={(e) => setCare(e.target.value)}
+            rows={2}
+            className="input"
+            placeholder="Machine wash cold, tumble dry low, do not bleach."
+          />
+        </Labeled>
+        <div className="grid grid-cols-2 gap-4">
+          <Labeled label="Rating (0–5, optional)">
+            <input
+              type="number"
+              step="0.1"
+              min={0}
+              max={5}
+              value={rating}
+              onChange={(e) => setRating(e.target.value)}
+              className="input"
+              placeholder="4.8"
+            />
+          </Labeled>
+          <Labeled label="Review count (optional)">
+            <input
+              type="number"
+              min={0}
+              value={reviewCount}
+              onChange={(e) => setReviewCount(e.target.value)}
+              className="input"
+              placeholder="128"
+            />
+          </Labeled>
+        </div>
       </div>
 
       {/* Variants */}

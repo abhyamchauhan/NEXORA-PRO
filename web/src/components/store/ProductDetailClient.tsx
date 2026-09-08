@@ -6,6 +6,7 @@ import { inr, CATEGORY_LABELS } from "@/lib/format";
 import { useCart } from "./CartProvider";
 import { Rotation360Viewer } from "./Rotation360Viewer";
 import { ProductGallery } from "./ProductGallery";
+import { Stars } from "./Stars";
 
 export type ClientVariant = {
   id: string;
@@ -25,13 +26,16 @@ export type ClientProduct = {
   description: string;
   price: number;
   category: string;
+  material: string | null;
+  care: string | null;
+  rating: number | null;
+  reviewCount: number;
   variants: ClientVariant[];
 };
 
 export function ProductDetailClient({ product }: { product: ClientProduct }) {
   const { add } = useCart();
 
-  // Distinct colours, in first-seen order.
   const colors = useMemo(() => {
     const seen = new Map<string, ClientVariant>();
     for (const v of product.variants) if (!seen.has(v.color)) seen.set(v.color, v);
@@ -39,11 +43,8 @@ export function ProductDetailClient({ product }: { product: ClientProduct }) {
   }, [product.variants]);
 
   const [color, setColor] = useState(colors[0]?.color ?? "");
-
-  // Variants (sizes) available for the chosen colour = a different photo set.
   const sizesForColor = product.variants.filter((v) => v.color === color);
-  const firstInStock =
-    sizesForColor.find((v) => v.stock > 0) ?? sizesForColor[0];
+  const firstInStock = sizesForColor.find((v) => v.stock > 0) ?? sizesForColor[0];
   const [size, setSize] = useState(firstInStock?.size ?? "");
 
   const selected =
@@ -81,8 +82,8 @@ export function ProductDetailClient({ product }: { product: ClientProduct }) {
   const stock = selected?.stock ?? 0;
 
   return (
-    <div className="max-w-container mx-auto px-6 py-8">
-      <nav className="text-xs text-grey-500 mb-6">
+    <div className="max-w-container mx-auto px-6 py-10">
+      <nav className="text-sm text-grey-500 mb-8">
         <Link href="/shop" className="hover:text-ink">
           Shop
         </Link>{" "}
@@ -93,8 +94,8 @@ export function ProductDetailClient({ product }: { product: ClientProduct }) {
         / <span className="text-ink">{product.name}</span>
       </nav>
 
-      <div className="grid lg:grid-cols-2 gap-10">
-        {/* Viewer — switches on the selected variant's displayMode */}
+      <div className="grid lg:grid-cols-2 gap-10 lg:gap-16">
+        {/* Viewer */}
         <div>
           {selected?.displayMode === "rotation360" && selected.images.length ? (
             <Rotation360Viewer images={selected.images} alt={product.name} />
@@ -108,29 +109,40 @@ export function ProductDetailClient({ product }: { product: ClientProduct }) {
         </div>
 
         {/* Details */}
-        <div>
-          <p className="font-display text-xs tracking-label text-grey-500">
+        <div className="lg:py-2">
+          <p className="font-display text-sm tracking-label text-grey-500">
             {CATEGORY_LABELS[product.category] ?? product.category}
           </p>
-          <h1 className="font-display text-3xl mt-1">{product.name}</h1>
-          <p className="text-xl mt-3">{inr(product.price)}</p>
+          <h1 className="font-display text-3xl sm:text-4xl mt-2 leading-tight">
+            {product.name}
+          </h1>
 
-          <p className="text-sm text-grey-600 leading-relaxed mt-5">
+          {product.rating != null && (
+            <div className="mt-3">
+              <Stars rating={product.rating} count={product.reviewCount} size="lg" />
+            </div>
+          )}
+
+          <p className="text-2xl sm:text-3xl mt-5 font-display">
+            {inr(product.price)}
+          </p>
+
+          <p className="text-base text-grey-600 leading-relaxed mt-6 max-w-prose">
             {product.description}
           </p>
 
           {/* Colour */}
-          <div className="mt-7">
-            <p className="font-display text-xs tracking-label text-grey-500 mb-2">
-              Colour — <span className="text-ink">{color}</span>
+          <div className="mt-9">
+            <p className="font-display text-base tracking-button mb-3">
+              Colour — <span className="text-grey-500">{color}</span>
             </p>
-            <div className="flex gap-2">
+            <div className="flex gap-3">
               {colors.map((v) => (
                 <button
                   key={v.color}
                   onClick={() => onColor(v.color)}
                   title={v.color}
-                  className={`w-8 h-8 rounded-pill border-2 ${
+                  className={`w-10 h-10 rounded-pill border-2 transition-transform hover:scale-105 ${
                     color === v.color ? "border-ink" : "border-grey-200"
                   }`}
                   style={{ background: swatch(v) }}
@@ -141,11 +153,9 @@ export function ProductDetailClient({ product }: { product: ClientProduct }) {
           </div>
 
           {/* Size */}
-          <div className="mt-6">
-            <p className="font-display text-xs tracking-label text-grey-500 mb-2">
-              Size
-            </p>
-            <div className="flex flex-wrap gap-2">
+          <div className="mt-8">
+            <p className="font-display text-base tracking-button mb-3">Size</p>
+            <div className="flex flex-wrap gap-2.5">
               {sizesForColor.map((v) => {
                 const soldOut = v.stock <= 0;
                 return (
@@ -156,7 +166,7 @@ export function ProductDetailClient({ product }: { product: ClientProduct }) {
                       setSize(v.size);
                       setAdded(false);
                     }}
-                    className={`min-w-11 px-3 py-2 border text-sm font-display tracking-button transition-colors ${
+                    className={`min-w-14 px-4 py-3 border text-base font-display tracking-button transition-colors ${
                       size === v.size
                         ? "border-ink bg-ink text-white"
                         : "border-grey-300 hover:border-ink"
@@ -170,9 +180,9 @@ export function ProductDetailClient({ product }: { product: ClientProduct }) {
           </div>
 
           {/* Stock indicator */}
-          <div className="mt-5 text-sm">
+          <div className="mt-6 text-base font-display tracking-button">
             {stock <= 0 ? (
-              <span className="text-sale font-bold">Out of stock</span>
+              <span className="text-sale">Out of stock</span>
             ) : stock <= 5 ? (
               <span className="text-sale">Only {stock} left</span>
             ) : (
@@ -184,20 +194,47 @@ export function ProductDetailClient({ product }: { product: ClientProduct }) {
           <button
             onClick={onAdd}
             disabled={stock <= 0}
-            className="mt-4 w-full sm:w-auto font-display text-sm tracking-button bg-ink text-white px-10 py-4 rounded-button hover:bg-black transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+            className="mt-5 w-full sm:w-auto font-display text-base tracking-button bg-ink text-white px-12 py-4 rounded-button hover:bg-black transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
           >
             {stock <= 0 ? "Sold out" : added ? "✓ Added to bag" : "Add to bag"}
           </button>
 
           {added && (
-            <p className="mt-3 text-sm">
+            <p className="mt-3 text-base">
               <Link href="/cart" className="underline">
                 View bag →
               </Link>
             </p>
           )}
+
+          {/* Product details */}
+          <div className="mt-12 border-t border-grey-200 pt-8">
+            <h2 className="font-display text-xl mb-5">Product details</h2>
+            <dl className="space-y-4 text-base">
+              <Row label="Category">
+                {CATEGORY_LABELS[product.category] ?? product.category}
+              </Row>
+              {product.material && <Row label="Material">{product.material}</Row>}
+              <Row label="Care">
+                {product.care ||
+                  "Machine wash cold with like colours. Do not bleach. Tumble dry low. Warm iron if needed."}
+              </Row>
+              <Row label="Shipping">
+                Free doorstep delivery across India · easy 7-day returns.
+              </Row>
+            </dl>
+          </div>
         </div>
       </div>
+    </div>
+  );
+}
+
+function Row({ label, children }: { label: string; children: React.ReactNode }) {
+  return (
+    <div className="grid grid-cols-[110px_1fr] gap-4">
+      <dt className="font-display text-sm tracking-label text-grey-500">{label}</dt>
+      <dd className="text-grey-700">{children}</dd>
     </div>
   );
 }

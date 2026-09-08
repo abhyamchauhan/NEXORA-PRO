@@ -5,6 +5,7 @@ import {
   ProductDetailClient,
   type ClientProduct,
 } from "@/components/store/ProductDetailClient";
+import { ProductCard } from "@/components/store/ProductCard";
 
 export const dynamic = "force-dynamic";
 
@@ -44,6 +45,14 @@ export default async function ProductPage({
   const product = await getProduct(slug);
   if (!product) notFound();
 
+  // "You might also like" — same category, excluding this product.
+  const related = await prisma.product.findMany({
+    where: { category: product.category, id: { not: product.id } },
+    include: { variants: true },
+    take: 4,
+    orderBy: { createdAt: "desc" },
+  });
+
   const clientProduct: ClientProduct = {
     id: product.id,
     slug: product.slug,
@@ -51,6 +60,10 @@ export default async function ProductPage({
     description: product.description,
     price: product.price,
     category: product.category,
+    material: product.material,
+    care: product.care,
+    rating: product.rating,
+    reviewCount: product.reviewCount,
     variants: product.variants.map((v) => ({
       id: v.id,
       size: v.size,
@@ -63,5 +76,20 @@ export default async function ProductPage({
     })),
   };
 
-  return <ProductDetailClient product={clientProduct} />;
+  return (
+    <>
+      <ProductDetailClient product={clientProduct} />
+
+      {related.length > 0 && (
+        <section className="max-w-container mx-auto px-6 py-14 border-t border-grey-200 mt-6">
+          <h2 className="font-display text-2xl mb-6">You might also like</h2>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-x-4 gap-y-8">
+            {related.map((p) => (
+              <ProductCard key={p.id} product={p} />
+            ))}
+          </div>
+        </section>
+      )}
+    </>
+  );
 }

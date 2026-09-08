@@ -17,6 +17,10 @@ export type ProductInput = {
   price: number;
   category: Category;
   featured: boolean;
+  material: string | null;
+  care: string | null;
+  rating: number | null;
+  reviewCount: number;
   variants: VariantInput[];
 };
 
@@ -41,6 +45,20 @@ export function parseProductInput(raw: unknown): ParseResult {
   const price = Number(b.price);
   const category = b.category as Category;
   const featured = Boolean(b.featured);
+  const material =
+    typeof b.material === "string" && b.material.trim() ? b.material.trim() : null;
+  const care =
+    typeof b.care === "string" && b.care.trim() ? b.care.trim() : null;
+  const ratingRaw = Number(b.rating);
+  const rating =
+    Number.isFinite(ratingRaw) && ratingRaw > 0
+      ? Math.max(0, Math.min(5, ratingRaw))
+      : null;
+  const reviewCountRaw = Number(b.reviewCount);
+  const reviewCount =
+    Number.isFinite(reviewCountRaw) && reviewCountRaw > 0
+      ? Math.round(reviewCountRaw)
+      : 0;
 
   if (name.length < 2) return { ok: false, error: "Name is required." };
   if (description.length < 5)
@@ -111,6 +129,10 @@ export function parseProductInput(raw: unknown): ParseResult {
       price: Math.round(price),
       category,
       featured,
+      material,
+      care,
+      rating,
+      reviewCount,
       variants,
     },
   };
