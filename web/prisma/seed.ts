@@ -187,6 +187,25 @@ async function seedCoupons() {
   console.log("  ✓ coupon WELCOME10 (10% off orders over Rs. 999)");
 }
 
+async function seedSizeCharts() {
+  const fields = ["Chest", "Length", "Shoulder"];
+  const rows = [
+    { size: "S", values: { Chest: 96, Length: 68, Shoulder: 43 } },
+    { size: "M", values: { Chest: 101, Length: 70, Shoulder: 45 } },
+    { size: "L", values: { Chest: 106, Length: 72, Shoulder: 47 } },
+    { size: "XL", values: { Chest: 111, Length: 74, Shoulder: 49 } },
+    { size: "XXL", values: { Chest: 116, Length: 76, Shoulder: 51 } },
+  ];
+  for (const category of ["men", "women", "kids"] as const) {
+    await prisma.sizeChart.upsert({
+      where: { category },
+      update: {},
+      create: { category, fields, rows },
+    });
+  }
+  console.log("  ✓ default size charts for men / women / kids");
+}
+
 async function main() {
   console.log("Seeding NEXORA users…");
   await seedUsers();
@@ -210,6 +229,8 @@ async function main() {
   await seedHomepage();
   console.log("Seeding NEXORA coupons…");
   await seedCoupons();
+  console.log("Seeding NEXORA size charts…");
+  await seedSizeCharts();
   const total = await prisma.product.count();
   console.log(`Done. ${total} products in the catalogue.`);
 }

@@ -162,8 +162,27 @@ model Product {
 
   variants Variant[]
   wishlistItems WishlistItem[]
+  sizeChart SizeChart?
 
   @@index([category])
+}
+
+// Flexible size guide. Fields are admin-defined (e.g. Chest/Length/Shoulder for
+// tops, Waist/Hip/Inseam for bottoms). Measurements stored in CM; the UI toggles
+// to inches on display. A chart is either product-specific (productId set) or a
+// category default (category set) — a product falls back to its category default.
+model SizeChart {
+  id        String    @id @default(cuid())
+  productId String?   @unique
+  category  Category?
+  fields    String[] // ordered measurement field names
+  rows      Json // [{ size: "M", values: { "Chest": 52, ... } }] — cm
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  product Product? @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@unique([category])
 }
 
 model Variant {

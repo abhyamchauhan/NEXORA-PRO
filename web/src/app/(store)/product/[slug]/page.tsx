@@ -6,6 +6,7 @@ import {
   type ClientProduct,
 } from "@/components/store/ProductDetailClient";
 import { ProductCard } from "@/components/store/ProductCard";
+import { getEffectiveSizeChart } from "@/lib/size-chart";
 
 export const dynamic = "force-dynamic";
 
@@ -45,6 +46,11 @@ export default async function ProductPage({
   const product = await getProduct(slug);
   if (!product) notFound();
 
+  const sizeChart = await getEffectiveSizeChart({
+    id: product.id,
+    category: product.category,
+  });
+
   // "You might also like" — same category, excluding this product.
   const related = await prisma.product.findMany({
     where: { category: product.category, id: { not: product.id } },
@@ -78,7 +84,7 @@ export default async function ProductPage({
 
   return (
     <>
-      <ProductDetailClient product={clientProduct} />
+      <ProductDetailClient product={clientProduct} sizeChart={sizeChart} />
 
       {related.length > 0 && (
         <section className="max-w-container mx-auto px-6 py-14 border-t border-grey-200 mt-6">

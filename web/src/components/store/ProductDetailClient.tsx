@@ -8,6 +8,8 @@ import { Rotation360Viewer } from "./Rotation360Viewer";
 import { ProductGallery } from "./ProductGallery";
 import { Stars } from "./Stars";
 import { WishlistButton } from "./WishlistButton";
+import { SizeGuide } from "./SizeGuide";
+import type { SizeChartData } from "@/lib/size-chart";
 
 export type ClientVariant = {
   id: string;
@@ -34,7 +36,13 @@ export type ClientProduct = {
   variants: ClientVariant[];
 };
 
-export function ProductDetailClient({ product }: { product: ClientProduct }) {
+export function ProductDetailClient({
+  product,
+  sizeChart,
+}: {
+  product: ClientProduct;
+  sizeChart: SizeChartData | null;
+}) {
   const { add } = useCart();
 
   const colors = useMemo(() => {
@@ -158,7 +166,10 @@ export function ProductDetailClient({ product }: { product: ClientProduct }) {
 
           {/* Size */}
           <div className="mt-8">
-            <p className="font-display text-base tracking-button mb-3">Size</p>
+            <div className="flex items-center justify-between mb-3">
+              <p className="font-display text-base tracking-button">Size</p>
+              <SizeGuide chart={sizeChart} />
+            </div>
             <div className="flex flex-wrap gap-2.5">
               {sizesForColor.map((v) => {
                 const soldOut = v.stock <= 0;
