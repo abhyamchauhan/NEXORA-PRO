@@ -12,10 +12,15 @@ type Props = {
 
 const STATIC_SUGGESTIONS = ["Front", "Back", "Side", "Close-up", "Detail", "Fit"];
 
-// A photo whose display URL still equals its original had its background
-// removal fail (or skipped) — every successful cut-out is a fresh upload.
+// A photo has a real cut-out when it has a backup original AND its display URL
+// differs from it (every successful cut-out is a fresh upload). If the two are
+// equal, an attempted removal fell back to the original ("BG kept"). If there
+// is no backup at all, the image predates removal (legacy) — it can still be
+// cut out on demand.
+const hasCutout = (images: string[], originals: string[], i: number) =>
+  !!originals[i] && !!images[i] && images[i] !== originals[i];
 const removalFailed = (images: string[], originals: string[], i: number) =>
-  !!images[i] && images[i] === originals[i];
+  !!originals[i] && !!images[i] && images[i] === originals[i];
 
 async function uploadToCloudinary(file: Blob, filename?: string): Promise<string> {
   const sigRes = await fetch("/api/admin/upload-signature", { method: "POST" });
@@ -59,8 +64,9 @@ export function ImageUploader({
   const inputRef = useRef<HTMLInputElement>(null);
   const [busy, setBusy] = useState(false);
   const [progress, setProgress] = useState<string | null>(null);
-  const [retrying, setRetrying] = useState<number | null>(null);
+  const [working, setWorking] = useState<number[]>([]); // indices being processed
   const [error, setError] = useState<string | null>(null);
+  const isWorking = (i: number) => working.includes(i);
 
   const maxSlots = mode === "rotation360" ? 16 : 6;
   const remaining = maxSlots - images.length;
@@ -86,8 +92,13 @@ export function ImageUploader({
           setProgress(`Removing background ${n + 1} of ${batch.length}…`);
           const cut = await cutOut(file);
           displayUrl = await uploadToCloudinary(cut, "nexora-cutout.png");
-        } catch {
-          // removal failed — display falls back to the original
+        } catch (e) {
+          // removal failed — display falls back to the original (flagged for retry)
+          setError(
+            `Auto-removal failed for one photo (${
+              e instanceof Error ? e.message : "unknown error"
+            }). The original was kept — use “Remove background” on it to try again.`,
+          );
         }
         nextImages.push(displayUrl);
         nextOriginals.push(originalUrl);
@@ -105,25 +116,31 @@ export function ImageUploader({
     }
   }
 
-  async function retry(i: number) {
-    const src = imagesOriginal[i];
+  // Remove the background of an already-uploaded photo (works for legacy images
+  // uploaded before this feature, failed auto-removals, or a re-do). The source
+  // is the stored original when present, otherwise the current display image —
+  // which then becomes the preserved backup.
+  async function removeBgAt(i: number) {
+    const src = imagesOriginal[i] || images[i];
     if (!src) return;
     setError(null);
-    setRetrying(i);
+    setWorking((w) => [...w, i]);
     try {
       const cut = await cutOut(src);
       const displayUrl = await uploadToCloudinary(cut, "nexora-cutout.png");
       const ni = [...images];
+      const no = [...imagesOriginal];
       ni[i] = displayUrl;
-      onChange(ni, [...imagesOriginal], [...labels]);
+      no[i] = src; // keep the pre-removal image as the backup
+      onChange(ni, no, [...labels]);
     } catch (e) {
       setError(
         e instanceof Error
-          ? `Retry failed: ${e.message}`
-          : "Background removal failed again.",
+          ? `Background removal failed: ${e.message}`
+          : "Background removal failed. Check your connection and try again.",
       );
     } finally {
-      setRetrying(null);
+      setWorking((w) => w.filter((x) => x !== i));
     }
   }
 
@@ -162,14 +179,18 @@ export function ImageUploader({
     <div>
       <p className="text-xs text-grey-500 mb-1">{target}</p>
       <p className="text-xs text-grey-400 mb-3">
-        Backgrounds are removed automatically in your browser. The original is
-        kept as a backup — if removal fails, the photo is flagged so you can
-        retry or replace it.
+        New uploads have their background removed automatically in your browser,
+        keeping the original as a backup. For a photo added earlier (or if
+        removal failed), use <b>Remove background</b> on the photo. First run
+        downloads a one-time model (~40&nbsp;MB), so give it a few seconds.
       </p>
 
       <div className="grid grid-cols-3 sm:grid-cols-4 gap-3">
         {images.map((url, i) => {
           const failed = removalFailed(images, imagesOriginal, i);
+          const done = hasCutout(images, imagesOriginal, i);
+          const legacy = !failed && !done; // uploaded before removal / not yet cut out
+          const proc = isWorking(i);
           return (
             <div
               key={url + i}
@@ -200,16 +221,44 @@ export function ImageUploader({
                     BG kept
                   </span>
                 )}
+                {done && (
+                  <span className="absolute top-1 right-1 bg-rating text-white text-[10px] px-1.5 py-0.5 font-display tracking-button">
+                    BG removed
+                  </span>
+                )}
+                {proc && (
+                  <span className="absolute inset-0 grid place-items-center bg-white/70 text-[11px] font-display tracking-button text-ink">
+                    Removing…
+                  </span>
+                )}
               </div>
               <div className="p-1.5 space-y-1">
-                {failed && (
+                {(legacy || failed) && (
                   <button
                     type="button"
-                    onClick={() => retry(i)}
-                    disabled={retrying === i}
-                    className="w-full text-[11px] border border-sale text-sale px-1.5 py-1 hover:bg-sale hover:text-white transition-colors disabled:opacity-50"
+                    onClick={() => removeBgAt(i)}
+                    disabled={proc}
+                    className={`w-full text-[11px] px-1.5 py-1 transition-colors disabled:opacity-50 border ${
+                      failed
+                        ? "border-sale text-sale hover:bg-sale hover:text-white"
+                        : "border-ink text-ink hover:bg-ink hover:text-white"
+                    }`}
                   >
-                    {retrying === i ? "Retrying…" : "Retry removal"}
+                    {proc
+                      ? "Removing…"
+                      : failed
+                        ? "Retry removal"
+                        : "Remove background"}
+                  </button>
+                )}
+                {done && (
+                  <button
+                    type="button"
+                    onClick={() => removeBgAt(i)}
+                    disabled={proc}
+                    className="w-full text-[11px] px-1.5 py-1 border border-grey-200 text-grey-500 hover:border-ink hover:text-ink transition-colors disabled:opacity-50"
+                  >
+                    {proc ? "Removing…" : "Redo removal"}
                   </button>
                 )}
                 {mode === "static" && (
