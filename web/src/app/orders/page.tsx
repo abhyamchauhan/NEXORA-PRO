@@ -2,6 +2,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
+import { EmptyState } from "@/components/store/EmptyState";
 
 export const dynamic = "force-dynamic";
 
@@ -28,16 +29,14 @@ export default async function OrdersPage() {
         <h1 className="font-display text-2xl mt-2 mb-10">Order history</h1>
 
         {orders.length === 0 ? (
-          <div className="bg-white border border-grey-200 p-10 text-center max-w-xl">
-            <p className="text-grey-500 text-sm">
-              No orders yet. Your purchases will appear here.
-            </p>
-            <Link
-              href="/"
-              className="inline-block mt-4 font-display text-xs tracking-button bg-ink text-white px-5 py-2.5 rounded-button"
-            >
-              Start shopping
-            </Link>
+          <div className="max-w-xl">
+            <EmptyState
+              icon="❑"
+              title="No orders yet"
+              message="When you place an order, it'll show up here with its status and items."
+              ctaLabel="Start shopping"
+              ctaHref="/shop"
+            />
           </div>
         ) : (
           <div className="space-y-4 max-w-3xl">

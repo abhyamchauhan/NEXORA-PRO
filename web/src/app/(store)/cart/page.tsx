@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useCart } from "@/components/store/CartProvider";
 import { ProductImage } from "@/components/store/ProductImage";
+import { EmptyState } from "@/components/store/EmptyState";
 import { inr } from "@/lib/format";
 
 export default function CartPage() {
@@ -10,14 +11,14 @@ export default function CartPage() {
 
   if (lines.length === 0) {
     return (
-      <div className="max-w-container mx-auto px-6 py-20 text-center">
-        <h1 className="font-display text-2xl mb-3">Your bag is empty</h1>
-        <Link
-          href="/shop"
-          className="inline-block font-display text-sm tracking-button bg-ink text-white px-7 py-3 rounded-button"
-        >
-          Shop now
-        </Link>
+      <div className="max-w-container mx-auto px-6 py-16">
+        <EmptyState
+          icon="⛍"
+          title="Your bag is empty"
+          message="Nothing here yet — explore the collection and add something you love."
+          ctaLabel="Start shopping"
+          ctaHref="/shop"
+        />
       </div>
     );
   }

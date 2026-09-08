@@ -22,9 +22,10 @@ export function SiteFooter() {
         <FooterCol
           title="Help"
           links={[
-            { href: "/shop", label: "Size guide" },
-            { href: "/shop", label: "Shipping" },
-            { href: "/shop", label: "Returns" },
+            { href: "/refund-policy", label: "Returns & refunds" },
+            { href: "/refund-policy", label: "Shipping" },
+            { href: "/privacy", label: "Privacy Policy" },
+            { href: "/terms", label: "Terms of Service" },
           ]}
         />
         <FooterCol

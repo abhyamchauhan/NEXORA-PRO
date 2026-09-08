@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { useCart } from "@/components/store/CartProvider";
+import { HeaderSearch } from "@/components/store/HeaderSearch";
 
 const NAV = [
   { href: "/shop?category=men", label: "Men" },
@@ -110,6 +111,7 @@ export function SiteHeader() {
 
             {/* Right */}
             <div className="justify-self-end flex items-center gap-5">
+              <HeaderSearch tone={overlay ? "dark" : "light"} />
               <RollLink href="/shop" label="Shop all" className="hidden md:inline-block" />
               {session?.user?.role === "admin" && (
                 <RollLink href="/admin" label="Admin" className="hidden sm:inline-block" />
