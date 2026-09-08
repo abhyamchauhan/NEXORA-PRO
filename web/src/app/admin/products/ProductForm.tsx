@@ -3,9 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { ImageUploader } from "./ImageUploader";
-
-type DisplayMode = "static" | "rotation360";
+import { VariantMatrix, type VariantRow } from "./VariantMatrix";
 
 export type VariantState = {
   id?: string;
@@ -13,7 +11,7 @@ export type VariantState = {
   color: string;
   colorHex: string;
   stock: number;
-  displayMode: DisplayMode;
+  displayMode: "static" | "rotation360";
   images: string[];
   imageLabels: string[];
 };
@@ -32,54 +30,29 @@ export type ProductInitial = {
   variants: VariantState[];
 };
 
-const blankVariant = (): VariantState => ({
-  size: "",
-  color: "",
-  colorHex: "",
-  stock: 0,
-  displayMode: "static", // default; 360° is opt-in premium treatment
-  images: [],
-  imageLabels: [],
-});
-
 export function ProductForm({ initial }: { initial?: ProductInitial }) {
   const router = useRouter();
   const editing = !!initial;
 
   const [name, setName] = useState(initial?.name ?? "");
   const [description, setDescription] = useState(initial?.description ?? "");
-  const [price, setPrice] = useState<string>(
-    initial ? String(initial.price) : "",
-  );
-  const [category, setCategory] = useState<"men" | "women" | "kids">(
-    initial?.category ?? "men",
-  );
+  const [price, setPrice] = useState<string>(initial ? String(initial.price) : "");
+  const [category, setCategory] = useState<"men" | "women" | "kids">(initial?.category ?? "men");
   const [featured, setFeatured] = useState(initial?.featured ?? false);
   const [material, setMaterial] = useState(initial?.material ?? "");
   const [care, setCare] = useState(initial?.care ?? "");
-  const [rating, setRating] = useState<string>(
-    initial?.rating != null ? String(initial.rating) : "",
-  );
-  const [reviewCount, setReviewCount] = useState<string>(
-    initial?.reviewCount ? String(initial.reviewCount) : "",
-  );
-  const [variants, setVariants] = useState<VariantState[]>(
-    initial?.variants?.length ? initial.variants : [blankVariant()],
-  );
+  const [rating, setRating] = useState(initial?.rating != null ? String(initial.rating) : "");
+  const [reviewCount, setReviewCount] = useState(initial?.reviewCount ? String(initial.reviewCount) : "");
+
+  // Create-mode only: the matrix rows to submit with the product.
+  const [matrixRows, setMatrixRows] = useState<VariantRow[]>([]);
 
   const [error, setError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
+  const [detailsMsg, setDetailsMsg] = useState<string | null>(null);
 
-  function patchVariant(i: number, patch: Partial<VariantState>) {
-    setVariants((vs) => vs.map((v, idx) => (idx === i ? { ...v, ...patch } : v)));
-  }
-
-  async function onSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    setError(null);
-    setSaving(true);
-
-    const payload = {
+  function fieldsPayload() {
+    return {
       name,
       description,
       price: Number(price),
@@ -89,259 +62,171 @@ export function ProductForm({ initial }: { initial?: ProductInitial }) {
       care,
       rating: rating ? Number(rating) : null,
       reviewCount: reviewCount ? Number(reviewCount) : 0,
-      variants,
     };
+  }
 
-    const url = editing
-      ? `/api/admin/products/${initial!.id}`
-      : "/api/admin/products";
-    const res = await fetch(url, {
-      method: editing ? "PATCH" : "POST",
+  // CREATE: product + all matrix variants in one request.
+  async function onCreate(e: React.FormEvent) {
+    e.preventDefault();
+    setError(null);
+    if (matrixRows.length === 0) {
+      setError("Add at least one variant (pick sizes + colours, then Generate).");
+      return;
+    }
+    setSaving(true);
+    const res = await fetch("/api/admin/products", {
+      method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
+      body: JSON.stringify({
+        ...fieldsPayload(),
+        variants: matrixRows.map((r) => ({
+          size: r.size,
+          color: r.color,
+          colorHex: r.colorHex,
+          stock: r.stock,
+          displayMode: r.displayMode,
+          images: r.images,
+          imageLabels: r.imageLabels,
+        })),
+      }),
     });
-
     setSaving(false);
     if (!res.ok) {
       const d = await res.json().catch(() => ({}));
-      setError(d.error || "Could not save the product.");
+      setError(d.error || "Could not create the product.");
       return;
     }
     router.push("/admin/products");
     router.refresh();
   }
 
+  // EDIT: save product fields only (variants are managed live in the matrix).
+  async function onSaveDetails() {
+    setDetailsMsg(null);
+    setSaving(true);
+    const res = await fetch(`/api/admin/products/${initial!.id}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(fieldsPayload()),
+    });
+    setSaving(false);
+    const d = await res.json().catch(() => ({}));
+    setDetailsMsg(res.ok ? "Details saved ✓" : d.error || "Could not save.");
+    if (res.ok) router.refresh();
+  }
+
+  const initialRows: VariantRow[] = (initial?.variants ?? []).map((v) => ({
+    id: v.id,
+    size: v.size,
+    color: v.color,
+    colorHex: v.colorHex,
+    stock: v.stock,
+    displayMode: v.displayMode,
+    images: v.images,
+    imageLabels: v.imageLabels,
+  }));
+
   return (
-    <form onSubmit={onSubmit} className="max-w-3xl">
+    <div className="max-w-3xl">
       <div className="flex items-center justify-between mb-6">
-        <h1 className="font-display text-2xl">
-          {editing ? "Edit product" : "Add product"}
-        </h1>
+        <h1 className="font-display text-2xl">{editing ? "Edit product" : "Add product"}</h1>
         <Link href="/admin/products" className="text-sm text-grey-500 hover:text-ink">
           ← Back
         </Link>
       </div>
 
-      {/* Product fields */}
-      <div className="bg-white border border-grey-200 p-6 space-y-4">
-        <Labeled label="Name">
-          <input
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            required
-            className="input"
-          />
-        </Labeled>
-        <Labeled label="Description">
-          <textarea
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            rows={3}
-            required
-            className="input"
-          />
-        </Labeled>
-        <div className="grid grid-cols-2 gap-4">
-          <Labeled label="Price (₹)">
-            <input
-              type="number"
-              min={0}
-              value={price}
-              onChange={(e) => setPrice(e.target.value)}
-              required
-              className="input"
-            />
+      {/* Product details */}
+      <form onSubmit={editing ? (e) => e.preventDefault() : onCreate}>
+        <div className="bg-white border border-grey-200 p-6 space-y-4">
+          <Labeled label="Name">
+            <input value={name} onChange={(e) => setName(e.target.value)} required className="input" />
           </Labeled>
-          <Labeled label="Category">
-            <select
-              value={category}
-              onChange={(e) =>
-                setCategory(e.target.value as "men" | "women" | "kids")
-              }
-              className="input"
-            >
-              <option value="men">Men</option>
-              <option value="women">Women</option>
-              <option value="kids">Kids</option>
-            </select>
+          <Labeled label="Description">
+            <textarea value={description} onChange={(e) => setDescription(e.target.value)} rows={3} required className="input" />
           </Labeled>
-        </div>
-        <label className="flex items-center gap-2 text-sm">
-          <input
-            type="checkbox"
-            checked={featured}
-            onChange={(e) => setFeatured(e.target.checked)}
-          />
-          Feature on homepage
-        </label>
+          <div className="grid grid-cols-2 gap-4">
+            <Labeled label="Price (₹)">
+              <input type="number" min={0} value={price} onChange={(e) => setPrice(e.target.value)} required className="input" />
+            </Labeled>
+            <Labeled label="Category">
+              <select value={category} onChange={(e) => setCategory(e.target.value as "men" | "women" | "kids")} className="input">
+                <option value="men">Men</option>
+                <option value="women">Women</option>
+                <option value="kids">Kids</option>
+              </select>
+            </Labeled>
+          </div>
+          <label className="flex items-center gap-2 text-sm">
+            <input type="checkbox" checked={featured} onChange={(e) => setFeatured(e.target.checked)} />
+            Feature on homepage
+          </label>
+          <Labeled label="Material (optional)">
+            <input value={material} onChange={(e) => setMaterial(e.target.value)} className="input" placeholder="380 GSM brushed cotton fleece" />
+          </Labeled>
+          <Labeled label="Care instructions (optional)">
+            <textarea value={care} onChange={(e) => setCare(e.target.value)} rows={2} className="input" placeholder="Machine wash cold, tumble dry low." />
+          </Labeled>
+          <div className="grid grid-cols-2 gap-4">
+            <Labeled label="Rating (0–5, optional)">
+              <input type="number" step="0.1" min={0} max={5} value={rating} onChange={(e) => setRating(e.target.value)} className="input" placeholder="4.8" />
+            </Labeled>
+            <Labeled label="Review count (optional)">
+              <input type="number" min={0} value={reviewCount} onChange={(e) => setReviewCount(e.target.value)} className="input" placeholder="128" />
+            </Labeled>
+          </div>
 
-        <Labeled label="Material (optional)">
-          <input
-            value={material}
-            onChange={(e) => setMaterial(e.target.value)}
-            className="input"
-            placeholder="380 GSM brushed cotton fleece"
-          />
-        </Labeled>
-        <Labeled label="Care instructions (optional)">
-          <textarea
-            value={care}
-            onChange={(e) => setCare(e.target.value)}
-            rows={2}
-            className="input"
-            placeholder="Machine wash cold, tumble dry low, do not bleach."
-          />
-        </Labeled>
-        <div className="grid grid-cols-2 gap-4">
-          <Labeled label="Rating (0–5, optional)">
-            <input
-              type="number"
-              step="0.1"
-              min={0}
-              max={5}
-              value={rating}
-              onChange={(e) => setRating(e.target.value)}
-              className="input"
-              placeholder="4.8"
-            />
-          </Labeled>
-          <Labeled label="Review count (optional)">
-            <input
-              type="number"
-              min={0}
-              value={reviewCount}
-              onChange={(e) => setReviewCount(e.target.value)}
-              className="input"
-              placeholder="128"
-            />
-          </Labeled>
-        </div>
-      </div>
-
-      {/* Variants */}
-      <div className="flex items-center justify-between mt-8 mb-3">
-        <h2 className="font-display text-sm tracking-label text-grey-500">
-          Variants ({variants.length})
-        </h2>
-        <button
-          type="button"
-          onClick={() => setVariants((vs) => [...vs, blankVariant()])}
-          className="text-xs font-display tracking-button border border-grey-300 px-3 py-1.5 rounded-button hover:border-ink"
-        >
-          + Add variant
-        </button>
-      </div>
-
-      <div className="space-y-4">
-        {variants.map((v, i) => (
-          <div key={i} className="bg-white border border-grey-200 p-6">
-            <div className="flex items-center justify-between mb-4">
-              <span className="font-display text-xs tracking-label text-grey-500">
-                Variant {i + 1}
-              </span>
-              {variants.length > 1 && (
-                <button
-                  type="button"
-                  onClick={() =>
-                    setVariants((vs) => vs.filter((_, idx) => idx !== i))
-                  }
-                  className="text-xs text-sale underline"
-                >
-                  Remove variant
-                </button>
+          {editing && (
+            <div className="flex items-center gap-3 pt-2">
+              <button
+                type="button"
+                onClick={onSaveDetails}
+                disabled={saving}
+                className="font-display text-sm tracking-button bg-ink text-white px-6 py-3 rounded-button hover:bg-black disabled:opacity-60"
+              >
+                {saving ? "Saving…" : "Save details"}
+              </button>
+              {detailsMsg && (
+                <span className={`text-sm ${detailsMsg.includes("✓") ? "text-rating" : "text-sale"}`}>{detailsMsg}</span>
               )}
             </div>
+          )}
+        </div>
 
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-              <Labeled label="Size">
-                <input
-                  value={v.size}
-                  onChange={(e) => patchVariant(i, { size: e.target.value })}
-                  placeholder="M / L / OS"
-                  className="input"
-                />
-              </Labeled>
-              <Labeled label="Colour">
-                <input
-                  value={v.color}
-                  onChange={(e) => patchVariant(i, { color: e.target.value })}
-                  placeholder="Black"
-                  className="input"
-                />
-              </Labeled>
-              <Labeled label="Hex">
-                <input
-                  value={v.colorHex}
-                  onChange={(e) => patchVariant(i, { colorHex: e.target.value })}
-                  placeholder="#131313"
-                  className="input"
-                />
-              </Labeled>
-              <Labeled label="Stock">
-                <input
-                  type="number"
-                  min={0}
-                  value={v.stock}
-                  onChange={(e) =>
-                    patchVariant(i, { stock: Number(e.target.value) })
-                  }
-                  className="input"
-                />
-              </Labeled>
+        {/* Variants matrix */}
+        <div className="mt-8">
+          <h2 className="font-display text-sm tracking-label text-grey-500 mb-3">
+            Variants — sizes × colours
+          </h2>
+          <VariantMatrix
+            productId={initial?.id}
+            initial={initialRows}
+            onLocalChange={editing ? undefined : setMatrixRows}
+          />
+          {editing && (
+            <p className="text-xs text-grey-400 mt-3">
+              Each variant saves on its own — editing one never affects the others.
+            </p>
+          )}
+        </div>
+
+        {!editing && (
+          <>
+            {error && <p className="text-sale text-sm mt-5">{error}</p>}
+            <div className="mt-6 flex gap-3">
+              <button
+                type="submit"
+                disabled={saving}
+                className="font-display text-sm tracking-button bg-ink text-white px-6 py-3 rounded-button hover:bg-black disabled:opacity-60"
+              >
+                {saving ? "Creating…" : "Create product"}
+              </button>
+              <Link href="/admin/products" className="font-display text-sm tracking-button border border-grey-300 px-6 py-3 rounded-button hover:border-ink">
+                Cancel
+              </Link>
             </div>
-
-            {/* Hybrid photo mode toggle */}
-            <div className="mt-4">
-              <span className="font-display text-xs tracking-label text-grey-500">
-                Photo mode
-              </span>
-              <div className="flex gap-2 mt-1">
-                <ModeButton
-                  active={v.displayMode === "static"}
-                  onClick={() => patchVariant(i, { displayMode: "static" })}
-                  title="Static photos"
-                  sub="4–6 images · default"
-                />
-                <ModeButton
-                  active={v.displayMode === "rotation360"}
-                  onClick={() => patchVariant(i, { displayMode: "rotation360" })}
-                  title="360° rotation"
-                  sub="12–16 images · premium"
-                />
-              </div>
-            </div>
-
-            <div className="mt-4">
-              <ImageUploader
-                mode={v.displayMode}
-                images={v.images}
-                labels={v.imageLabels}
-                onChange={(images, imageLabels) =>
-                  patchVariant(i, { images, imageLabels })
-                }
-              />
-            </div>
-          </div>
-        ))}
-      </div>
-
-      {error && <p className="text-sale text-sm mt-5">{error}</p>}
-
-      <div className="mt-6 flex gap-3">
-        <button
-          type="submit"
-          disabled={saving}
-          className="font-display text-sm tracking-button bg-ink text-white px-6 py-3 rounded-button hover:bg-black transition-colors disabled:opacity-60"
-        >
-          {saving ? "Saving…" : editing ? "Save changes" : "Create product"}
-        </button>
-        <Link
-          href="/admin/products"
-          className="font-display text-sm tracking-button border border-grey-300 px-6 py-3 rounded-button hover:border-ink"
-        >
-          Cancel
-        </Link>
-      </div>
+          </>
+        )}
+      </form>
 
       <style jsx>{`
         :global(.input) {
@@ -349,55 +234,22 @@ export function ProductForm({ initial }: { initial?: ProductInitial }) {
           border: 1px solid #dddddd;
           background: #fff;
           padding: 0.55rem 0.65rem;
-          font-size: 0.85rem;
+          font-size: 0.9rem;
           outline: none;
         }
         :global(.input:focus) {
           border-color: #1c1c1c;
         }
       `}</style>
-    </form>
+    </div>
   );
 }
 
-function Labeled({
-  label,
-  children,
-}: {
-  label: string;
-  children: React.ReactNode;
-}) {
+function Labeled({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <label className="block">
-      <span className="font-display text-xs tracking-label text-grey-500">
-        {label}
-      </span>
+      <span className="font-display text-xs tracking-label text-grey-500">{label}</span>
       <div className="mt-1">{children}</div>
     </label>
-  );
-}
-
-function ModeButton({
-  active,
-  onClick,
-  title,
-  sub,
-}: {
-  active: boolean;
-  onClick: () => void;
-  title: string;
-  sub: string;
-}) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      className={`flex-1 text-left border px-3 py-2 rounded-button transition-colors ${
-        active ? "border-ink bg-grey-50" : "border-grey-200 hover:border-grey-400"
-      }`}
-    >
-      <span className="block font-display text-xs tracking-button">{title}</span>
-      <span className="block text-[11px] text-grey-500">{sub}</span>
-    </button>
   );
 }
