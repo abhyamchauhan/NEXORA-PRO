@@ -2,6 +2,7 @@ import type { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import { ProductCard } from "@/components/store/ProductCard";
 import { ShopFilters } from "./ShopFilters";
+import { Reveal } from "@/components/store/Reveal";
 import { CATEGORY_LABELS } from "@/lib/format";
 
 export const dynamic = "force-dynamic";
@@ -77,20 +78,24 @@ export default async function ShopPage({ searchParams }: { searchParams: SP }) {
         {products.length} product{products.length !== 1 ? "s" : ""}
       </p>
 
-      <div className="grid lg:grid-cols-[220px_1fr] gap-8">
-        <ShopFilters sizeOptions={sizeOptions} colorOptions={colorOptions} />
+      <div className="grid lg:grid-cols-[20%_1fr] gap-10">
+        {/* Sticky filter sidebar */}
+        <div className="lg:sticky lg:top-28 self-start">
+          <ShopFilters sizeOptions={sizeOptions} colorOptions={colorOptions} />
+        </div>
 
-        <div>
+        {/* Product area with an elegant 1px divider on desktop */}
+        <div className="lg:border-l lg:border-grey-200/70 lg:pl-10">
           {products.length === 0 ? (
             <div className="border border-grey-200 p-14 text-center text-grey-500">
               No products match these filters.
             </div>
           ) : (
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-x-4 gap-y-8">
+            <Reveal className="grid grid-cols-2 md:grid-cols-3 gap-x-4 gap-y-10">
               {products.map((p) => (
                 <ProductCard key={p.id} product={p} />
               ))}
-            </div>
+            </Reveal>
           )}
         </div>
       </div>
