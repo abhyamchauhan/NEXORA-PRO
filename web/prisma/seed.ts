@@ -120,6 +120,44 @@ async function seedUsers() {
   console.log(`  ✓ customer: ${CUSTOMER_EMAIL} / ${CUSTOMER_PASSWORD}`);
 }
 
+async function seedHomepage() {
+  const existing = await prisma.homepageSection.count();
+  if (existing > 0) {
+    console.log(`  · homepage already has ${existing} section(s), skipping`);
+    return;
+  }
+  const featured = await prisma.product.findMany({
+    where: { featured: true },
+    select: { id: true },
+    take: 8,
+  });
+  await prisma.homepageSection.createMany({
+    data: [
+      {
+        type: "hero",
+        position: 0,
+        heading: "Streetwear, engineered clean.",
+        subtext: "Render 01 — the season drop",
+        buttonText: "Shop all",
+        buttonLink: "/shop",
+      },
+      {
+        type: "categoryShowcase",
+        position: 1,
+        heading: "Shop by category",
+        categories: ["men", "women", "kids"],
+      },
+      {
+        type: "featuredProducts",
+        position: 2,
+        heading: "Featured",
+        productIds: featured.map((f) => f.id),
+      },
+    ],
+  });
+  console.log("  ✓ created 3 default homepage sections");
+}
+
 async function main() {
   console.log("Seeding NEXORA users…");
   await seedUsers();
@@ -136,6 +174,8 @@ async function main() {
     });
     console.log(`  ✓ ${p.name} (${variants.length} variants)`);
   }
+  console.log("Seeding NEXORA homepage…");
+  await seedHomepage();
   const total = await prisma.product.count();
   console.log(`Done. ${total} products in the catalogue.`);
 }

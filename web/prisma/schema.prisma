@@ -42,6 +42,13 @@ enum OrderStatus {
   cancelled
 }
 
+enum SectionType {
+  hero
+  banner
+  featuredProducts
+  categoryShowcase
+}
+
 // ---------------------------------------------------------------------------
 // Auth (single User table, differentiated by `role`). NextAuth adapter tables
 // (Account/Session/VerificationToken) are included now so Step 2 needs no
@@ -191,6 +198,34 @@ model Order {
   items OrderItem[]
 
   @@index([userId])
+}
+
+// ---------------------------------------------------------------------------
+// Homepage CMS — the storefront homepage is composed entirely from these rows,
+// managed by the admin. Nothing on the homepage is hardcoded.
+// ---------------------------------------------------------------------------
+
+model HomepageSection {
+  id       String      @id @default(cuid())
+  type     SectionType
+  position Int         @default(0)
+  visible  Boolean     @default(true)
+
+  // Shared content fields (used per type)
+  heading    String?
+  subtext    String?
+  image      String? // Cloudinary URL (admin upload only)
+  buttonText String?
+  buttonLink String?
+
+  // featuredProducts → ordered product ids; categoryShowcase → category ids
+  productIds String[] @default([])
+  categories String[] @default([])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([position])
 }
 
 model OrderItem {
