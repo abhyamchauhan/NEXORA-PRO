@@ -66,7 +66,6 @@ export default async function ProductPage({
     description: product.description,
     price: product.price,
     category: product.category,
-    bgColor: product.bgColor,
     material: product.material,
     care: product.care,
     rating: product.rating,

@@ -11,16 +11,12 @@ export function ProductImage({
   alt,
   sizes,
   priority,
-  fit = "cover",
   className = "",
 }: {
   src?: string | null;
   alt: string;
   sizes?: string;
   priority?: boolean;
-  // "contain" keeps a background-removed garment fully visible, centred on the
-  // product's background colour; "cover" is the default for legacy full-bleed art.
-  fit?: "cover" | "contain";
   className?: string;
 }) {
   const [error, setError] = useState(false);
@@ -34,7 +30,7 @@ export function ProductImage({
       sizes={sizes ?? "(max-width: 768px) 50vw, 25vw"}
       priority={priority}
       onError={() => setError(true)}
-      className={`${fit === "contain" ? "object-contain" : "object-cover"} ${className}`}
+      className={`object-cover ${className}`}
     />
   );
 }

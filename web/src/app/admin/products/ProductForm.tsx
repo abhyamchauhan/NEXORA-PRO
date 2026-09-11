@@ -4,7 +4,6 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { VariantMatrix, type VariantRow } from "./VariantMatrix";
-import { DEFAULT_PRODUCT_BG } from "@/lib/format";
 
 export type VariantState = {
   id?: string;
@@ -14,7 +13,6 @@ export type VariantState = {
   stock: number;
   displayMode: "static" | "rotation360";
   images: string[];
-  imagesOriginal: string[];
   imageLabels: string[];
 };
 
@@ -25,7 +23,6 @@ export type ProductInitial = {
   price: number;
   category: "men" | "women" | "kids";
   featured: boolean;
-  bgColor: string | null;
   material: string | null;
   care: string | null;
   rating: number | null;
@@ -42,7 +39,6 @@ export function ProductForm({ initial }: { initial?: ProductInitial }) {
   const [price, setPrice] = useState<string>(initial ? String(initial.price) : "");
   const [category, setCategory] = useState<"men" | "women" | "kids">(initial?.category ?? "men");
   const [featured, setFeatured] = useState(initial?.featured ?? false);
-  const [bgColor, setBgColor] = useState(initial?.bgColor ?? DEFAULT_PRODUCT_BG);
   const [material, setMaterial] = useState(initial?.material ?? "");
   const [care, setCare] = useState(initial?.care ?? "");
   const [rating, setRating] = useState(initial?.rating != null ? String(initial.rating) : "");
@@ -62,7 +58,6 @@ export function ProductForm({ initial }: { initial?: ProductInitial }) {
       price: Number(price),
       category,
       featured,
-      bgColor,
       material,
       care,
       rating: rating ? Number(rating) : null,
@@ -91,7 +86,6 @@ export function ProductForm({ initial }: { initial?: ProductInitial }) {
           stock: r.stock,
           displayMode: r.displayMode,
           images: r.images,
-          imagesOriginal: r.imagesOriginal,
           imageLabels: r.imageLabels,
         })),
       }),
@@ -129,7 +123,6 @@ export function ProductForm({ initial }: { initial?: ProductInitial }) {
     stock: v.stock,
     displayMode: v.displayMode,
     images: v.images,
-    imagesOriginal: v.imagesOriginal,
     imageLabels: v.imageLabels,
   }));
 
@@ -167,42 +160,6 @@ export function ProductForm({ initial }: { initial?: ProductInitial }) {
             <input type="checkbox" checked={featured} onChange={(e) => setFeatured(e.target.checked)} />
             Feature on homepage
           </label>
-
-          <Labeled label="Product background colour">
-            <div className="flex items-center gap-3">
-              <input
-                type="color"
-                value={/^#[0-9a-fA-F]{6}$/.test(bgColor) ? bgColor : DEFAULT_PRODUCT_BG}
-                onChange={(e) => setBgColor(e.target.value)}
-                className="h-10 w-14 border border-grey-200 bg-white p-0.5 cursor-pointer"
-                aria-label="Pick background colour"
-              />
-              <input
-                value={bgColor}
-                onChange={(e) => setBgColor(e.target.value)}
-                placeholder={DEFAULT_PRODUCT_BG}
-                className="input !w-32 font-mono text-sm"
-              />
-              <button
-                type="button"
-                onClick={() => setBgColor(DEFAULT_PRODUCT_BG)}
-                className="text-xs underline text-grey-500 hover:text-ink"
-              >
-                Reset
-              </button>
-              <span
-                className="ml-auto h-10 flex-1 max-w-[10rem] border border-grey-200 rounded-sm"
-                style={{ background: /^#[0-9a-fA-F]{3,6}$/.test(bgColor) ? bgColor : DEFAULT_PRODUCT_BG }}
-                aria-hidden
-              />
-            </div>
-            <p className="text-xs text-grey-400 mt-1">
-              Shown behind the (transparent) product photos on cards, the detail
-              page and the 360° viewer. Applied instantly — no re-upload needed.
-              Leave the default for a clean neutral.
-            </p>
-          </Labeled>
-
           <Labeled label="Material (optional)">
             <input value={material} onChange={(e) => setMaterial(e.target.value)} className="input" placeholder="380 GSM brushed cotton fleece" />
           </Labeled>
