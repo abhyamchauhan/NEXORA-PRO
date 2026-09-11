@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { useCart } from "@/components/store/CartProvider";
+import { useWishlist } from "@/components/store/WishlistProvider";
 import { HeaderSearch } from "@/components/store/HeaderSearch";
 
 const NAV = [
@@ -47,6 +48,8 @@ function RollLink({
 export function SiteHeader() {
   const { data: session } = useSession();
   const { count } = useCart();
+  const { ids: wishlistIds } = useWishlist();
+  const wishCount = wishlistIds.size;
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -109,26 +112,65 @@ export function SiteHeader() {
               NEXORA
             </Link>
 
-            {/* Right */}
-            <div className="justify-self-end flex items-center gap-5">
-              <HeaderSearch tone={overlay ? "dark" : "light"} />
-              <RollLink href="/shop" label="Shop all" className="hidden md:inline-block" />
+            {/* Right — icon cluster: search · account · wishlist · bag */}
+            <div className="justify-self-end flex items-center gap-4 sm:gap-5">
+              <HeaderSearch />
+
               {session?.user?.role === "admin" && (
-                <RollLink href="/admin" label="Admin" className="hidden sm:inline-block" />
+                <RollLink href="/admin" label="Admin" className="hidden md:inline-block" />
               )}
-              <RollLink
+
+              {/* Account / sign-in */}
+              <Link
                 href={session ? "/account" : "/login"}
-                label={session ? "Account" : "Sign in"}
-                className="hidden sm:inline-block"
-              />
+                aria-label={session ? "Account" : "Sign in"}
+                title={session ? "Account" : "Sign in"}
+                className="hover:opacity-70 transition-opacity"
+              >
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden>
+                  <circle cx="12" cy="8" r="4" stroke="currentColor" strokeWidth="2" />
+                  <path d="M4 21c0-4 3.6-6 8-6s8 2 8 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+                </svg>
+              </Link>
+
+              {/* Wishlist — links to the logged-in customer's saved wishlist */}
+              <Link
+                href="/account/wishlist"
+                aria-label="Wishlist"
+                title="Wishlist"
+                className="relative hover:opacity-70 transition-opacity"
+              >
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden>
+                  <path
+                    d="M12 21s-7.5-4.6-10-9.2C.6 8.8 2.2 5.5 5.4 5.5c2 0 3.3 1.2 4.6 2.9 1.3-1.7 2.6-2.9 4.6-2.9 3.2 0 4.8 3.3 3.4 6.3C19.5 16.4 12 21 12 21z"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+                {wishCount > 0 && (
+                  <span className="absolute -top-2 -right-2 min-w-4 h-4 px-1 rounded-pill bg-sale text-white text-[10px] font-display grid place-items-center">
+                    {wishCount}
+                  </span>
+                )}
+              </Link>
+
+              {/* Cart / bag */}
               <Link
                 href="/cart"
-                className="group/roll font-display text-sm tracking-button relative"
+                aria-label={`Bag (${count})`}
+                title="Bag"
+                className="relative hover:opacity-70 transition-opacity"
               >
-                <span className="roll">
-                  <span>Bag ({count})</span>
-                  <span aria-hidden>Bag ({count})</span>
-                </span>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden>
+                  <path d="M6 8h12l-1 12H7L6 8z" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" />
+                  <path d="M9 8V6a3 3 0 0 1 6 0v2" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+                </svg>
+                {count > 0 && (
+                  <span className="absolute -top-2 -right-2 min-w-4 h-4 px-1 rounded-pill bg-ink text-white text-[10px] font-display grid place-items-center">
+                    {count}
+                  </span>
+                )}
               </Link>
             </div>
           </div>
@@ -146,6 +188,13 @@ export function SiteHeader() {
                   {n.label}
                 </Link>
               ))}
+              <Link
+                href="/account/wishlist"
+                onClick={() => setOpen(false)}
+                className="font-display text-base tracking-button"
+              >
+                Wishlist{wishCount > 0 ? ` (${wishCount})` : ""}
+              </Link>
               <Link
                 href={session ? "/account" : "/login"}
                 onClick={() => setOpen(false)}
