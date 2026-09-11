@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { useCart } from "@/components/store/CartProvider";
@@ -53,6 +53,15 @@ export function SiteHeader() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+
+  // Bump a counter whenever the bag count increases → replays the cart icon
+  // bounce + badge pop (clear feedback that "add to cart" registered).
+  const [bump, setBump] = useState(0);
+  const prevCount = useRef(count);
+  useEffect(() => {
+    if (count > prevCount.current) setBump((b) => b + 1);
+    prevCount.current = count;
+  }, [count]);
 
   const isHome = pathname === "/";
   // Overlay the hero (transparent, light text) only at the top of the homepage.
@@ -162,12 +171,19 @@ export function SiteHeader() {
                 title="Bag"
                 className="relative hover:opacity-70 transition-opacity"
               >
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden>
-                  <path d="M6 8h12l-1 12H7L6 8z" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" />
-                  <path d="M9 8V6a3 3 0 0 1 6 0v2" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-                </svg>
+                <span key={`bag-${bump}`} className={bump ? "cart-bounce inline-block" : "inline-block"}>
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden>
+                    <path d="M6 8h12l-1 12H7L6 8z" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" />
+                    <path d="M9 8V6a3 3 0 0 1 6 0v2" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+                  </svg>
+                </span>
                 {count > 0 && (
-                  <span className="absolute -top-2 -right-2 min-w-4 h-4 px-1 rounded-pill bg-ink text-white text-[10px] font-display grid place-items-center">
+                  <span
+                    key={`badge-${bump}`}
+                    className={`absolute -top-2 -right-2 min-w-4 h-4 px-1 rounded-pill bg-ink text-white text-[10px] font-display grid place-items-center ${
+                      bump ? "badge-pop" : ""
+                    }`}
+                  >
                     {count}
                   </span>
                 )}

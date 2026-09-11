@@ -4,6 +4,8 @@ import { CATEGORY_LABELS } from "@/lib/format";
 import { ProductCard } from "@/components/store/ProductCard";
 import { ProductImage } from "@/components/store/ProductImage";
 import { Reveal } from "@/components/store/Reveal";
+import { Stagger } from "@/components/store/Stagger";
+import { LetterReveal } from "@/components/store/LetterReveal";
 import { Magnetic } from "@/components/store/Magnetic";
 import { HeroParallax } from "@/components/store/HeroParallax";
 
@@ -45,8 +47,8 @@ function HeroSection({ s }: { s: HydratedSection }) {
           </p>
         )}
         {s.heading && (
-          <h1 className="font-display text-5xl sm:text-7xl lg:text-8xl leading-[0.95] max-w-4xl anim-fade-up anim-delay-2">
-            {s.heading}
+          <h1 className="hero-wobble font-display text-5xl sm:text-7xl lg:text-8xl leading-[0.95] max-w-4xl">
+            <LetterReveal text={s.heading} start={0.15} />
           </h1>
         )}
         {s.buttonText && (
@@ -107,11 +109,11 @@ function FeaturedProductsSection({ s }: { s: HydratedSection }) {
             View all →
           </Link>
         </div>
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-4 gap-y-8">
+        <Stagger className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-4 gap-y-8">
           {s.products.map((p) => (
             <ProductCard key={p.id} product={p} />
           ))}
-        </div>
+        </Stagger>
       </section>
     </Reveal>
   );

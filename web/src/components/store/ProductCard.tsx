@@ -18,7 +18,10 @@ export function ProductCard({ product }: { product: CardProduct }) {
   const [hover, setHover] = useState(false);
   const [tilt, setTilt] = useState({ rx: 0, ry: 0 });
 
-  const firstImage = product.variants.flatMap((v) => v.images)[0];
+  const allImages = product.variants.flatMap((v) => v.images).filter(Boolean);
+  const firstImage = allImages[0];
+  // A different angle/photo to crossfade to on hover (falls back to none).
+  const secondImage = allImages.find((img) => img && img !== firstImage) ?? null;
   const colours = new Set(product.variants.map((v) => v.color)).size;
   const totalStock = product.variants.reduce((s, v) => s + v.stock, 0);
   const has360 = product.variants.some((v) => v.displayMode === "rotation360");
@@ -60,12 +63,26 @@ export function ProductCard({ product }: { product: CardProduct }) {
           className="relative aspect-[4/5] bg-grey-50 overflow-hidden transition-[box-shadow,transform] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] active:scale-[0.98]"
           style={hover ? { boxShadow: "0 24px 50px -12px rgb(0 0 0 / 0.28)" } : undefined}
         >
+          {/* Base image — fades OUT on hover when a second angle exists */}
           <ProductImage
             src={firstImage}
             alt={product.name}
             sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-            className="transition-[transform,filter] duration-[600ms] ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.05] group-hover:brightness-[1.04]"
+            className={`transition-[transform,filter,opacity] duration-[600ms] ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.05] group-hover:brightness-[1.04] ${
+              secondImage ? "group-hover:opacity-0" : ""
+            }`}
           />
+          {/* Second angle — crossfades IN on hover */}
+          {secondImage && (
+            <span className="absolute inset-0 opacity-0 transition-opacity duration-[500ms] ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:opacity-100">
+              <ProductImage
+                src={secondImage}
+                alt={`${product.name} — alternate view`}
+                sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+                className="transition-transform duration-[600ms] ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.05]"
+              />
+            </span>
+          )}
           {has360 && (
             <span className="absolute top-2 left-2 bg-ink text-white text-[10px] font-display tracking-button px-2 py-1">
               360°
