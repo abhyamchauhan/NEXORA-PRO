@@ -15,6 +15,37 @@ export function isEmailConfigured() {
   return !!process.env.RESEND_API_KEY;
 }
 
+// Send a password-reset link. Never throws; returns whether it was sent.
+export async function sendPasswordResetEmail(
+  to: string,
+  resetUrl: string,
+): Promise<{ sent: boolean; reason?: string }> {
+  try {
+    if (!isEmailConfigured()) return { sent: false, reason: "RESEND_API_KEY not set" };
+    const resend = new Resend(process.env.RESEND_API_KEY);
+    const html = `
+      <div style="font-family:Arial,Helvetica,sans-serif;max-width:480px;margin:0 auto;padding:24px;color:#1c1c1c">
+        <h1 style="font-size:20px;letter-spacing:.04em;text-transform:uppercase;margin:0 0 4px">NEXORA</h1>
+        <p style="color:#6b6b6b;font-size:13px;margin:0 0 20px">Reset your password</p>
+        <p style="font-size:14px;line-height:1.6">We received a request to reset your password. Click below to choose a new one. This link expires in 1 hour.</p>
+        <p style="margin:24px 0">
+          <a href="${resetUrl}" style="background:#1c1c1c;color:#fff;text-decoration:none;font-size:14px;padding:12px 22px;border-radius:2px;display:inline-block">Reset password</a>
+        </p>
+        <p style="font-size:12px;color:#9a9a9a">If you didn't request this, you can safely ignore this email — your password won't change.</p>
+      </div>`;
+    const { error } = await resend.emails.send({
+      from: FROM,
+      to,
+      subject: "Reset your password | NEXORA",
+      html,
+    });
+    if (error) return { sent: false, reason: String(error) };
+    return { sent: true };
+  } catch (e) {
+    return { sent: false, reason: e instanceof Error ? e.message : "unknown" };
+  }
+}
+
 // Load everything the email needs from the DB. Resolves the recipient from the
 // guest email or the linked user's email.
 export async function buildOrderEmailData(orderId: string): Promise<OrderEmailData | null> {

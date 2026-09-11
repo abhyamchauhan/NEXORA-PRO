@@ -73,6 +73,12 @@ export default function LoginForm() {
 
           {error && <p className="text-sale text-sm">{error}</p>}
 
+          <div className="text-right">
+            <Link href="/forgot-password" className="text-xs text-grey-500 hover:text-ink underline">
+              Forgot password?
+            </Link>
+          </div>
+
           <button
             type="submit"
             disabled={loading}

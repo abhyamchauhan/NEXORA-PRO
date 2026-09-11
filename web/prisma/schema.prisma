@@ -68,11 +68,27 @@ model User {
   role         Role     @default(customer)
   createdAt    DateTime @default(now())
 
-  cart     Cart?
-  orders   Order[]
-  accounts Account[]
-  sessions Session[]
-  wishlist WishlistItem[]
+  cart        Cart?
+  orders      Order[]
+  accounts    Account[]
+  sessions    Session[]
+  wishlist    WishlistItem[]
+  resetTokens PasswordResetToken[]
+}
+
+// Password reset tokens. Only the SHA-256 hash of the token is stored; the raw
+// token travels only in the emailed link. Single-use and time-limited.
+model PasswordResetToken {
+  id        String    @id @default(cuid())
+  userId    String
+  tokenHash String    @unique
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime  @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
 }
 
 model WishlistItem {

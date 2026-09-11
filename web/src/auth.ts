@@ -5,7 +5,7 @@ import Google from "next-auth/providers/google";
 import bcrypt from "bcryptjs";
 import { prisma } from "@/lib/prisma";
 import { authConfig } from "./auth.config";
-import { rateLimit } from "@/lib/rate-limit";
+import { limit } from "@/lib/rate-limit";
 
 const googleEnabled =
   !!process.env.GOOGLE_CLIENT_ID && !!process.env.GOOGLE_CLIENT_SECRET;
@@ -30,7 +30,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
         // Brute-force protection: cap attempts per email (best-effort,
         // in-memory). Production should back this with Redis/Upstash.
-        if (!rateLimit(`login:${email}`, 6, 60_000).ok) return null;
+        if (!(await limit(`login:${email}`, 6, 60_000)).ok) return null;
 
         const user = await prisma.user.findUnique({ where: { email } });
         if (!user?.passwordHash) return null; // no such user, or OAuth-only

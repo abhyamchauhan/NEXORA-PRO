@@ -56,6 +56,16 @@ export default async function AccountPage() {
             </p>
             <p className="text-sm">View saved products →</p>
           </Link>
+
+          <Link
+            href="/account/security"
+            className="bg-white border border-grey-200 p-6 hover:border-ink transition-colors"
+          >
+            <p className="font-display text-xs tracking-label text-grey-500 mb-3">
+              Password &amp; security
+            </p>
+            <p className="text-sm">Set or change your password →</p>
+          </Link>
         </div>
       </div>
     </main>
