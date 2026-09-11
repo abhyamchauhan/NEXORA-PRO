@@ -23,6 +23,7 @@ export type ProductInitial = {
   price: number;
   category: "men" | "women" | "kids";
   featured: boolean;
+  subCategoryId: string | null;
   material: string | null;
   care: string | null;
   rating: number | null;
@@ -30,7 +31,20 @@ export type ProductInitial = {
   variants: VariantState[];
 };
 
-export function ProductForm({ initial }: { initial?: ProductInitial }) {
+export type SubCategoryOption = {
+  id: string;
+  name: string;
+  group: string;
+  category: "men" | "women" | "kids";
+};
+
+export function ProductForm({
+  initial,
+  subCategories = [],
+}: {
+  initial?: ProductInitial;
+  subCategories?: SubCategoryOption[];
+}) {
   const router = useRouter();
   const editing = !!initial;
 
@@ -39,6 +53,7 @@ export function ProductForm({ initial }: { initial?: ProductInitial }) {
   const [price, setPrice] = useState<string>(initial ? String(initial.price) : "");
   const [category, setCategory] = useState<"men" | "women" | "kids">(initial?.category ?? "men");
   const [featured, setFeatured] = useState(initial?.featured ?? false);
+  const [subCategoryId, setSubCategoryId] = useState<string>(initial?.subCategoryId ?? "");
   const [material, setMaterial] = useState(initial?.material ?? "");
   const [care, setCare] = useState(initial?.care ?? "");
   const [rating, setRating] = useState(initial?.rating != null ? String(initial.rating) : "");
@@ -58,12 +73,16 @@ export function ProductForm({ initial }: { initial?: ProductInitial }) {
       price: Number(price),
       category,
       featured,
+      subCategoryId: subCategoryId || null,
       material,
       care,
       rating: rating ? Number(rating) : null,
       reviewCount: reviewCount ? Number(reviewCount) : 0,
     };
   }
+
+  // Sub-categories available for the currently-selected category.
+  const subOptions = subCategories.filter((s) => s.category === category);
 
   // CREATE: product + all matrix variants in one request.
   async function onCreate(e: React.FormEvent) {
@@ -149,13 +168,38 @@ export function ProductForm({ initial }: { initial?: ProductInitial }) {
               <input type="number" min={0} value={price} onChange={(e) => setPrice(e.target.value)} required className="input" />
             </Labeled>
             <Labeled label="Category">
-              <select value={category} onChange={(e) => setCategory(e.target.value as "men" | "women" | "kids")} className="input">
+              <select
+                value={category}
+                onChange={(e) => {
+                  setCategory(e.target.value as "men" | "women" | "kids");
+                  setSubCategoryId(""); // sub-categories are category-specific
+                }}
+                className="input"
+              >
                 <option value="men">Men</option>
                 <option value="women">Women</option>
                 <option value="kids">Kids</option>
               </select>
             </Labeled>
           </div>
+
+          <Labeled label="Sub-category (optional)">
+            <select
+              value={subCategoryId}
+              onChange={(e) => setSubCategoryId(e.target.value)}
+              className="input"
+              disabled={subOptions.length === 0}
+            >
+              <option value="">
+                {subOptions.length === 0 ? "No sub-categories for this category yet" : "— None —"}
+              </option>
+              {subOptions.map((s) => (
+                <option key={s.id} value={s.id}>
+                  {s.group} → {s.name}
+                </option>
+              ))}
+            </select>
+          </Labeled>
           <label className="flex items-center gap-2 text-sm">
             <input type="checkbox" checked={featured} onChange={(e) => setFeatured(e.target.checked)} />
             Feature on homepage

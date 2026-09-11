@@ -13,6 +13,13 @@ export async function GET(req: Request) {
     return Response.json({ products: [], categories: [] });
   }
 
+  const subRows = await prisma.subCategory.findMany({
+    where: { name: { contains: q, mode: "insensitive" } },
+    orderBy: { position: "asc" },
+    take: 5,
+    select: { name: true, slug: true, group: true, category: true },
+  });
+
   const rows = await prisma.product.findMany({
     where: {
       OR: [
@@ -39,10 +46,17 @@ export async function GET(req: Request) {
     image: p.variants.flatMap((v) => v.images).find(Boolean) ?? null,
   }));
 
-  // Category suggestions: any top-level category whose label matches the query.
-  const categories = Object.entries(CATEGORY_LABELS)
+  // Category suggestions: matching sub-categories first (e.g. "jog" → Joggers),
+  // then any top-level category whose label matches the query.
+  const subSuggestions = subRows.map((s) => ({
+    label: `${s.name} · ${CATEGORY_LABELS[s.category] ?? s.category}`,
+    href: `/shop?category=${s.category}&sub=${encodeURIComponent(s.slug)}`,
+  }));
+  const topSuggestions = Object.entries(CATEGORY_LABELS)
     .filter(([, label]) => label.toLowerCase().includes(q.toLowerCase()))
-    .map(([slug, label]) => ({ label, href: `/shop?category=${slug}` }));
+    .map(([slug, label]) => ({ label, href: `/category/${slug}` }));
+
+  const categories = [...subSuggestions, ...topSuggestions].slice(0, 6);
 
   return Response.json({ products, categories });
 }

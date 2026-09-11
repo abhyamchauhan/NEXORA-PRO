@@ -172,14 +172,61 @@ model Product {
   rating      Float? // 0–5; null = no reviews yet
   reviewCount Int      @default(0)
 
+  // Sub-category tag (e.g. "Joggers" under Bottomwear). Optional so existing
+  // products keep working; drives filtering and tile representative images.
+  subCategoryId String?
+
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
   variants Variant[]
   wishlistItems WishlistItem[]
   sizeChart SizeChart?
+  subCategory SubCategory? @relation(fields: [subCategoryId], references: [id], onDelete: SetNull)
 
   @@index([category])
+  @@index([subCategoryId])
+}
+
+// ---------------------------------------------------------------------------
+// Category taxonomy — admin-managed sub-categories grouped under a top-level
+// category (Men/Women/Kids) and a group label (e.g. "Topwear"/"Bottomwear").
+// Each has a representative image (falls back to a product photo if unset).
+// ---------------------------------------------------------------------------
+
+model SubCategory {
+  id        String   @id @default(cuid())
+  category  Category // men | women | kids
+  group     String // "Topwear", "Bottomwear", …
+  name      String // "Joggers"
+  slug      String // "joggers"
+  image     String? // representative image (Cloudinary); else first product photo
+  position  Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  products Product[]
+
+  @@unique([category, slug])
+  @@index([category, position])
+}
+
+// Per-category promotional banners shown in the landing-page carousel. Same
+// shape/pattern as HomepageSection banners, but scoped to one category.
+model CategoryBanner {
+  id         String   @id @default(cuid())
+  category   Category
+  heading    String?
+  subtext    String?
+  image      String?
+  buttonText String?
+  buttonLink String?
+  position   Int      @default(0)
+  visible    Boolean  @default(true)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([category, position])
 }
 
 // Flexible size guide. Fields are admin-defined (e.g. Chest/Length/Shoulder for

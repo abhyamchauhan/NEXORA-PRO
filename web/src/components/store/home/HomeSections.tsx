@@ -131,7 +131,7 @@ function CategoryShowcaseSection({ s }: { s: HydratedSection }) {
           {cats.map((c) => (
             <Link
               key={c}
-              href={`/shop?category=${c}`}
+              href={`/category/${c}`}
               className="group relative bg-grey-50 border border-grey-200 p-8 h-48 flex flex-col justify-end hover:border-ink transition-colors"
             >
               <p className="font-display text-3xl">

@@ -63,6 +63,7 @@ export async function POST(req: Request) {
       price: data.price,
       category: data.category,
       featured: data.featured,
+      subCategoryId: data.subCategoryId,
       material: data.material,
       care: data.care,
       rating: data.rating,

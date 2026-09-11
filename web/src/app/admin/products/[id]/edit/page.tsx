@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { ProductForm, type ProductInitial } from "../../ProductForm";
 import { SizeChartEditor } from "@/components/admin/SizeChartEditor";
+import { getSubCategoryOptions } from "@/lib/category";
 
 export const dynamic = "force-dynamic";
 
@@ -11,10 +12,10 @@ export default async function EditProductPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const product = await prisma.product.findUnique({
-    where: { id },
-    include: { variants: true },
-  });
+  const [product, subCategories] = await Promise.all([
+    prisma.product.findUnique({ where: { id }, include: { variants: true } }),
+    getSubCategoryOptions(),
+  ]);
   if (!product) notFound();
 
   const initial: ProductInitial = {
@@ -24,6 +25,7 @@ export default async function EditProductPage({
     price: product.price,
     category: product.category,
     featured: product.featured,
+    subCategoryId: product.subCategoryId,
     material: product.material,
     care: product.care,
     rating: product.rating,
@@ -44,7 +46,7 @@ export default async function EditProductPage({
 
   return (
     <div className="space-y-10">
-      <ProductForm initial={initial} />
+      <ProductForm initial={initial} subCategories={subCategories} />
 
       <section className="max-w-3xl">
         <h2 className="font-display text-xl mb-1">Size chart (this product)</h2>

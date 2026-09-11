@@ -9,9 +9,9 @@ import { useWishlist } from "@/components/store/WishlistProvider";
 import { HeaderSearch } from "@/components/store/HeaderSearch";
 
 const NAV = [
-  { href: "/shop?category=men", label: "Men" },
-  { href: "/shop?category=women", label: "Women" },
-  { href: "/shop?category=kids", label: "Kids" },
+  { href: "/category/men", label: "Men" },
+  { href: "/category/women", label: "Women" },
+  { href: "/category/kids", label: "Kids" },
 ];
 
 const ANNOUNCEMENTS = [

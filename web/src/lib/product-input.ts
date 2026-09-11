@@ -17,12 +17,16 @@ export type ProductInput = {
   price: number;
   category: Category;
   featured: boolean;
+  subCategoryId: string | null;
   material: string | null;
   care: string | null;
   rating: number | null;
   reviewCount: number;
   variants: VariantInput[];
 };
+
+const parseSubCategoryId = (v: unknown): string | null =>
+  typeof v === "string" && v.trim() ? v.trim() : null;
 
 const CATEGORIES = ["men", "women", "kids"] as const;
 const DISPLAY_MODES = ["static", "rotation360"] as const;
@@ -112,6 +116,7 @@ export function parseProductFields(
       price: Math.round(price),
       category,
       featured: Boolean(b.featured),
+      subCategoryId: parseSubCategoryId(b.subCategoryId),
       material,
       care,
       rating,
@@ -218,6 +223,7 @@ export function parseProductInput(raw: unknown): ParseResult {
       price: Math.round(price),
       category,
       featured,
+      subCategoryId: parseSubCategoryId(b.subCategoryId),
       material,
       care,
       rating,

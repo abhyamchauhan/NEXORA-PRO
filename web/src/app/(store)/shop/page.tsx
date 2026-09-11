@@ -29,6 +29,8 @@ type SP = Promise<{
   max?: string;
   sort?: string;
   q?: string;
+  sub?: string;
+  group?: string;
 }>;
 
 export default async function ShopPage({ searchParams }: { searchParams: SP }) {
@@ -42,6 +44,8 @@ export default async function ShopPage({ searchParams }: { searchParams: SP }) {
   const min = sp.min ? Number(sp.min) : undefined;
   const max = sp.max ? Number(sp.max) : undefined;
   const q = sp.q?.trim();
+  const sub = sp.sub?.trim();
+  const group = sp.group?.trim();
 
   const where: Prisma.ProductWhereInput = {};
   if (q)
@@ -50,6 +54,9 @@ export default async function ShopPage({ searchParams }: { searchParams: SP }) {
       { description: { contains: q, mode: "insensitive" } },
     ];
   if (category) where.category = category as Prisma.ProductWhereInput["category"];
+  // Sub-category / group scoping (from the category landing tiles).
+  if (sub) where.subCategory = { is: { slug: sub } };
+  else if (group) where.subCategory = { is: { group } };
   if (min !== undefined || max !== undefined)
     where.price = {
       ...(min !== undefined && Number.isFinite(min) ? { gte: min } : {}),
@@ -72,9 +79,12 @@ export default async function ShopPage({ searchParams }: { searchParams: SP }) {
           ? { name: "asc" }
           : { createdAt: "desc" };
 
-  const [products, allVariants] = await Promise.all([
+  const [products, allVariants, subRow] = await Promise.all([
     prisma.product.findMany({ where, orderBy, include: { variants: true } }),
     prisma.variant.findMany({ select: { size: true, color: true } }),
+    sub
+      ? prisma.subCategory.findFirst({ where: { slug: sub }, select: { name: true } })
+      : Promise.resolve(null),
   ]);
 
   const sizeOptions = [...new Set(allVariants.map((v) => v.size))].sort();
@@ -82,9 +92,13 @@ export default async function ShopPage({ searchParams }: { searchParams: SP }) {
 
   const heading = q
     ? `Results for “${q}”`
-    : category
-      ? CATEGORY_LABELS[category]
-      : "All products";
+    : subRow
+      ? subRow.name
+      : group
+        ? group
+        : category
+          ? CATEGORY_LABELS[category]
+          : "All products";
 
   return (
     <div className="max-w-container mx-auto px-6 py-10">

@@ -1,5 +1,9 @@
 import { ProductForm } from "../ProductForm";
+import { getSubCategoryOptions } from "@/lib/category";
 
-export default function NewProductPage() {
-  return <ProductForm />;
+export const dynamic = "force-dynamic";
+
+export default async function NewProductPage() {
+  const subCategories = await getSubCategoryOptions();
+  return <ProductForm subCategories={subCategories} />;
 }
