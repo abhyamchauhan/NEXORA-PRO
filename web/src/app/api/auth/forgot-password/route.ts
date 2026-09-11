@@ -17,7 +17,9 @@ export async function POST(req: Request) {
   const user = await prisma.user.findUnique({ where: { email } });
   if (user) {
     const raw = await createResetToken(user.id);
-    const base = process.env.NEXT_PUBLIC_SITE_URL ?? new URL(req.url).origin;
+    // Trusted, configured origin only — never the request Host header, so the
+    // emailed reset link can't be poisoned to point at an attacker's domain.
+    const base = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
     const url = `${base}/reset-password?token=${raw}`;
     // Best-effort; if email isn't configured this is a no-op (dev). The response
     // is identical either way so nothing leaks.
