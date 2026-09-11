@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRef, useState } from "react";
 import type { Product, Variant } from "@prisma/client";
 import { inr } from "@/lib/format";
+import { saleActive, effectivePrice, discountPct, isComingSoon } from "@/lib/pricing";
 import { ProductImage } from "./ProductImage";
 import { WishlistButton } from "./WishlistButton";
 
@@ -25,6 +26,10 @@ export function ProductCard({ product }: { product: CardProduct }) {
   const colours = new Set(product.variants.map((v) => v.color)).size;
   const totalStock = product.variants.reduce((s, v) => s + v.stock, 0);
   const has360 = product.variants.some((v) => v.displayMode === "rotation360");
+  const onSale = saleActive(product);
+  const eff = effectivePrice(product);
+  const pct = discountPct(product);
+  const comingSoon = isComingSoon(product);
 
   function onMove(e: React.MouseEvent) {
     const el = ref.current;
@@ -83,12 +88,22 @@ export function ProductCard({ product }: { product: CardProduct }) {
               />
             </span>
           )}
-          {has360 && (
+          {onSale && (
+            <span className="absolute top-2 left-2 bg-sale text-white text-[10px] font-display tracking-button px-2 py-1 rounded-button sale-pulse">
+              {pct}% OFF
+            </span>
+          )}
+          {!onSale && has360 && (
             <span className="absolute top-2 left-2 bg-ink text-white text-[10px] font-display tracking-button px-2 py-1">
               360°
             </span>
           )}
-          {totalStock === 0 && (
+          {comingSoon && (
+            <span className="absolute bottom-2 left-2 bg-ink text-white text-[10px] font-display tracking-button px-2 py-1">
+              COMING SOON
+            </span>
+          )}
+          {!comingSoon && totalStock === 0 && (
             <span className="absolute bottom-2 left-2 bg-grey-100 text-grey-500 text-[10px] font-display tracking-button px-2 py-1">
               SOLD OUT
             </span>
@@ -98,7 +113,10 @@ export function ProductCard({ product }: { product: CardProduct }) {
           <p className="font-display text-base tracking-button group-hover:text-grey-500 transition-colors">
             {product.name}
           </p>
-          <p className="text-base mt-1">{inr(product.price)}</p>
+          <p className="text-base mt-1 flex items-center gap-2">
+            <span className={onSale ? "text-sale font-display" : ""}>{inr(eff)}</span>
+            {onSale && <span className="text-sm text-grey-400 line-through">{inr(product.price)}</span>}
+          </p>
           <p className="text-sm text-grey-400 mt-0.5">
             {colours} colour{colours !== 1 ? "s" : ""}
           </p>

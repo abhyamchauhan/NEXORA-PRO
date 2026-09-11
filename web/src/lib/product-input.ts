@@ -18,6 +18,10 @@ export type ProductInput = {
   category: Category;
   featured: boolean;
   subCategoryId: string | null;
+  salePrice: number | null;
+  saleStartsAt: string | null;
+  saleEndsAt: string | null;
+  releaseAt: string | null;
   material: string | null;
   care: string | null;
   rating: number | null;
@@ -27,6 +31,27 @@ export type ProductInput = {
 
 const parseSubCategoryId = (v: unknown): string | null =>
   typeof v === "string" && v.trim() ? v.trim() : null;
+
+const parseSalePrice = (v: unknown): number | null => {
+  const n = Number(v);
+  return v !== "" && v != null && Number.isFinite(n) && n > 0 ? Math.round(n) : null;
+};
+
+const parseDate = (v: unknown): string | null => {
+  if (typeof v !== "string" || !v.trim()) return null;
+  const t = new Date(v).getTime();
+  return Number.isFinite(t) ? new Date(t).toISOString() : null;
+};
+
+// Sale/drop fields shared by both product parsers.
+function parseSaleDrop(b: Record<string, unknown>) {
+  return {
+    salePrice: parseSalePrice(b.salePrice),
+    saleStartsAt: parseDate(b.saleStartsAt),
+    saleEndsAt: parseDate(b.saleEndsAt),
+    releaseAt: parseDate(b.releaseAt),
+  };
+}
 
 const CATEGORIES = ["men", "women", "kids"] as const;
 const DISPLAY_MODES = ["static", "rotation360"] as const;
@@ -117,6 +142,7 @@ export function parseProductFields(
       category,
       featured: Boolean(b.featured),
       subCategoryId: parseSubCategoryId(b.subCategoryId),
+      ...parseSaleDrop(b),
       material,
       care,
       rating,
@@ -224,6 +250,7 @@ export function parseProductInput(raw: unknown): ParseResult {
       category,
       featured,
       subCategoryId: parseSubCategoryId(b.subCategoryId),
+      ...parseSaleDrop(b),
       material,
       care,
       rating,

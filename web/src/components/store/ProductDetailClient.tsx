@@ -2,7 +2,16 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { inr, CATEGORY_LABELS } from "@/lib/format";
+import {
+  saleActive,
+  effectivePrice,
+  discountPct,
+  isComingSoon,
+  countdownTarget,
+} from "@/lib/pricing";
+import { Countdown } from "./Countdown";
 import { useCart } from "./CartProvider";
 import { Rotation360Viewer } from "./Rotation360Viewer";
 import { ProductGallery } from "./ProductGallery";
@@ -28,6 +37,10 @@ export type ClientProduct = {
   name: string;
   description: string;
   price: number;
+  salePrice: number | null;
+  saleStartsAt: string | null;
+  saleEndsAt: string | null;
+  releaseAt: string | null;
   category: string;
   material: string | null;
   care: string | null;
@@ -44,6 +57,14 @@ export function ProductDetailClient({
   sizeChart: SizeChartData | null;
 }) {
   const { add } = useCart();
+  const router = useRouter();
+
+  // Sale / drop state (Step 16). Computed from the server-provided fields.
+  const onSale = saleActive(product);
+  const effPrice = effectivePrice(product);
+  const pct = discountPct(product);
+  const comingSoon = isComingSoon(product);
+  const target = countdownTarget(product);
 
   const colors = useMemo(() => {
     const seen = new Map<string, ClientVariant>();
@@ -71,7 +92,7 @@ export function ProductDetailClient({
   }
 
   function onAdd() {
-    if (!selected || selected.stock <= 0) return;
+    if (comingSoon || !selected || selected.stock <= 0) return;
     add({
       variantId: selected.id,
       productId: product.id,
@@ -79,7 +100,7 @@ export function ProductDetailClient({
       name: product.name,
       color: selected.color,
       size: selected.size,
-      price: product.price,
+      price: effPrice, // sale price when on sale
       image: selected.images[0],
       maxStock: selected.stock,
     });
@@ -135,9 +156,27 @@ export function ProductDetailClient({
             </div>
           )}
 
-          <p className="text-2xl sm:text-3xl mt-5 font-display">
-            {inr(product.price)}
-          </p>
+          <div className="mt-5 flex items-center gap-3 flex-wrap">
+            <p className="text-2xl sm:text-3xl font-display">{inr(effPrice)}</p>
+            {onSale && (
+              <>
+                <span className="text-lg text-grey-400 line-through">{inr(product.price)}</span>
+                <span className="font-display text-xs tracking-button bg-sale text-white px-2 py-1 rounded-button sale-pulse">
+                  {pct}% OFF
+                </span>
+              </>
+            )}
+          </div>
+
+          {/* Sale ends / Drops in — flip countdown */}
+          {target && (
+            <div className="mt-5 border border-grey-200 bg-grey-50 p-4">
+              <p className="font-display text-xs tracking-label text-grey-500 mb-2">
+                {target.kind === "drop" ? "Drops in" : "Sale ends in"}
+              </p>
+              <Countdown endsAt={target.endsAt} onExpire={() => router.refresh()} size="md" />
+            </div>
+          )}
 
           <p className="text-base text-grey-600 leading-relaxed mt-6 max-w-prose">
             {product.description}
@@ -196,7 +235,9 @@ export function ProductDetailClient({
 
           {/* Stock indicator */}
           <div className="mt-6 text-base font-display tracking-button">
-            {stock <= 0 ? (
+            {comingSoon ? (
+              <span className="text-grey-500">Coming soon</span>
+            ) : stock <= 0 ? (
               <span className="text-sale">Out of stock</span>
             ) : stock <= 5 ? (
               <span className="text-sale">Only {stock} left</span>
@@ -205,13 +246,19 @@ export function ProductDetailClient({
             )}
           </div>
 
-          {/* Add to cart */}
+          {/* Add to cart (or coming-soon lock) */}
           <button
             onClick={onAdd}
-            disabled={stock <= 0}
+            disabled={comingSoon || stock <= 0}
             className="mt-5 w-full sm:w-auto font-display text-base tracking-button bg-accent text-white px-12 py-4 rounded-button transition-all duration-300 hover:opacity-90 active:scale-[0.98] disabled:opacity-40 disabled:cursor-not-allowed"
           >
-            {stock <= 0 ? "Sold out" : added ? "✓ Added to bag" : "Add to bag"}
+            {comingSoon
+              ? "Coming soon"
+              : stock <= 0
+                ? "Sold out"
+                : added
+                  ? "✓ Added to bag"
+                  : "Add to bag"}
           </button>
 
           {added && (

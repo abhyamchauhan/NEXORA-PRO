@@ -211,6 +211,21 @@ a {
 .toast-in { animation: toast-in 0.28s cubic-bezier(0.22, 1, 0.36, 1) both; }
 .toast-out { animation: toast-out 0.28s cubic-bezier(0.4, 0, 1, 1) both; }
 
+/* Countdown flip — a digit card flips down when its value changes. */
+@keyframes flip-down {
+  0% { transform: rotateX(-90deg); opacity: 0; }
+  100% { transform: rotateX(0deg); opacity: 1; }
+}
+.flip-digit {
+  display: inline-block;
+  transform-origin: center bottom;
+  animation: flip-down 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+  backface-visibility: hidden;
+}
+@media (prefers-reduced-motion: reduce) {
+  .flip-digit { animation: none !important; }
+}
+
 /* Skeleton loading — subtle shimmer sweep (premium loading state). */
 @keyframes shimmer {
   0% { background-position: -180% 0; }

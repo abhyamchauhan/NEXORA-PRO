@@ -2,9 +2,11 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { getCategoryLanding, isCategory } from "@/lib/category";
+import { getActiveCategoryPromo } from "@/lib/promo";
 import { CATEGORY_LABELS } from "@/lib/format";
 import { CategoryBannerCarousel } from "@/components/store/CategoryBannerCarousel";
 import { SubCategoryAccordion } from "@/components/store/SubCategoryAccordion";
+import { PromoBar } from "@/components/store/PromoBar";
 
 export const dynamic = "force-dynamic";
 
@@ -23,11 +25,15 @@ export default async function CategoryLandingPage({ params }: { params: Params }
   const { cat } = await params;
   if (!isCategory(cat)) notFound();
 
-  const { banners, groups } = await getCategoryLanding(cat);
+  const [{ banners, groups }, promo] = await Promise.all([
+    getCategoryLanding(cat),
+    getActiveCategoryPromo(cat),
+  ]);
   const label = CATEGORY_LABELS[cat] ?? cat;
 
   return (
     <div>
+      {promo && <PromoBar promo={promo} />}
       {banners.length > 0 && <CategoryBannerCarousel banners={banners} />}
 
       <div className="max-w-container mx-auto px-6 pt-10">

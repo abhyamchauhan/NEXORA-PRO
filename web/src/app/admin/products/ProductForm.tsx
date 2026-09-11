@@ -24,12 +24,25 @@ export type ProductInitial = {
   category: "men" | "women" | "kids";
   featured: boolean;
   subCategoryId: string | null;
+  salePrice: number | null;
+  saleStartsAt: string | null;
+  saleEndsAt: string | null;
+  releaseAt: string | null;
   material: string | null;
   care: string | null;
   rating: number | null;
   reviewCount: number;
   variants: VariantState[];
 };
+
+// ISO → value for <input type="datetime-local"> (local, minute precision).
+function toLocalInput(iso: string | null): string {
+  if (!iso) return "";
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return "";
+  const pad = (n: number) => String(n).padStart(2, "0");
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+}
 
 export type SubCategoryOption = {
   id: string;
@@ -54,6 +67,10 @@ export function ProductForm({
   const [category, setCategory] = useState<"men" | "women" | "kids">(initial?.category ?? "men");
   const [featured, setFeatured] = useState(initial?.featured ?? false);
   const [subCategoryId, setSubCategoryId] = useState<string>(initial?.subCategoryId ?? "");
+  const [salePrice, setSalePrice] = useState(initial?.salePrice != null ? String(initial.salePrice) : "");
+  const [saleStartsAt, setSaleStartsAt] = useState(toLocalInput(initial?.saleStartsAt ?? null));
+  const [saleEndsAt, setSaleEndsAt] = useState(toLocalInput(initial?.saleEndsAt ?? null));
+  const [releaseAt, setReleaseAt] = useState(toLocalInput(initial?.releaseAt ?? null));
   const [material, setMaterial] = useState(initial?.material ?? "");
   const [care, setCare] = useState(initial?.care ?? "");
   const [rating, setRating] = useState(initial?.rating != null ? String(initial.rating) : "");
@@ -74,6 +91,10 @@ export function ProductForm({
       category,
       featured,
       subCategoryId: subCategoryId || null,
+      salePrice: salePrice ? Number(salePrice) : null,
+      saleStartsAt: saleStartsAt || null,
+      saleEndsAt: saleEndsAt || null,
+      releaseAt: releaseAt || null,
       material,
       care,
       rating: rating ? Number(rating) : null,
@@ -204,6 +225,37 @@ export function ProductForm({
             <input type="checkbox" checked={featured} onChange={(e) => setFeatured(e.target.checked)} />
             Feature on homepage
           </label>
+          {/* Flash sale + drop (Step 16) */}
+          <div className="border border-grey-200 p-4 space-y-4">
+            <p className="font-display text-xs tracking-label text-grey-500">Sale &amp; drop (optional)</p>
+            <div className="grid grid-cols-2 gap-4">
+              <Labeled label="Sale price (₹)">
+                <input
+                  type="number"
+                  min={0}
+                  value={salePrice}
+                  onChange={(e) => setSalePrice(e.target.value)}
+                  className="input"
+                  placeholder="Leave blank for no sale"
+                />
+              </Labeled>
+              <div className="flex items-end text-xs text-grey-400 pb-2">
+                Must be lower than the price above to show as a sale.
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <Labeled label="Sale starts (optional)">
+                <input type="datetime-local" value={saleStartsAt} onChange={(e) => setSaleStartsAt(e.target.value)} className="input" />
+              </Labeled>
+              <Labeled label="Sale ends (countdown)">
+                <input type="datetime-local" value={saleEndsAt} onChange={(e) => setSaleEndsAt(e.target.value)} className="input" />
+              </Labeled>
+            </div>
+            <Labeled label="Drop / release time (optional — 'Coming soon' until then)">
+              <input type="datetime-local" value={releaseAt} onChange={(e) => setReleaseAt(e.target.value)} className="input" />
+            </Labeled>
+          </div>
+
           <Labeled label="Material (optional)">
             <input value={material} onChange={(e) => setMaterial(e.target.value)} className="input" placeholder="380 GSM brushed cotton fleece" />
           </Labeled>

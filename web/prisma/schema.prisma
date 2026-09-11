@@ -176,6 +176,15 @@ model Product {
   // products keep working; drives filtering and tile representative images.
   subCategoryId String?
 
+  // Flash sale (Step 16): discounted price active within an optional window.
+  // Server-authoritative pricing uses these; UI shows a countdown + SALE badge.
+  salePrice    Int? // discounted price (rupees); null = no sale
+  saleStartsAt DateTime? // null = active immediately
+  saleEndsAt   DateTime? // null = no end; else the countdown target
+
+  // Drop / launch (Step 16): product is "coming soon" until this time.
+  releaseAt    DateTime?
+
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
@@ -209,6 +218,22 @@ model SubCategory {
 
   @@unique([category, slug])
   @@index([category, position])
+}
+
+// Promo countdown banner (Step 16). Site-wide (category null) or scoped to one
+// category. Shown as a slim bar with a flip countdown to `endsAt`.
+model PromoCountdown {
+  id         String    @id @default(cuid())
+  category   Category? // null = site-wide
+  label      String // "Winter Sale ends in"
+  endsAt     DateTime
+  buttonText String?
+  buttonLink String?
+  visible    Boolean   @default(true)
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+
+  @@index([category])
 }
 
 // Per-category promotional banners shown in the landing-page carousel. Same

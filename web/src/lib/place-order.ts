@@ -2,6 +2,7 @@ import type { OrderStatus } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import type { Shipping } from "@/lib/shipping";
 import { evaluateCoupon, computeDiscount } from "@/lib/coupon";
+import { effectivePrice, isComingSoon } from "@/lib/pricing";
 
 export type LineInput = { variantId: string; quantity: number };
 
@@ -38,7 +39,7 @@ export async function priceLines(items: LineInput[]) {
     const v = byId.get(it.variantId);
     if (!v) throw new OrderError("An item in your bag is no longer available.");
     const qty = Math.max(1, Math.floor(it.quantity));
-    subtotal += v.product.price * qty;
+    subtotal += effectivePrice(v.product) * qty;
     return { v, qty };
   });
   return { lines, subtotal };
@@ -86,12 +87,14 @@ export async function placeOrder(opts: {
     const lines = items.map((it) => {
       const v = byId.get(it.variantId);
       if (!v) throw new OrderError("An item in your bag is no longer available.");
+      if (isComingSoon(v.product))
+        throw new OrderError(`${v.product.name} hasn't dropped yet.`);
       const qty = Math.max(1, Math.floor(it.quantity));
       if (qty > v.stock)
         throw new OrderError(
           `Only ${v.stock} left of ${v.product.name} (${v.color}/${v.size}).`,
         );
-      sub += v.product.price * qty;
+      sub += effectivePrice(v.product) * qty;
       return { v, qty };
     });
 
@@ -137,7 +140,7 @@ export async function placeOrder(opts: {
             productName: v.product.name,
             color: v.color,
             size: v.size,
-            price: v.product.price,
+            price: effectivePrice(v.product),
             quantity: qty,
             image: v.images[0] ?? null,
           })),

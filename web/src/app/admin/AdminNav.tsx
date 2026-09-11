@@ -9,6 +9,7 @@ const LINKS = [
   { href: "/admin/products", label: "Products" },
   { href: "/admin/subcategories", label: "Sub-categories" },
   { href: "/admin/category-banners", label: "Category banners" },
+  { href: "/admin/promos", label: "Promos" },
   { href: "/admin/orders", label: "Orders" },
   { href: "/admin/coupons", label: "Coupons" },
   { href: "/admin/size-charts", label: "Size charts" },
