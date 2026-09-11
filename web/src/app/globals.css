@@ -3,8 +3,12 @@
 @tailwind utilities;
 
 :root {
+  /* Theme defaults — overridden at runtime by the admin theme (injected as a
+     :root block in the document head). Keep these in sync with DEFAULT_THEME. */
   --surface-page: #ffffff;
   --text-body: #1c1c1c;
+  --accent: #1c1c1c;
+  --font-scale: 1;
 }
 
 html,
@@ -16,8 +20,9 @@ body {
   font-family: var(--font-body), "Nunito", ui-sans-serif, system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
   letter-spacing: -0.01em;
-  /* Body minimum 16px, comfortable leading (also prevents iOS input zoom). */
-  font-size: 16px;
+  /* Base 16px × admin font-scale. rem-based type scales from the root font-size,
+     so this one multiplier retunes the whole site's typography. */
+  font-size: calc(16px * var(--font-scale, 1));
   line-height: 1.65;
 }
 

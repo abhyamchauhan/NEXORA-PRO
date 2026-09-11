@@ -12,6 +12,9 @@ const config: Config = {
     extend: {
       colors: {
         black: "#000000",
+        // Admin-themable accent (primary buttons / links). Defaults to ink, so
+        // the monochrome look is unchanged until an admin picks another colour.
+        accent: "var(--accent, #1c1c1c)",
         ink: "#1c1c1c",
         graphite: "#262626",
         concrete: "#c4c4c4",

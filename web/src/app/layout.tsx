@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Instrument_Sans, Nunito } from "next/font/google";
 import "./globals.css";
 import { Providers } from "./providers";
+import { getSiteTheme, themeCssVars } from "@/lib/site-settings";
 
 const display = Instrument_Sans({
   subsets: ["latin"],
@@ -34,13 +35,23 @@ export const metadata: Metadata = {
   twitter: { card: "summary_large_image" },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  // Admin-configured theme → CSS custom properties applied site-wide. Read on
+  // every request so changes take effect on the next refresh.
+  const theme = await getSiteTheme();
+
   return (
     <html lang="en" className={`${display.variable} ${body.variable}`}>
+      <head>
+        <style
+          // eslint-disable-next-line react/no-danger
+          dangerouslySetInnerHTML={{ __html: `:root{${themeCssVars(theme)}}` }}
+        />
+      </head>
       <body>
         <Providers>{children}</Providers>
       </body>

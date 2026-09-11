@@ -209,7 +209,7 @@ export function ProductDetailClient({
           <button
             onClick={onAdd}
             disabled={stock <= 0}
-            className="mt-5 w-full sm:w-auto font-display text-base tracking-button bg-ink text-white px-12 py-4 rounded-button transition-all duration-300 hover:bg-black active:scale-[0.98] disabled:opacity-40 disabled:cursor-not-allowed"
+            className="mt-5 w-full sm:w-auto font-display text-base tracking-button bg-accent text-white px-12 py-4 rounded-button transition-all duration-300 hover:opacity-90 active:scale-[0.98] disabled:opacity-40 disabled:cursor-not-allowed"
           >
             {stock <= 0 ? "Sold out" : added ? "✓ Added to bag" : "Add to bag"}
           </button>

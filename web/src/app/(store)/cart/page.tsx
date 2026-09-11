@@ -99,7 +99,7 @@ export default function CartPage() {
         </div>
         <Link
           href="/checkout"
-          className="mt-5 block text-center font-display text-sm tracking-button bg-ink text-white py-3 rounded-button hover:bg-black transition-colors"
+          className="mt-5 block text-center font-display text-sm tracking-button bg-accent text-white py-3 rounded-button hover:opacity-90 transition-opacity"
         >
           Checkout
         </Link>

@@ -297,7 +297,7 @@ export default function CheckoutPage() {
           <button
             type="submit"
             disabled={busy}
-            className="mt-5 w-full font-display text-sm tracking-button bg-ink text-white py-3.5 rounded-button transition-all duration-300 hover:bg-black active:scale-[0.99] disabled:opacity-60"
+            className="mt-5 w-full font-display text-sm tracking-button bg-accent text-white py-3.5 rounded-button transition-all duration-300 hover:opacity-90 active:scale-[0.99] disabled:opacity-60"
           >
             {busy ? "Processing…" : method === "cod" ? "Place order" : `Pay ${inr(total)}`}
           </button>

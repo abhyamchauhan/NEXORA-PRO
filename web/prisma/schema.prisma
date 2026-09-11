@@ -139,6 +139,21 @@ model VerificationToken {
 }
 
 // ---------------------------------------------------------------------------
+// Site theme — a single admin-editable row driving CSS custom properties
+// site-wide (colours + base font scale). Read on every request in the root
+// layout. `id` is pinned to "singleton" so there is always exactly one row.
+// ---------------------------------------------------------------------------
+
+model SiteSetting {
+  id          String   @id @default("singleton")
+  bgColor     String   @default("#ffffff") // primary background
+  textColor   String   @default("#1c1c1c") // base text colour
+  accentColor String   @default("#1c1c1c") // primary/accent (buttons, links)
+  fontScale   String   @default("medium") // small | medium | large
+  updatedAt   DateTime @updatedAt
+}
+
+// ---------------------------------------------------------------------------
 // Catalogue
 // ---------------------------------------------------------------------------
 

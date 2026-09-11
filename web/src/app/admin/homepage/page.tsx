@@ -1,13 +1,16 @@
 import { prisma } from "@/lib/prisma";
 import { HomepageList } from "./HomepageList";
+import { ThemeSettings } from "./ThemeSettings";
 import type { SectionRow } from "./SectionMiniPreview";
+import { getSiteTheme } from "@/lib/site-settings";
 
 export const dynamic = "force-dynamic";
 
 export default async function AdminHomepage() {
-  const sections = await prisma.homepageSection.findMany({
-    orderBy: { position: "asc" },
-  });
+  const [sections, theme] = await Promise.all([
+    prisma.homepageSection.findMany({ orderBy: { position: "asc" } }),
+    getSiteTheme(),
+  ]);
 
   const rows: SectionRow[] = sections.map((s) => ({
     id: s.id,
@@ -23,5 +26,10 @@ export default async function AdminHomepage() {
     categories: s.categories,
   }));
 
-  return <HomepageList initial={rows} />;
+  return (
+    <>
+      <ThemeSettings initial={theme} />
+      <HomepageList initial={rows} />
+    </>
+  );
 }
