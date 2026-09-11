@@ -5,6 +5,31 @@ export type HydratedSection = HomepageSection & {
   products: (Product & { variants: Variant[] })[];
 };
 
+export type HomeBannerView = {
+  id: string;
+  heading: string | null;
+  subtext: string | null;
+  image: string | null;
+  buttonText: string | null;
+  buttonLink: string | null;
+};
+
+// Visible homepage hero-carousel slides, in order.
+export async function getHomeBanners(): Promise<HomeBannerView[]> {
+  const rows = await prisma.homeBanner.findMany({
+    where: { visible: true },
+    orderBy: { position: "asc" },
+  });
+  return rows.map((b) => ({
+    id: b.id,
+    heading: b.heading,
+    subtext: b.subtext,
+    image: b.image,
+    buttonText: b.buttonText,
+    buttonLink: b.buttonLink,
+  }));
+}
+
 // Fetch homepage sections in saved order, hydrating the picked products for
 // featuredProducts sections (preserving the admin's chosen order).
 export async function getHomepageSections(

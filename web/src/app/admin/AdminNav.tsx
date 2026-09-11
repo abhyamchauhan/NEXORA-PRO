@@ -14,6 +14,7 @@ const LINKS = [
   { href: "/admin/coupons", label: "Coupons" },
   { href: "/admin/size-charts", label: "Size charts" },
   { href: "/admin/homepage", label: "Homepage" },
+  { href: "/admin/home-banners", label: "Home slider" },
   { href: "/admin/email-preview", label: "Emails" },
 ];
 
