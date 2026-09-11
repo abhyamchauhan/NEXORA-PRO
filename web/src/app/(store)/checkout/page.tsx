@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { useCart } from "@/components/store/CartProvider";
 import { inr } from "@/lib/format";
+import { emitToast } from "@/lib/toast";
 
 type Shipping = {
   name: string;
@@ -61,6 +62,7 @@ export default function CheckoutPage() {
     if (d.ok) {
       setApplied({ code: d.code, discount: d.discount });
       setCouponMsg({ ok: true, text: d.message });
+      emitToast("Coupon applied");
     } else {
       setApplied(null);
       setCouponMsg({ ok: false, text: d.message || "Invalid coupon." });

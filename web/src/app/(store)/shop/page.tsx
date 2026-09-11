@@ -2,7 +2,7 @@ import type { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import { ProductCard } from "@/components/store/ProductCard";
 import { ShopFilters } from "./ShopFilters";
-import { Reveal } from "@/components/store/Reveal";
+import { Stagger } from "@/components/store/Stagger";
 import { EmptyState } from "@/components/store/EmptyState";
 import { CATEGORY_LABELS } from "@/lib/format";
 
@@ -114,11 +114,11 @@ export default async function ShopPage({ searchParams }: { searchParams: SP }) {
               ctaHref="/shop"
             />
           ) : (
-            <Reveal className="grid grid-cols-2 md:grid-cols-3 gap-x-4 gap-y-10">
+            <Stagger className="grid grid-cols-2 md:grid-cols-3 gap-x-4 gap-y-10">
               {products.map((p) => (
                 <ProductCard key={p.id} product={p} />
               ))}
-            </Reveal>
+            </Stagger>
           )}
         </div>
       </div>

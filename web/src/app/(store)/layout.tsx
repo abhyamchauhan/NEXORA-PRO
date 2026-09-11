@@ -1,6 +1,8 @@
 import { SiteHeader } from "@/components/store/SiteHeader";
 import { SiteFooter } from "@/components/store/SiteFooter";
 import { SupportWidget } from "@/components/store/SupportWidget";
+import { Toaster } from "@/components/store/Toaster";
+import { CursorGlow } from "@/components/store/CursorGlow";
 
 export default function StoreLayout({
   children,
@@ -13,6 +15,8 @@ export default function StoreLayout({
       <div className="flex-1">{children}</div>
       <SiteFooter />
       <SupportWidget />
+      <Toaster />
+      <CursorGlow />
     </div>
   );
 }

@@ -9,6 +9,7 @@ import {
   useCallback,
 } from "react";
 import { useSession } from "next-auth/react";
+import { emitToast } from "@/lib/toast";
 
 export type CartLine = {
   variantId: string;
@@ -114,6 +115,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
   const add = useCallback(
     (line: Omit<CartLine, "quantity">, qty = 1) => {
+      emitToast("Added to bag");
       setLines((prev) => {
         const existing = prev.find((l) => l.variantId === line.variantId);
         if (existing)
