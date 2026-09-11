@@ -10,3 +10,7 @@ uploads/
 # The 9 MB compiled single-file build. Regenerate it only when you need to hand
 # the whole site over as one attachment; the multi-file version is the source.
 NEXORA-single-file.html
+
+# Python bytecode (from .claude skill scripts)
+__pycache__/
+*.pyc

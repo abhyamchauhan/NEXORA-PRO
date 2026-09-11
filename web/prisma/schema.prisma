@@ -1,0 +1,432 @@
+// NEXORA — Prisma schema (PostgreSQL / Neon)
+// Provider is Postgres from the start. Never SQLite.
+// String[] scalar lists (Variant.images) rely on Postgres array support.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  // Neon pooled connection (pgbouncer) for the app; direct URL for migrations.
+  directUrl = env("DIRECT_URL")
+}
+
+// ---------------------------------------------------------------------------
+// Enums
+// ---------------------------------------------------------------------------
+
+enum Role {
+  customer
+  admin
+}
+
+enum Category {
+  men
+  women
+  kids
+}
+
+enum DisplayMode {
+  rotation360
+  static
+}
+
+enum OrderStatus {
+  pending
+  paid
+  processing
+  shipped
+  delivered
+  cancelled
+}
+
+enum SectionType {
+  hero
+  banner
+  featuredProducts
+  categoryShowcase
+}
+
+enum DiscountType {
+  percentage
+  fixed
+}
+
+// ---------------------------------------------------------------------------
+// Auth (single User table, differentiated by `role`). NextAuth adapter tables
+// (Account/Session/VerificationToken) are included now so Step 2 needs no
+// schema churn; they are inert until auth is wired up.
+// ---------------------------------------------------------------------------
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  name         String?
+  passwordHash String? // null for OAuth-only accounts
+  role         Role     @default(customer)
+  createdAt    DateTime @default(now())
+
+  cart        Cart?
+  orders      Order[]
+  accounts    Account[]
+  sessions    Session[]
+  wishlist    WishlistItem[]
+  resetTokens PasswordResetToken[]
+}
+
+// Password reset tokens. Only the SHA-256 hash of the token is stored; the raw
+// token travels only in the emailed link. Single-use and time-limited.
+model PasswordResetToken {
+  id        String    @id @default(cuid())
+  userId    String
+  tokenHash String    @unique
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime  @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model WishlistItem {
+  id        String   @id @default(cuid())
+  userId    String
+  productId String
+  createdAt DateTime @default(now())
+
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, productId])
+  @@index([userId])
+}
+
+model Coupon {
+  id         String       @id @default(cuid())
+  code       String       @unique
+  type       DiscountType
+  value      Int // percentage (e.g. 10) or fixed rupees
+  minOrder   Int? // minimum order subtotal (rupees) to qualify
+  expiresAt  DateTime?
+  usageLimit Int? // max total redemptions; null = unlimited
+  usedCount  Int          @default(0)
+  active     Boolean      @default(true)
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+// ---------------------------------------------------------------------------
+// Site theme — a single admin-editable row driving CSS custom properties
+// site-wide (colours + base font scale). Read on every request in the root
+// layout. `id` is pinned to "singleton" so there is always exactly one row.
+// ---------------------------------------------------------------------------
+
+model SiteSetting {
+  id          String   @id @default("singleton")
+  bgColor     String   @default("#ffffff") // primary background
+  textColor   String   @default("#1c1c1c") // base text colour
+  accentColor String   @default("#1c1c1c") // primary/accent (buttons, links)
+  fontScale   String   @default("medium") // small | medium | large
+  updatedAt   DateTime @updatedAt
+}
+
+// ---------------------------------------------------------------------------
+// Catalogue
+// ---------------------------------------------------------------------------
+
+model Product {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  name        String
+  description String
+  price       Int // whole rupees (INR)
+  category    Category
+  featured    Boolean  @default(false)
+
+  // Product detail content (all optional)
+  material    String? // e.g. "380 GSM brushed cotton fleece"
+  care        String? // care instructions
+  rating      Float? // 0–5; null = no reviews yet
+  reviewCount Int      @default(0)
+
+  // Sub-category tag (e.g. "Joggers" under Bottomwear). Optional so existing
+  // products keep working; drives filtering and tile representative images.
+  subCategoryId String?
+
+  // Flash sale (Step 16): discounted price active within an optional window.
+  // Server-authoritative pricing uses these; UI shows a countdown + SALE badge.
+  salePrice    Int? // discounted price (rupees); null = no sale
+  saleStartsAt DateTime? // null = active immediately
+  saleEndsAt   DateTime? // null = no end; else the countdown target
+
+  // Drop / launch (Step 16): product is "coming soon" until this time.
+  releaseAt    DateTime?
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  variants Variant[]
+  wishlistItems WishlistItem[]
+  sizeChart SizeChart?
+  subCategory SubCategory? @relation(fields: [subCategoryId], references: [id], onDelete: SetNull)
+
+  @@index([category])
+  @@index([subCategoryId])
+}
+
+// ---------------------------------------------------------------------------
+// Category taxonomy — admin-managed sub-categories grouped under a top-level
+// category (Men/Women/Kids) and a group label (e.g. "Topwear"/"Bottomwear").
+// Each has a representative image (falls back to a product photo if unset).
+// ---------------------------------------------------------------------------
+
+model SubCategory {
+  id        String   @id @default(cuid())
+  category  Category // men | women | kids
+  group     String // "Topwear", "Bottomwear", …
+  name      String // "Joggers"
+  slug      String // "joggers"
+  image     String? // representative image (Cloudinary); else first product photo
+  position  Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  products Product[]
+
+  @@unique([category, slug])
+  @@index([category, position])
+}
+
+// Promo countdown banner (Step 16). Site-wide (category null) or scoped to one
+// category. Shown as a slim bar with a flip countdown to `endsAt`.
+model PromoCountdown {
+  id         String    @id @default(cuid())
+  category   Category? // null = site-wide
+  label      String // "Winter Sale ends in"
+  endsAt     DateTime
+  buttonText String?
+  buttonLink String?
+  visible    Boolean   @default(true)
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+
+  @@index([category])
+}
+
+// Homepage hero carousel slides — an admin-managed, auto-rotating/swipeable
+// banner slider shown at the top of the homepage (same carousel component as
+// the category landing pages).
+model HomeBanner {
+  id         String   @id @default(cuid())
+  heading    String?
+  subtext    String?
+  image      String?
+  buttonText String?
+  buttonLink String?
+  position   Int      @default(0)
+  visible    Boolean  @default(true)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([position])
+}
+
+// Per-category promotional banners shown in the landing-page carousel. Same
+// shape/pattern as HomepageSection banners, but scoped to one category.
+model CategoryBanner {
+  id         String   @id @default(cuid())
+  category   Category
+  heading    String?
+  subtext    String?
+  image      String?
+  buttonText String?
+  buttonLink String?
+  position   Int      @default(0)
+  visible    Boolean  @default(true)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([category, position])
+}
+
+// Flexible size guide. Fields are admin-defined (e.g. Chest/Length/Shoulder for
+// tops, Waist/Hip/Inseam for bottoms). Measurements stored in CM; the UI toggles
+// to inches on display. A chart is either product-specific (productId set) or a
+// category default (category set) — a product falls back to its category default.
+model SizeChart {
+  id        String    @id @default(cuid())
+  productId String?   @unique
+  category  Category?
+  fields    String[] // ordered measurement field names
+  rows      Json // [{ size: "M", values: { "Chest": 52, ... } }] — cm
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  product Product? @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@unique([category])
+}
+
+model Variant {
+  id          String      @id @default(cuid())
+  productId   String
+  size        String
+  color       String
+  colorHex    String?
+  stock       Int         @default(0)
+  displayMode DisplayMode @default(static)
+  images      String[] // ordered image URLs: 12-16 for rotation360, 4-6 for static
+  imageLabels String[]  @default([]) // parallel to images; free-form captions for static mode
+
+  product    Product     @relation(fields: [productId], references: [id], onDelete: Cascade)
+  cartItems  CartItem[]
+  orderItems OrderItem[]
+
+  @@index([productId])
+}
+
+// ---------------------------------------------------------------------------
+// Cart (DB-backed, one per user)
+// ---------------------------------------------------------------------------
+
+model Cart {
+  id        String     @id @default(cuid())
+  userId    String     @unique
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  items     CartItem[]
+}
+
+model CartItem {
+  id        String @id @default(cuid())
+  cartId    String
+  variantId String
+  quantity  Int    @default(1)
+
+  cart    Cart    @relation(fields: [cartId], references: [id], onDelete: Cascade)
+  variant Variant @relation(fields: [variantId], references: [id], onDelete: Cascade)
+
+  @@unique([cartId, variantId])
+  @@index([cartId])
+}
+
+// ---------------------------------------------------------------------------
+// Orders (line items snapshot product data so history survives edits/deletes)
+// ---------------------------------------------------------------------------
+
+model Order {
+  id         String      @id @default(cuid())
+  userId     String? // null = guest checkout
+  guestEmail String? // contact email for guest orders
+  total      Int
+  discount   Int         @default(0)
+  couponCode String?
+  status     OrderStatus @default(pending)
+
+  // Shipping details
+  shippingName    String
+  shippingPhone   String
+  shippingAddress String
+  shippingCity    String
+  shippingState   String
+  shippingPincode String
+
+  // Payment (Razorpay test mode)
+  razorpayOrderId   String?
+  razorpayPaymentId String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user  User?       @relation(fields: [userId], references: [id])
+  items OrderItem[]
+
+  @@index([userId])
+}
+
+// ---------------------------------------------------------------------------
+// Homepage CMS — the storefront homepage is composed entirely from these rows,
+// managed by the admin. Nothing on the homepage is hardcoded.
+// ---------------------------------------------------------------------------
+
+model HomepageSection {
+  id       String      @id @default(cuid())
+  type     SectionType
+  position Int         @default(0)
+  visible  Boolean     @default(true)
+
+  // Shared content fields (used per type)
+  heading    String?
+  subtext    String?
+  image      String? // Cloudinary URL (admin upload only)
+  buttonText String?
+  buttonLink String?
+
+  // featuredProducts → ordered product ids; categoryShowcase → category ids
+  productIds String[] @default([])
+  categories String[] @default([])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([position])
+}
+
+model OrderItem {
+  id        String   @id @default(cuid())
+  orderId   String
+  variantId String?
+
+  // Snapshot at purchase time
+  productName String
+  color       String
+  size        String
+  price       Int
+  quantity    Int
+  image       String?
+
+  order   Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  variant Variant? @relation(fields: [variantId], references: [id], onDelete: SetNull)
+
+  @@index([orderId])
+}

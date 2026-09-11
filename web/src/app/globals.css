@@ -1,0 +1,328 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Theme defaults — overridden at runtime by the admin theme (injected as a
+     :root block in the document head). Keep these in sync with DEFAULT_THEME. */
+  --surface-page: #ffffff;
+  --text-body: #1c1c1c;
+  --accent: #1c1c1c;
+  --font-scale: 1;
+}
+
+html,
+body {
+  padding: 0;
+  margin: 0;
+  background: var(--surface-page);
+  color: var(--text-body);
+  font-family: var(--font-body), "Nunito", ui-sans-serif, system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  letter-spacing: -0.01em;
+  /* Base 16px × admin font-scale. rem-based type scales from the root font-size,
+     so this one multiplier retunes the whole site's typography. */
+  font-size: calc(16px * var(--font-scale, 1));
+  line-height: 1.65;
+}
+
+/* Display type: Instrument Sans, uppercase, tight tracking, bold — the loud
+   voice. Weight 600 gives headings and labels real presence. */
+.font-display {
+  font-family: var(--font-display), "Instrument Sans", sans-serif;
+  text-transform: uppercase;
+  letter-spacing: -0.01em;
+  line-height: 1.05;
+  font-weight: 600;
+}
+
+/* Large display headings read bolder still. */
+h1.font-display,
+.font-display.text-4xl,
+.font-display.text-5xl,
+.font-display.text-6xl,
+.font-display.text-7xl,
+.font-display.text-8xl {
+  font-weight: 700;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* ------------------------------------------------------------------ */
+/* Motion — tasteful, fast (200–400ms), never on body/prices/buttons.  */
+/* Easing per UI/UX Pro Max: power1.out ≈ cubic-bezier(.22,.61,.36,1).  */
+/* ------------------------------------------------------------------ */
+
+/* Hero heading: one-time soft rise + settle on load (subtle, not looping). */
+@keyframes hero-rise {
+  0% {
+    opacity: 0;
+    transform: translateY(18px) scale(0.985);
+  }
+  60% {
+    opacity: 1;
+    transform: translateY(-2px) scale(1.004);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+.hero-wobble {
+  animation: hero-rise 0.7s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+}
+
+/* Scroll reveal — progressive enhancement. The Reveal client component sets
+   data-reveal="hidden" only after mount, so no-JS / SSR shows content fully
+   visible (SEO-safe), then it fades/rises in when scrolled into view. */
+.reveal {
+  transition:
+    opacity 0.45s cubic-bezier(0.22, 0.61, 0.36, 1),
+    transform 0.45s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+.reveal[data-reveal="hidden"] {
+  opacity: 0;
+  transform: translateY(16px);
+}
+
+/* Premium entrance animations (hero, staggered reveals). */
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(22px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes img-in {
+  from {
+    transform: scale(1.035);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+.anim-fade-up {
+  animation: fade-up 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.anim-img-in {
+  animation: img-in 1.3s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.anim-delay-1 {
+  animation-delay: 0.08s;
+}
+.anim-delay-2 {
+  animation-delay: 0.2s;
+}
+.anim-delay-3 {
+  animation-delay: 0.34s;
+}
+
+/* Hero heading — letter-by-letter reveal. Each letter fades/slides up with a
+   per-letter delay set inline (--d). Runs once on load, alongside the wobble. */
+@keyframes letter-in {
+  from {
+    opacity: 0;
+    transform: translateY(0.5em) rotate(2deg);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.letter-reveal > span {
+  display: inline-block;
+  white-space: pre;
+  animation: letter-in 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: var(--d, 0s);
+  will-change: transform, opacity;
+}
+
+/* Staggered grid: children fade+rise one after another when the grid enters
+   the viewport. transform/opacity only. SSR shows everything (no attr). */
+.stagger > * {
+  transition:
+    opacity 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.stagger[data-stagger="hidden"] > * {
+  opacity: 0;
+  transform: translateY(20px);
+}
+.stagger[data-stagger="shown"] > *:nth-child(1) { transition-delay: 0s; }
+.stagger[data-stagger="shown"] > *:nth-child(2) { transition-delay: 0.06s; }
+.stagger[data-stagger="shown"] > *:nth-child(3) { transition-delay: 0.12s; }
+.stagger[data-stagger="shown"] > *:nth-child(4) { transition-delay: 0.18s; }
+.stagger[data-stagger="shown"] > *:nth-child(5) { transition-delay: 0.24s; }
+.stagger[data-stagger="shown"] > *:nth-child(6) { transition-delay: 0.30s; }
+.stagger[data-stagger="shown"] > *:nth-child(7) { transition-delay: 0.36s; }
+.stagger[data-stagger="shown"] > *:nth-child(8) { transition-delay: 0.42s; }
+.stagger[data-stagger="shown"] > *:nth-child(n + 9) { transition-delay: 0.48s; }
+
+/* Count "pop" — used on the header cart/wishlist badges when they change. */
+@keyframes badge-pop {
+  0% { transform: scale(1); }
+  35% { transform: scale(1.5); }
+  70% { transform: scale(0.9); }
+  100% { transform: scale(1); }
+}
+.badge-pop {
+  animation: badge-pop 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Cart icon bounce when an item is added (triggered globally). */
+@keyframes cart-bounce {
+  0% { transform: translateY(0) scale(1); }
+  30% { transform: translateY(-4px) scale(1.15); }
+  55% { transform: translateY(0) scale(0.95); }
+  100% { transform: translateY(0) scale(1); }
+}
+.cart-bounce {
+  animation: cart-bounce 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Sale badge — gentle pulsing glow to draw the eye. Used sparingly. */
+@keyframes sale-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgb(197 49 45 / 0.55); }
+  50% { box-shadow: 0 0 0 6px rgb(197 49 45 / 0); }
+}
+.sale-pulse {
+  animation: sale-pulse 1.8s ease-out infinite;
+}
+
+/* Toast — slides in from the corner, then fades out. */
+@keyframes toast-in {
+  from { opacity: 0; transform: translateY(14px) scale(0.98); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes toast-out {
+  from { opacity: 1; transform: none; }
+  to { opacity: 0; transform: translateY(8px) scale(0.98); }
+}
+.toast-in { animation: toast-in 0.28s cubic-bezier(0.22, 1, 0.36, 1) both; }
+.toast-out { animation: toast-out 0.28s cubic-bezier(0.4, 0, 1, 1) both; }
+
+/* Countdown flip — a digit card flips down when its value changes. */
+@keyframes flip-down {
+  0% { transform: rotateX(-90deg); opacity: 0; }
+  100% { transform: rotateX(0deg); opacity: 1; }
+}
+.flip-digit {
+  display: inline-block;
+  transform-origin: center bottom;
+  animation: flip-down 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+  backface-visibility: hidden;
+}
+@media (prefers-reduced-motion: reduce) {
+  .flip-digit { animation: none !important; }
+}
+
+/* Skeleton loading — subtle shimmer sweep (premium loading state). */
+@keyframes shimmer {
+  0% { background-position: -180% 0; }
+  100% { background-position: 180% 0; }
+}
+.skeleton {
+  background-color: #ededed;
+  background-image: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.6) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  background-size: 180% 100%;
+  background-repeat: no-repeat;
+  animation: shimmer 1.3s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .toast-in,
+  .toast-out { animation: none !important; }
+  .skeleton { animation: none !important; }
+}
+
+/* Rolling-text nav hover: two stacked copies, the lower rolls up on hover. */
+.roll {
+  position: relative;
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: bottom;
+}
+.roll > span {
+  display: block;
+  transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.roll > span:last-child {
+  position: absolute;
+  left: 0;
+  top: 100%;
+}
+.group\/roll:hover .roll > span,
+.roll:hover > span {
+  transform: translateY(-100%);
+}
+
+/* Respect users who prefer reduced motion — show everything, animate nothing. */
+@media (prefers-reduced-motion: reduce) {
+  .hero-wobble,
+  .reveal,
+  .anim-fade-up,
+  .anim-img-in,
+  .letter-reveal > span,
+  .badge-pop,
+  .cart-bounce,
+  .sale-pulse {
+    animation: none !important;
+    transition: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  .reveal[data-reveal="hidden"],
+  .stagger[data-stagger="hidden"] > * {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  .stagger > * {
+    transition: none !important;
+  }
+  .roll > span {
+    transition: none !important;
+  }
+  html {
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Smooth in-page scrolling. */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Route transition — each store page fades + rises in on navigation. */
+@keyframes page-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.page-enter {
+  animation: page-in 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+@media (prefers-reduced-motion: reduce) {
+  .page-enter {
+    animation: none !important;
+  }
+}
