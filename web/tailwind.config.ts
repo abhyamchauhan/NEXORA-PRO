@@ -1,0 +1,109 @@
+import type { Config } from "tailwindcss";
+
+// GENRAGE design tokens ported from the Claude Design mockup (_ds/tokens).
+// Monochrome streetwear system — colour is functional only.
+const config: Config = {
+  darkMode: "class",
+  content: [
+    "./src/app/**/*.{ts,tsx}",
+    "./src/components/**/*.{ts,tsx}",
+    "./src/**/*.{ts,tsx}",
+  ],
+  theme: {
+    extend: {
+      colors: {
+        black: "#000000",
+        // Tokens used by the shadcn/21st animated sign-in component.
+        background: "var(--background)",
+        foreground: "var(--foreground)",
+        skeleton: "var(--skeleton)",
+        border: "var(--btn-border)",
+        input: "var(--input)",
+        // Admin-themable accent (primary buttons / links / sale). Brand signal
+        // red by default; admin can override via the theme settings.
+        accent: "var(--accent, #E8291C)",
+        ink: "#1c1c1c",
+        graphite: "#262626",
+        concrete: "#c4c4c4",
+        bone: "#e9e5dd",
+        sale: "#E8291C", // brand signal red
+        rating: "#3ECF6E", // brand success green
+        success: "#3ECF6E",
+        grey: {
+          50: "#f5f5f5",
+          100: "#ededed",
+          200: "#dddddd",
+          300: "#c4c4c4",
+          400: "#a7a7a7",
+          500: "#6b6b6b",
+          700: "#4a4a4a",
+        },
+      },
+      fontFamily: {
+        display: ["var(--font-display)", "Instrument Sans", "sans-serif"],
+        body: ["var(--font-body)", "Nunito", "sans-serif"],
+      },
+      // Modern e-commerce type scale (larger + comfortable). Headings 28–96px,
+      // body 16–18px. [size, line-height].
+      fontSize: {
+        xs: ["0.75rem", "1rem"], // 12 — micro labels only
+        sm: ["0.9375rem", "1.5rem"], // 15 — secondary text
+        base: ["1rem", "1.65rem"], // 16 — body minimum
+        lg: ["1.125rem", "1.7rem"], // 18 — lead body
+        xl: ["1.375rem", "1.85rem"], // 22
+        "2xl": ["1.75rem", "1.2"], // 28 — section headings
+        "3xl": ["2.125rem", "1.12"], // 34 — page titles
+        "4xl": ["2.75rem", "1.06"], // 44
+        "5xl": ["3.25rem", "1.03"], // 52
+        "6xl": ["4rem", "1.0"], // 64
+        "7xl": ["4.75rem", "0.98"], // 76
+        "8xl": ["6rem", "0.95"], // 96
+      },
+      borderRadius: {
+        none: "0px",
+        button: "2px",
+      },
+      maxWidth: {
+        container: "85rem", // 1360px
+      },
+      boxShadow: {
+        drawer: "-8px 0 40px rgb(0 0 0 / 0.12)",
+        card: "0 5px 30px rgb(0 0 0 / 0.05)",
+        input: [
+          "0px 2px 3px -1px rgba(0, 0, 0, 0.1)",
+          "0px 1px 0px 0px rgba(25, 28, 33, 0.02)",
+          "0px 0px 0px 1px rgba(25, 28, 33, 0.08)",
+        ].join(", "),
+      },
+      letterSpacing: {
+        display: "-0.01em",
+        label: "0.12em",
+        button: "0.05em",
+      },
+      // Animations for the animated sign-in component (ripple + orbiting icons).
+      animation: {
+        ripple: "ripple 2s ease calc(var(--i, 0) * 0.2s) infinite",
+        orbit: "orbit calc(var(--duration) * 1s) linear infinite",
+      },
+      keyframes: {
+        ripple: {
+          "0%, 100%": { transform: "translate(-50%, -50%) scale(1)" },
+          "50%": { transform: "translate(-50%, -50%) scale(0.9)" },
+        },
+        orbit: {
+          "0%": {
+            transform:
+              "rotate(0deg) translateY(calc(var(--radius) * 1px)) rotate(0deg)",
+          },
+          "100%": {
+            transform:
+              "rotate(360deg) translateY(calc(var(--radius) * 1px)) rotate(-360deg)",
+          },
+        },
+      },
+    },
+  },
+  plugins: [],
+};
+
+export default config;
