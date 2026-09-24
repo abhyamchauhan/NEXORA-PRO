@@ -1,5 +1,12 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import {
+  ShieldCheck,
+  Package,
+  Heart,
+  LockKeyhole,
+  ArrowRight,
+} from "lucide-react";
 import { auth } from "@/auth";
 import { SignOutButton } from "@/components/SignOutButton";
 import { PremiumCard } from "@/components/store/PremiumCard";
@@ -17,101 +24,143 @@ export default async function AccountPage() {
   const isAdmin = role.toLowerCase() === "admin";
 
   return (
-    <main className="min-h-screen bg-grey-50 px-6 py-16 sm:py-20">
-      <div className="max-w-container mx-auto">
+    <main className="relative min-h-screen overflow-hidden bg-[#08080a] text-white px-6 py-16 sm:py-20">
+      {/* Ambient vignette + faint top-centre light bloom behind the content */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0"
+        style={{
+          background:
+            "radial-gradient(900px circle at 50% -10%, rgba(255,255,255,0.06), transparent 60%), radial-gradient(1200px circle at 50% 120%, rgba(255,255,255,0.03), transparent 55%)",
+        }}
+      />
+
+      <div className="relative max-w-container mx-auto">
         {/* Header */}
-        <div className="anim-fade-up flex items-start justify-between gap-6 mb-12 sm:mb-14">
+        <div className="anim-fade-up flex items-start justify-between gap-6">
           <div>
             <Link
               href="/"
-              className="font-display text-2xl leading-none lux-glow inline-block"
+              className="font-display text-3xl sm:text-4xl leading-none lux-glow-dark inline-block"
             >
               NEXORA
             </Link>
-            <h1 className="font-display text-sm tracking-label text-grey-500 mt-3">
+            <h1 className="font-display text-xs tracking-label text-white/45 mt-3">
               My account
             </h1>
           </div>
           <SignOutButton />
         </div>
 
-        {/* Editorial asymmetric grid — Account & Security is the anchor card */}
-        <div className="grid gap-5 sm:gap-6 md:grid-cols-[1.45fr_1fr] max-w-4xl">
-          {/* Account & Security — larger, spans both rows on md+ */}
+        {/* Branded headline block */}
+        <div className="anim-fade-up anim-delay-1 mt-16 sm:mt-20 mb-12 sm:mb-14 text-center">
+          <span className="inline-block font-display text-[10px] tracking-[0.32em] text-white/40 border border-white/12 rounded-full px-4 py-1.5">
+            YOUR ACCOUNT
+          </span>
+          <h2 className="font-display text-4xl sm:text-5xl leading-[1.05] mt-7 lux-glow-dark">
+            Your NEXORA world
+          </h2>
+          <p className="text-sm sm:text-base text-white/50 mt-5 max-w-lg mx-auto">
+            Manage your account, orders, wishlist, and preferences in one place.
+          </p>
+        </div>
+
+        {/* Editorial asymmetric grid */}
+        <div className="grid gap-5 sm:gap-6 md:grid-cols-[1.45fr_1fr] max-w-4xl mx-auto">
+          {/* Account & Security — anchor card, spans both rows on md+ */}
           <PremiumCard
             href="/account/security"
-            className="anim-fade-up anim-delay-1 md:row-span-2 p-8 sm:p-10 flex flex-col"
+            className="is-dark anim-fade-up anim-delay-1 md:row-span-2 p-8 sm:p-10 flex flex-col"
           >
-            <p className="font-display text-xs tracking-label text-grey-500">
-              Account &amp; security
-            </p>
+            <div className="flex items-center justify-between">
+              <span className="lux-icon-ring h-14 w-14">
+                <ShieldCheck size={24} strokeWidth={1.5} />
+              </span>
+              <span className="font-display text-[10px] tracking-label text-white/40">
+                Account &amp; security
+              </span>
+            </div>
 
-            <div className="mt-8">
-              <p className="font-display text-2xl sm:text-3xl leading-tight text-ink lux-glow">
+            <div className="mt-9">
+              <p className="font-display text-2xl sm:text-3xl leading-tight text-white lux-glow-dark">
                 {name}
               </p>
-              <p className="text-sm text-grey-500 mt-2 break-all">{email}</p>
-              <p className="text-[11px] text-grey-400 mt-4 uppercase tracking-label">
+              <p className="text-sm text-white/50 mt-2 break-all">{email}</p>
+              <p className="text-[10px] text-white/35 mt-4 uppercase tracking-label">
                 {isAdmin ? "Administrator" : "Customer"}
               </p>
             </div>
 
             {/* Hairline divider */}
-            <div className="h-px bg-grey-200 my-8" />
+            <div className="h-px bg-white/10 my-8" />
 
             <div className="mt-auto flex items-end justify-between gap-4">
-              <div>
-                <p className="font-display text-xs tracking-label text-ink">
-                  Security
-                </p>
-                <p className="text-sm text-grey-500 mt-2 max-w-xs">
-                  Manage your password and account security.
-                </p>
+              <div className="flex items-start gap-3">
+                <LockKeyhole
+                  size={18}
+                  strokeWidth={1.5}
+                  className="text-white/55 mt-0.5"
+                />
+                <div>
+                  <p className="font-display text-xs tracking-label text-white/85">
+                    Security
+                  </p>
+                  <p className="text-sm text-white/45 mt-1.5 max-w-xs">
+                    Manage your password and account security.
+                  </p>
+                </div>
               </div>
-              <span
-                aria-hidden="true"
-                className="font-display text-lg text-ink transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:translate-x-1.5"
-              >
-                &rarr;
-              </span>
+              <ArrowRight
+                size={20}
+                strokeWidth={1.5}
+                className="shrink-0 text-white/70 transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:translate-x-1.5 group-hover:text-white"
+              />
             </div>
           </PremiumCard>
 
           {/* Orders */}
           <PremiumCard
             href="/orders"
-            className="anim-fade-up anim-delay-2 p-8 flex flex-col justify-between min-h-[9.5rem]"
+            className="is-dark anim-fade-up anim-delay-2 p-8 flex flex-col justify-between min-h-[11rem]"
           >
-            <p className="font-display text-xs tracking-label text-grey-500">
-              Orders
-            </p>
-            <div className="mt-6 flex items-end justify-between gap-4">
-              <p className="text-sm text-grey-600">View your order history</p>
-              <span
-                aria-hidden="true"
-                className="font-display text-lg text-ink transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:translate-x-1.5"
-              >
-                &rarr;
+            <div className="flex items-center justify-between">
+              <span className="lux-icon-ring h-12 w-12">
+                <Package size={22} strokeWidth={1.5} />
               </span>
+              <span className="font-display text-[10px] tracking-label text-white/40">
+                Orders
+              </span>
+            </div>
+            <div className="mt-6 flex items-end justify-between gap-4">
+              <p className="text-sm text-white/55">View your order history</p>
+              <ArrowRight
+                size={20}
+                strokeWidth={1.5}
+                className="shrink-0 text-white/70 transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:translate-x-1.5 group-hover:text-white"
+              />
             </div>
           </PremiumCard>
 
           {/* Wishlist */}
           <PremiumCard
             href="/account/wishlist"
-            className="anim-fade-up anim-delay-3 p-8 flex flex-col justify-between min-h-[9.5rem]"
+            className="is-dark anim-fade-up anim-delay-3 p-8 flex flex-col justify-between min-h-[11rem]"
           >
-            <p className="font-display text-xs tracking-label text-grey-500">
-              Wishlist
-            </p>
-            <div className="mt-6 flex items-end justify-between gap-4">
-              <p className="text-sm text-grey-600">View saved products</p>
-              <span
-                aria-hidden="true"
-                className="font-display text-lg text-ink transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:translate-x-1.5"
-              >
-                &rarr;
+            <div className="flex items-center justify-between">
+              <span className="lux-icon-ring h-12 w-12">
+                <Heart size={22} strokeWidth={1.5} />
               </span>
+              <span className="font-display text-[10px] tracking-label text-white/40">
+                Wishlist
+              </span>
+            </div>
+            <div className="mt-6 flex items-end justify-between gap-4">
+              <p className="text-sm text-white/55">View saved products</p>
+              <ArrowRight
+                size={20}
+                strokeWidth={1.5}
+                className="shrink-0 text-white/70 transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:translate-x-1.5 group-hover:text-white"
+              />
             </div>
           </PremiumCard>
         </div>

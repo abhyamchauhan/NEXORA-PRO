@@ -284,6 +284,85 @@ a {
   }
 }
 
+/* ---- Dark luxury variant (My Account) — softly illuminated cards on black ---- */
+.premium-card.is-dark {
+  background: #131315; /* one step up from the near-black page */
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.03) inset,
+    0 30px 60px -40px rgba(0, 0, 0, 0.9);
+}
+.premium-card.is-dark:hover {
+  border-color: rgba(255, 255, 255, 0.28);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.06) inset,
+    0 28px 70px -30px rgba(0, 0, 0, 0.95),
+    0 0 40px -12px rgba(255, 255, 255, 0.08);
+}
+.premium-card.is-dark .premium-card__glow {
+  background: radial-gradient(
+    360px circle at var(--mx, 50%) var(--my, 50%),
+    rgba(255, 255, 255, 0.07),
+    transparent 60%
+  );
+}
+
+/* Soft luminous text for headings on the dark account page. */
+.lux-glow-dark {
+  text-shadow: 0 0 22px rgba(255, 255, 255, 0.12);
+  transition: text-shadow 0.45s ease;
+}
+.lux-glow-dark:hover {
+  text-shadow: 0 0 30px rgba(255, 255, 255, 0.22);
+}
+
+/* Circular icon ring — thin border, dark centre, faint halo; lifts on hover. */
+.lux-icon-ring {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background:
+    radial-gradient(
+      circle at 50% 35%,
+      rgba(255, 255, 255, 0.06),
+      rgba(255, 255, 255, 0) 70%
+    ),
+    rgba(255, 255, 255, 0.02);
+  box-shadow:
+    0 0 0 6px rgba(255, 255, 255, 0.015),
+    0 0 24px -8px rgba(255, 255, 255, 0.15);
+  color: rgba(255, 255, 255, 0.82);
+  transition:
+    transform 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 0.5s ease,
+    box-shadow 0.5s ease,
+    color 0.5s ease;
+}
+.group:hover .lux-icon-ring {
+  transform: scale(1.04);
+  border-color: rgba(255, 255, 255, 0.4);
+  color: #ffffff;
+  box-shadow:
+    0 0 0 6px rgba(255, 255, 255, 0.03),
+    0 0 34px -6px rgba(255, 255, 255, 0.28);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lux-glow-dark {
+    text-shadow: none;
+    transition: none;
+  }
+  .lux-icon-ring {
+    transition: border-color 0.2s ease, color 0.2s ease;
+  }
+  .group:hover .lux-icon-ring {
+    transform: none;
+  }
+}
+
 /* Wishlist heart — a satisfying pop when toggled on. */
 @keyframes heart-pop {
   0% { transform: scale(1); }
