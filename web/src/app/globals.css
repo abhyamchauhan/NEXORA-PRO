@@ -310,10 +310,49 @@ a {
 /* Soft luminous text for headings on the dark account page. */
 .lux-glow-dark {
   text-shadow: 0 0 22px rgba(255, 255, 255, 0.12);
-  transition: text-shadow 0.45s ease;
+  transition:
+    text-shadow 0.45s ease,
+    transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .lux-glow-dark:hover {
   text-shadow: 0 0 30px rgba(255, 255, 255, 0.22);
+}
+
+/* Premium editorial serif for hero headings (pairs with Instrument Sans). */
+.font-lux-serif {
+  font-family: "Instrument Serif", Georgia, "Times New Roman", serif;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+/* Stronger luminous glow — for the accented brand word in a hero heading. */
+.lux-glow-strong {
+  text-shadow:
+    0 0 26px rgba(255, 255, 255, 0.35),
+    0 0 60px rgba(255, 255, 255, 0.18);
+}
+
+/* Top-left brand mark: gentle pop + brighter glow on hover. */
+.lux-brand {
+  transform-origin: left center;
+  transition:
+    transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+    text-shadow 0.35s ease;
+  text-shadow: 0 0 20px rgba(255, 255, 255, 0.14);
+}
+.lux-brand:hover {
+  transform: scale(1.07) translateY(-1px);
+  text-shadow:
+    0 0 26px rgba(255, 255, 255, 0.4),
+    0 0 54px rgba(255, 255, 255, 0.2);
+}
+@media (prefers-reduced-motion: reduce) {
+  .lux-brand {
+    transition: text-shadow 0.2s ease;
+  }
+  .lux-brand:hover {
+    transform: none;
+  }
 }
 
 /* Circular icon ring — thin border, dark centre, faint halo; lifts on hover. */

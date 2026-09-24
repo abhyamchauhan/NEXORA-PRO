@@ -41,7 +41,7 @@ export default async function AccountPage() {
           <div>
             <Link
               href="/"
-              className="font-display text-3xl sm:text-4xl leading-none lux-glow-dark inline-block"
+              className="font-display text-3xl sm:text-4xl leading-none lux-brand inline-block"
             >
               NEXORA
             </Link>
@@ -57,20 +57,28 @@ export default async function AccountPage() {
           <span className="inline-block font-display text-[10px] tracking-[0.32em] text-white/40 border border-white/12 rounded-full px-4 py-1.5">
             YOUR ACCOUNT
           </span>
-          <h2 className="font-display text-4xl sm:text-5xl leading-[1.05] mt-7 lux-glow-dark">
-            Your NEXORA world
+          <h2 className="mt-7 flex flex-wrap items-baseline justify-center gap-x-3 sm:gap-x-4 leading-[1.05]">
+            <span className="font-lux-serif italic text-5xl sm:text-6xl text-white/90">
+              Your
+            </span>
+            <span className="font-display not-italic text-4xl sm:text-5xl tracking-tight text-white lux-glow-strong">
+              NEXORA
+            </span>
+            <span className="font-lux-serif italic text-5xl sm:text-6xl text-white/90">
+              World
+            </span>
           </h2>
           <p className="text-sm sm:text-base text-white/50 mt-5 max-w-lg mx-auto">
             Manage your account, orders, wishlist, and preferences in one place.
           </p>
         </div>
 
-        {/* Editorial asymmetric grid */}
-        <div className="grid gap-5 sm:gap-6 md:grid-cols-[1.45fr_1fr] max-w-4xl mx-auto">
-          {/* Account & Security — anchor card, spans both rows on md+ */}
+        {/* Editorial asymmetric grid — Account left, Orders + Wishlist stacked right */}
+        <div className="grid gap-5 sm:gap-6 md:grid-cols-[1.45fr_1fr] md:items-start max-w-4xl mx-auto">
+          {/* Account & Security — anchor card */}
           <PremiumCard
             href="/account/security"
-            className="is-dark anim-fade-up anim-delay-1 md:row-span-2 p-8 sm:p-10 flex flex-col"
+            className="is-dark anim-fade-up anim-delay-1 p-8 sm:p-10 flex flex-col"
           >
             <div className="flex items-center justify-between">
               <span className="lux-icon-ring h-14 w-14">
@@ -118,6 +126,8 @@ export default async function AccountPage() {
             </div>
           </PremiumCard>
 
+          {/* Right column — Orders on top, Wishlist directly beneath it */}
+          <div className="flex flex-col gap-5 sm:gap-6">
           {/* Orders */}
           <PremiumCard
             href="/orders"
@@ -163,6 +173,7 @@ export default async function AccountPage() {
               />
             </div>
           </PremiumCard>
+          </div>
         </div>
       </div>
     </main>
