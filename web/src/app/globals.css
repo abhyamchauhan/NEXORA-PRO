@@ -227,6 +227,63 @@ a {
   to { transform: scaleX(1); }
 }
 
+/* ---- Premium account cards: slow lift + tilt + cursor-follow highlight ---- */
+.premium-card {
+  position: relative;
+  background: #fcfbf9; /* warm off-white, a touch brighter than the page */
+  border: 1px solid #e6e4df;
+  transform: translateY(var(--ty, 0px)) scale(var(--sc, 1))
+    rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+  transform-style: preserve-3d;
+  will-change: transform;
+  transition:
+    transform 0.55s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.55s cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 0.4s ease;
+}
+.premium-card:hover {
+  border-color: #111111;
+  box-shadow: 0 24px 55px -26px rgba(0, 0, 0, 0.3);
+}
+.premium-card__glow {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.45s ease;
+  background: radial-gradient(
+    340px circle at var(--mx, 50%) var(--my, 50%),
+    rgba(0, 0, 0, 0.05),
+    transparent 60%
+  );
+}
+.premium-card:hover .premium-card__glow {
+  opacity: 1;
+}
+
+/* Barely-there luminous edge on key headings; a touch stronger on hover. */
+.lux-glow {
+  text-shadow: 0 1px 14px rgba(0, 0, 0, 0.04);
+  transition: text-shadow 0.45s ease;
+}
+.lux-glow:hover {
+  text-shadow: 0 2px 26px rgba(0, 0, 0, 0.16);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .premium-card {
+    transition: border-color 0.2s ease;
+    transform: none !important;
+  }
+  .premium-card__glow {
+    display: none;
+  }
+  .lux-glow {
+    text-shadow: none;
+    transition: none;
+  }
+}
+
 /* Wishlist heart — a satisfying pop when toggled on. */
 @keyframes heart-pop {
   0% { transform: scale(1); }
