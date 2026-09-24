@@ -11,8 +11,8 @@ export type ThemeSettings = {
 };
 
 export const DEFAULT_THEME: ThemeSettings = {
-  bgColor: "#ffffff",
-  textColor: "#1c1c1c",
+  bgColor: "#141414", // brand charcoal / near-black page background
+  textColor: "#F5F5F5", // off-white primary text
   accentColor: "#E8291C", // brand signal red — CTAs, sale, hover accents
   fontScale: "medium",
   displayFont: "Instrument Sans",

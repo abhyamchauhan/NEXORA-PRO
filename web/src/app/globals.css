@@ -5,10 +5,22 @@
 :root {
   /* Theme defaults — overridden at runtime by the admin theme (injected as a
      :root block in the document head). Keep these in sync with DEFAULT_THEME. */
-  --surface-page: #ffffff;
-  --text-body: #1c1c1c;
+  --surface-page: #141414; /* brand charcoal page background */
+  --text-body: #f5f5f5; /* off-white primary text */
   --accent: #E8291C; /* brand signal red */
   --font-scale: 1;
+
+  /* Dark brand surfaces + roles used by the dark-theme remap layer below.
+     Layering (darkest→lightest): page #141414 < section #1b1b1b < card #242424,
+     so cards lift off the page and inset tiles/inputs read as recessed. */
+  --surface: #242424; /* cards / panels (bg-white) */
+  --surface-2: #1b1b1b; /* section backgrounds, tiles, inputs (bg-grey-50) */
+  --surface-3: #2e2e2e; /* raised chips (bg-grey-100) */
+  --text-soft: #cfcfcf; /* strong secondary */
+  --text-muted: #a0a0a0; /* warm-gray secondary text */
+  --border: #3a3a3a; /* borders / dividers */
+
+  color-scheme: dark;
 }
 
 html,
@@ -337,4 +349,78 @@ html {
   .page-enter {
     animation: none !important;
   }
+}
+
+/* ==================================================================== */
+/* DARK BRAND THEME — remaps the light Tailwind utilities used across the */
+/* app to the brand's charcoal palette in one place, so the whole site   */
+/* reads dark without editing every component. Signal red (accent/sale)  */
+/* and text-white are intentionally left as-is.                          */
+/* ==================================================================== */
+
+/* Surfaces */
+.bg-white { background-color: var(--surface) !important; }
+.bg-grey-50 { background-color: var(--surface-2) !important; }
+.bg-grey-100 { background-color: var(--surface-3) !important; }
+.bg-grey-200 { background-color: var(--surface-3) !important; }
+.bg-bone { background-color: var(--surface-2) !important; }
+.bg-ink { background-color: #2a2a2a !important; } /* buttons, header, footer, nav */
+.bg-black { background-color: #0e0e0e !important; }
+
+/* Translucent light surfaces → dark translucent */
+.bg-white\/50 { background-color: rgba(28, 28, 28, 0.55) !important; }
+.bg-white\/70 { background-color: rgba(28, 28, 28, 0.7) !important; }
+.bg-white\/80 { background-color: rgba(20, 20, 20, 0.8) !important; }
+.bg-white\/85 { background-color: rgba(20, 20, 20, 0.82) !important; }
+.bg-white\/90 { background-color: rgba(18, 18, 18, 0.9) !important; }
+
+/* Text */
+.text-ink { color: var(--text-body) !important; }
+.text-black { color: var(--text-body) !important; }
+.text-grey-700 { color: var(--text-soft) !important; }
+.text-grey-500 { color: var(--text-muted) !important; }
+.text-grey-400 { color: #8a8a8a !important; }
+.text-grey-300 { color: #9a9a9a !important; }
+.text-concrete { color: #b5b5b5 !important; }
+
+/* Borders / dividers */
+.border-grey-100,
+.border-grey-200,
+.border-grey-300,
+.border-graphite { border-color: var(--border) !important; }
+/* ink border = strong/selected → light in the dark theme */
+.border-ink { border-color: #f5f5f5 !important; }
+
+/* Hover states that switch to a light surface → dark surface */
+.hover\:bg-grey-50:hover { background-color: var(--surface-2) !important; }
+.hover\:bg-white:hover { background-color: var(--surface-2) !important; }
+.hover\:bg-black:hover { background-color: #000 !important; }
+.hover\:border-ink:hover { border-color: #f5f5f5 !important; }
+.hover\:text-ink:hover { color: var(--text-body) !important; }
+
+/* Form controls render dark by default */
+input:not([type="checkbox"]):not([type="radio"]):not([type="color"]):not([type="range"]),
+select,
+textarea {
+  background-color: var(--surface-2);
+  color: var(--text-body);
+}
+::placeholder { color: #7d7d7d; }
+/* global inputs used by product/variant/coupon forms (.input/.vin classes) */
+.input,
+.vin {
+  background-color: var(--surface-2) !important;
+  color: var(--text-body) !important;
+  border-color: var(--border) !important;
+}
+
+/* Skeleton shimmer on dark */
+.skeleton {
+  background-color: #262626;
+  background-image: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.08) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
 }
