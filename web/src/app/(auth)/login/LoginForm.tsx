@@ -1,42 +1,11 @@
 "use client";
 
-import { useState, type ChangeEvent, type FormEvent, type ReactNode } from "react";
-import Image from "next/image";
+import { useState, type ChangeEvent, type FormEvent } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { signIn, getSession } from "next-auth/react";
-import {
-  Ripple,
-  TechOrbitDisplay,
-  AnimatedForm,
-} from "@/components/ui/modern-animated-sign-in";
+import { AnimatedForm } from "@/components/ui/modern-animated-sign-in";
 
 const googleEnabled = process.env.NEXT_PUBLIC_GOOGLE_ENABLED === "true";
-
-// Orbiting brand/tech marks for the animated left panel.
-type OrbitIcon = {
-  component: () => ReactNode;
-  className: string;
-  duration?: number;
-  delay?: number;
-  radius?: number;
-  path?: boolean;
-  reverse?: boolean;
-};
-
-const orbitImg = (src: string, alt: string) => () => (
-  <Image width={100} height={100} src={src} alt={alt} />
-);
-
-const iconsArray: OrbitIcon[] = [
-  { component: orbitImg("https://cdn.21st.dev/assets/mirror/34/34826e5b3315daadf4fa15f723a3c1d5ba4a89277bfd94e22ac4d7d3d54338c5.svg", "HTML5"), className: "size-[30px] border-none bg-transparent", duration: 20, delay: 20, radius: 100, path: false, reverse: false },
-  { component: orbitImg("https://cdn.21st.dev/assets/mirror/36/36b7d94b657d571d3f94042acbf6a4c86a5301a222f83f4b4583ad2acf6e297d.svg", "CSS3"), className: "size-[30px] border-none bg-transparent", duration: 20, delay: 10, radius: 100, path: false, reverse: false },
-  { component: orbitImg("https://cdn.21st.dev/assets/mirror/c9/c9191199f4049920c2fc19035b8a6664f37f4689fcd9e8434e786097e78863f0.svg", "TypeScript"), className: "size-[50px] border-none bg-transparent", radius: 210, duration: 20, path: false, reverse: false },
-  { component: orbitImg("https://cdn.21st.dev/assets/mirror/06/0656ff65fc8eeacda5c78d7f9ffe91ec1eb919db64f56e0b7dcd460af4bbd36c.svg", "JavaScript"), className: "size-[50px] border-none bg-transparent", radius: 210, duration: 20, delay: 20, path: false, reverse: false },
-  { component: orbitImg("https://cdn.21st.dev/assets/mirror/f8/f8cec54589553807eb603bcaf4e056aa090196211698b056542e3cc62a2f3448.svg", "TailwindCSS"), className: "size-[30px] border-none bg-transparent", duration: 20, delay: 20, radius: 150, path: false, reverse: true },
-  { component: orbitImg("https://cdn.21st.dev/assets/mirror/d9/d9435c4ede7133b376c0173a80226bb3856729366707cd96e9a66e39448d0288.svg", "Nextjs"), className: "size-[30px] border-none bg-transparent", duration: 20, delay: 10, radius: 150, path: false, reverse: true },
-  { component: orbitImg("https://cdn.21st.dev/assets/mirror/58/5825b649c8c04dec13ecf01d0182401bd0ec71789d2fa06224866d882cd1515f.svg", "React"), className: "size-[50px] border-none bg-transparent", radius: 270, duration: 20, path: false, reverse: true },
-  { component: orbitImg("https://cdn.21st.dev/assets/mirror/71/717a57ea97bf7e86de721dab3e68afac66332a10676d5c9abce4ae6a5a9c9983.svg", "Git"), className: "size-[50px] border-none bg-transparent", radius: 320, duration: 20, delay: 20, path: false, reverse: false },
-];
 
 export default function LoginForm() {
   const router = useRouter();
@@ -91,10 +60,34 @@ export default function LoginForm() {
 
   return (
     <section className="flex max-lg:justify-center min-h-[100dvh]">
-      {/* Left — animated orbit panel */}
-      <span className="relative flex flex-col justify-center w-1/2 max-lg:hidden">
-        <Ripple mainCircleSize={100} />
-        <TechOrbitDisplay iconsArray={iconsArray} text="NEXORA" />
+      {/* Left — full-bleed looping brand video (falls back to a dark panel if
+          the video file is missing, so it never renders blank/white). */}
+      <span className="relative w-1/2 h-[100dvh] overflow-hidden max-lg:hidden bg-ink">
+        <video
+          autoPlay
+          muted
+          loop
+          playsInline
+          poster="/login-hero.jpg"
+          className="absolute inset-0 w-full h-full object-cover"
+        >
+          {/* Drop your clip at web/public/login-hero.mp4 (webm optional). */}
+          <source src="/login-hero.webm" type="video/webm" />
+          <source src="/login-hero.mp4" type="video/mp4" />
+        </video>
+
+        {/* Gradient for legible overlay text */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-black/40" />
+
+        {/* Brand overlay */}
+        <div className="relative h-full flex flex-col justify-end p-12 text-white">
+          <p className="font-display text-xs tracking-label text-white/70 mb-2">
+            NEXORA
+          </p>
+          <h2 className="font-display text-4xl leading-tight max-w-sm">
+            Premium streetwear, engineered clean.
+          </h2>
+        </div>
       </span>
 
       {/* Right — the real login form */}
