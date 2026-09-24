@@ -37,48 +37,48 @@ export function SecurityForm({ hasPassword }: { hasPassword: boolean }) {
   return (
     <form onSubmit={onSubmit} className="space-y-4 max-w-md">
       {!already && (
-        <p className="text-sm text-grey-500">
+        <p className="text-sm text-white/50">
           Your account uses Google sign-in and has no password yet. Set one here to
           also sign in with email + password.
         </p>
       )}
       {already && (
         <label className="block">
-          <span className="font-display text-xs tracking-label text-grey-500">Current password</span>
+          <span className="font-display text-xs tracking-label text-white/50">Current password</span>
           <input
             type="password"
             autoComplete="current-password"
             value={current}
             onChange={(e) => setCurrent(e.target.value)}
-            className="mt-1 w-full border border-grey-300 bg-white px-3 py-2.5 text-sm outline-none focus:border-ink"
+            className="mt-1.5 w-full border border-white/15 bg-white/[0.03] px-3 py-2.5 text-sm text-white placeholder-white/30 outline-none transition-colors focus:border-white/50"
           />
         </label>
       )}
       <label className="block">
-        <span className="font-display text-xs tracking-label text-grey-500">New password</span>
+        <span className="font-display text-xs tracking-label text-white/50">New password</span>
         <input
           type="password"
           autoComplete="new-password"
           value={next}
           onChange={(e) => setNext(e.target.value)}
-          className="mt-1 w-full border border-grey-300 bg-white px-3 py-2.5 text-sm outline-none focus:border-ink"
+          className="mt-1.5 w-full border border-white/15 bg-white/[0.03] px-3 py-2.5 text-sm text-white placeholder-white/30 outline-none transition-colors focus:border-white/50"
         />
       </label>
       <label className="block">
-        <span className="font-display text-xs tracking-label text-grey-500">Confirm new password</span>
+        <span className="font-display text-xs tracking-label text-white/50">Confirm new password</span>
         <input
           type="password"
           autoComplete="new-password"
           value={confirm}
           onChange={(e) => setConfirm(e.target.value)}
-          className="mt-1 w-full border border-grey-300 bg-white px-3 py-2.5 text-sm outline-none focus:border-ink"
+          className="mt-1.5 w-full border border-white/15 bg-white/[0.03] px-3 py-2.5 text-sm text-white placeholder-white/30 outline-none transition-colors focus:border-white/50"
         />
       </label>
       {msg && <p className={`text-sm ${msg.ok ? "text-rating" : "text-sale"}`}>{msg.text}</p>}
       <button
         type="submit"
         disabled={loading}
-        className="group inline-flex items-center gap-2 bg-ink text-white font-display text-sm tracking-button px-6 py-3 rounded-button transition-colors hover:bg-black disabled:opacity-60"
+        className="group inline-flex items-center gap-2 bg-white text-[#0a0a0a] font-display text-sm tracking-button px-6 py-3 rounded-button transition-all duration-300 hover:shadow-[0_0_28px_-8px_rgba(255,255,255,0.5)] disabled:opacity-60"
       >
         <span>{loading ? "Saving…" : already ? "Change password" : "Set password"}</span>
         <span

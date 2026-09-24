@@ -1,10 +1,9 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { Heart, ArrowLeft, ArrowRight } from "lucide-react";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import { ProductCard } from "@/components/store/ProductCard";
-import { EmptyState } from "@/components/store/EmptyState";
-import { PremiumCard } from "@/components/store/PremiumCard";
 
 export const dynamic = "force-dynamic";
 
@@ -20,43 +19,65 @@ export default async function WishlistPage() {
   const products = items.map((i) => i.product);
 
   return (
-    <main className="min-h-screen bg-grey-50 px-6 py-16 sm:py-20">
-      <div className="max-w-container mx-auto">
+    <main className="relative min-h-screen overflow-hidden bg-[#08080a] text-white px-6 py-16 sm:py-20">
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0"
+        style={{
+          background:
+            "radial-gradient(900px circle at 50% -10%, rgba(255,255,255,0.06), transparent 60%)",
+        }}
+      />
+
+      <div className="relative max-w-container mx-auto">
         <Link
           href="/account"
-          className="group inline-flex items-center gap-1.5 text-sm text-grey-500 hover:text-ink transition-colors"
+          className="group inline-flex items-center gap-1.5 text-sm text-white/45 hover:text-white transition-colors"
         >
-          <span className="inline-block transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:-translate-x-1">
-            &larr;
-          </span>
+          <ArrowLeft
+            size={16}
+            strokeWidth={1.6}
+            className="transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:-translate-x-1"
+          />
           Account
         </Link>
 
-        <div className="anim-fade-up mt-6 mb-10 flex items-baseline gap-3">
-          <h1 className="font-display text-3xl leading-tight lux-glow">
+        <div className="anim-fade-up mt-8 mb-10 flex items-baseline gap-3">
+          <h1 className="font-lux-serif italic text-4xl sm:text-5xl leading-tight lux-glow-dark">
             My wishlist
           </h1>
           {products.length > 0 && (
-            <span className="font-display text-xs tracking-label text-grey-400">
+            <span className="font-display text-xs tracking-label text-white/40">
               {products.length} {products.length === 1 ? "item" : "items"}
             </span>
           )}
         </div>
 
         {products.length === 0 ? (
-          <div className="max-w-xl anim-fade-up anim-delay-1">
-            <PremiumCard interactive={false} className="p-2">
-              <EmptyState
-                icon="♡"
-                title="Your wishlist is empty"
-                message="Tap the heart on any product to save it here for later."
-                ctaLabel="Explore products"
-                ctaHref="/shop"
+          <div className="anim-fade-up anim-delay-1 max-w-md mx-auto text-center py-16">
+            <span className="lux-icon-ring h-16 w-16 mx-auto mb-6 flex">
+              <Heart size={26} strokeWidth={1.5} />
+            </span>
+            <h2 className="font-display text-xl text-white mb-3">
+              Your wishlist is empty
+            </h2>
+            <p className="text-sm text-white/50 max-w-sm mx-auto">
+              Tap the heart on any product to save it here for later.
+            </p>
+            <Link
+              href="/shop"
+              className="group mt-8 inline-flex items-center gap-2 bg-white text-[#0a0a0a] font-display text-sm tracking-button px-7 py-3 rounded-button transition-all duration-300 hover:shadow-[0_0_28px_-8px_rgba(255,255,255,0.5)]"
+            >
+              Explore products
+              <ArrowRight
+                size={18}
+                strokeWidth={1.6}
+                className="transition-transform duration-[420ms] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:translate-x-1"
               />
-            </PremiumCard>
+            </Link>
           </div>
         ) : (
-          <div className="anim-fade-up anim-delay-1 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-4 gap-y-10 bg-white border border-grey-200 p-4 sm:p-6">
+          <div className="anim-fade-up anim-delay-1 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-4 gap-y-10">
             {products.map((p) => (
               <ProductCard key={p.id} product={p} />
             ))}
