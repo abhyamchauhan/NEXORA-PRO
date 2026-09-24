@@ -1,10 +1,42 @@
 "use client";
 
-import { useState } from "react";
-import Link from "next/link";
+import { useState, type ChangeEvent, type FormEvent, type ReactNode } from "react";
+import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import { signIn, getSession } from "next-auth/react";
-import { GoogleButton } from "@/components/GoogleButton";
+import {
+  Ripple,
+  TechOrbitDisplay,
+  AnimatedForm,
+} from "@/components/ui/modern-animated-sign-in";
+
+const googleEnabled = process.env.NEXT_PUBLIC_GOOGLE_ENABLED === "true";
+
+// Orbiting brand/tech marks for the animated left panel.
+type OrbitIcon = {
+  component: () => ReactNode;
+  className: string;
+  duration?: number;
+  delay?: number;
+  radius?: number;
+  path?: boolean;
+  reverse?: boolean;
+};
+
+const orbitImg = (src: string, alt: string) => () => (
+  <Image width={100} height={100} src={src} alt={alt} />
+);
+
+const iconsArray: OrbitIcon[] = [
+  { component: orbitImg("https://cdn.21st.dev/assets/mirror/34/34826e5b3315daadf4fa15f723a3c1d5ba4a89277bfd94e22ac4d7d3d54338c5.svg", "HTML5"), className: "size-[30px] border-none bg-transparent", duration: 20, delay: 20, radius: 100, path: false, reverse: false },
+  { component: orbitImg("https://cdn.21st.dev/assets/mirror/36/36b7d94b657d571d3f94042acbf6a4c86a5301a222f83f4b4583ad2acf6e297d.svg", "CSS3"), className: "size-[30px] border-none bg-transparent", duration: 20, delay: 10, radius: 100, path: false, reverse: false },
+  { component: orbitImg("https://cdn.21st.dev/assets/mirror/c9/c9191199f4049920c2fc19035b8a6664f37f4689fcd9e8434e786097e78863f0.svg", "TypeScript"), className: "size-[50px] border-none bg-transparent", radius: 210, duration: 20, path: false, reverse: false },
+  { component: orbitImg("https://cdn.21st.dev/assets/mirror/06/0656ff65fc8eeacda5c78d7f9ffe91ec1eb919db64f56e0b7dcd460af4bbd36c.svg", "JavaScript"), className: "size-[50px] border-none bg-transparent", radius: 210, duration: 20, delay: 20, path: false, reverse: false },
+  { component: orbitImg("https://cdn.21st.dev/assets/mirror/f8/f8cec54589553807eb603bcaf4e056aa090196211698b056542e3cc62a2f3448.svg", "TailwindCSS"), className: "size-[30px] border-none bg-transparent", duration: 20, delay: 20, radius: 150, path: false, reverse: true },
+  { component: orbitImg("https://cdn.21st.dev/assets/mirror/d9/d9435c4ede7133b376c0173a80226bb3856729366707cd96e9a66e39448d0288.svg", "Nextjs"), className: "size-[30px] border-none bg-transparent", duration: 20, delay: 10, radius: 150, path: false, reverse: true },
+  { component: orbitImg("https://cdn.21st.dev/assets/mirror/58/5825b649c8c04dec13ecf01d0182401bd0ec71789d2fa06224866d882cd1515f.svg", "React"), className: "size-[50px] border-none bg-transparent", radius: 270, duration: 20, path: false, reverse: true },
+  { component: orbitImg("https://cdn.21st.dev/assets/mirror/71/717a57ea97bf7e86de721dab3e68afac66332a10676d5c9abce4ae6a5a9c9983.svg", "Git"), className: "size-[50px] border-none bg-transparent", radius: 320, duration: 20, delay: 20, path: false, reverse: false },
+];
 
 export default function LoginForm() {
   const router = useRouter();
@@ -13,18 +45,14 @@ export default function LoginForm() {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<string | undefined>();
   const [loading, setLoading] = useState(false);
 
-  async function onSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    setError(null);
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setError(undefined);
     setLoading(true);
-    const res = await signIn("credentials", {
-      email,
-      password,
-      redirect: false,
-    });
+    const res = await signIn("credentials", { email, password, redirect: false });
     if (res?.error) {
       setError("Invalid email or password.");
       setLoading(false);
@@ -32,103 +60,66 @@ export default function LoginForm() {
     }
     // Role-based redirect: admins → /admin, customers → callbackUrl or /account.
     const session = await getSession();
-    if (session?.user?.role === "admin") {
-      router.push("/admin");
-    } else {
-      router.push(callbackUrl || "/account");
-    }
+    router.push(
+      session?.user?.role === "admin" ? "/admin" : callbackUrl || "/account",
+    );
     router.refresh();
   }
 
+  const formFields = {
+    header: "Welcome back",
+    subHeader: "Sign in to your NEXORA account",
+    fields: [
+      {
+        label: "Email",
+        required: true,
+        type: "email" as const,
+        placeholder: "Enter your email address",
+        onChange: (e: ChangeEvent<HTMLInputElement>) => setEmail(e.target.value),
+      },
+      {
+        label: "Password",
+        required: true,
+        type: "password" as const,
+        placeholder: "Enter your password",
+        onChange: (e: ChangeEvent<HTMLInputElement>) => setPassword(e.target.value),
+      },
+    ],
+    submitButton: loading ? "Signing in…" : "Sign in",
+    textVariantButton: "Forgot password?",
+  };
+
   return (
-    <main className="min-h-screen bg-grey-50 flex items-center justify-center px-6 py-16">
-      <div className="w-full max-w-md bg-white border border-grey-200 p-8">
-        <Link
-          href="/"
-          className="font-display text-2xl leading-none block mb-1"
-        >
-          NEXORA
-        </Link>
-        <h1 className="font-display text-sm tracking-label text-grey-500 mb-8">
-          Sign in
-        </h1>
-
-        <form onSubmit={onSubmit} className="space-y-4">
-          <Field
-            label="Email"
-            type="email"
-            value={email}
-            onChange={setEmail}
-            autoComplete="email"
-            required
-          />
-          <Field
-            label="Password"
-            type="password"
-            value={password}
-            onChange={setPassword}
-            autoComplete="current-password"
-            required
-          />
-
-          {error && <p className="text-sale text-sm">{error}</p>}
-
-          <div className="text-right">
-            <Link href="/forgot-password" className="text-xs text-grey-500 hover:text-ink underline">
-              Forgot password?
-            </Link>
-          </div>
-
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full bg-ink text-white font-display text-sm tracking-button py-3 rounded-button hover:bg-black transition-colors disabled:opacity-60"
-          >
-            {loading ? "Signing in…" : "Sign in"}
-          </button>
-        </form>
-
-        <GoogleButton callbackUrl={callbackUrl || "/account"} />
-
-        <p className="text-sm text-grey-500 mt-6">
-          New here?{" "}
-          <Link href="/register" className="text-ink underline">
-            Create an account
-          </Link>
-        </p>
-      </div>
-    </main>
-  );
-}
-
-function Field({
-  label,
-  type,
-  value,
-  onChange,
-  autoComplete,
-  required,
-}: {
-  label: string;
-  type: string;
-  value: string;
-  onChange: (v: string) => void;
-  autoComplete?: string;
-  required?: boolean;
-}) {
-  return (
-    <label className="block">
-      <span className="font-display text-xs tracking-label text-grey-500">
-        {label}
+    <section className="flex max-lg:justify-center min-h-[100dvh]">
+      {/* Left — animated orbit panel */}
+      <span className="relative flex flex-col justify-center w-1/2 max-lg:hidden">
+        <Ripple mainCircleSize={100} />
+        <TechOrbitDisplay iconsArray={iconsArray} text="NEXORA" />
       </span>
-      <input
-        type={type}
-        value={value}
-        required={required}
-        autoComplete={autoComplete}
-        onChange={(e) => onChange(e.target.value)}
-        className="mt-1 w-full border border-grey-300 bg-white px-3 py-2.5 text-sm outline-none focus:border-ink"
-      />
-    </label>
+
+      {/* Right — the real login form */}
+      <span className="w-1/2 h-[100dvh] flex flex-col justify-center items-center max-lg:w-full max-lg:px-[10%]">
+        <AnimatedForm
+          {...formFields}
+          errorField={error}
+          fieldPerRow={1}
+          onSubmit={handleSubmit}
+          goTo={(e) => {
+            e.preventDefault();
+            router.push("/forgot-password");
+          }}
+          googleLogin={googleEnabled ? "Continue with Google" : undefined}
+          onGoogleLogin={() =>
+            signIn("google", { callbackUrl: callbackUrl || "/account" })
+          }
+        />
+        <p className="mt-6 text-sm text-neutral-600 dark:text-neutral-300">
+          New here?{" "}
+          <a href="/register" className="text-ink underline">
+            Create an account
+          </a>
+        </p>
+      </span>
+    </section>
   );
 }
