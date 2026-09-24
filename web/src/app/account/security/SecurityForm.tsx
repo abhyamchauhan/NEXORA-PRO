@@ -78,9 +78,15 @@ export function SecurityForm({ hasPassword }: { hasPassword: boolean }) {
       <button
         type="submit"
         disabled={loading}
-        className="bg-ink text-white font-display text-sm tracking-button px-6 py-3 rounded-button hover:bg-black transition-colors disabled:opacity-60"
+        className="group inline-flex items-center gap-2 bg-ink text-white font-display text-sm tracking-button px-6 py-3 rounded-button transition-colors hover:bg-black disabled:opacity-60"
       >
-        {loading ? "Saving…" : already ? "Change password" : "Set password"}
+        <span>{loading ? "Saving…" : already ? "Change password" : "Set password"}</span>
+        <span
+          aria-hidden="true"
+          className="transition-transform duration-[420ms] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:translate-x-1"
+        >
+          &rarr;
+        </span>
       </button>
     </form>
   );

@@ -6,6 +6,12 @@ import { useRef, type ReactNode, type CSSProperties } from "react";
 type PremiumCardProps = {
   /** When set, the whole card is a link. Otherwise it renders as a static block. */
   href?: string;
+  /**
+   * Cursor-tracked tilt / highlight. Default true. Set false for cards that
+   * hold forms or long content, where a moving surface would be distracting —
+   * the card keeps its premium border, glow and hover lift, minus the tilt.
+   */
+  interactive?: boolean;
   children: ReactNode;
   className?: string;
   style?: CSSProperties;
@@ -18,10 +24,17 @@ type PremiumCardProps = {
  * variables the .premium-card rules read (see globals.css). On touch devices,
  * reduced-motion, or when the pointer leaves, all vars reset to rest.
  */
-export function PremiumCard({ href, children, className = "", style }: PremiumCardProps) {
+export function PremiumCard({
+  href,
+  interactive = true,
+  children,
+  className = "",
+  style,
+}: PremiumCardProps) {
   const ref = useRef<HTMLElement | null>(null);
 
-  const interactive = () => {
+  const canTilt = () => {
+    if (!interactive) return false;
     if (typeof window === "undefined" || !window.matchMedia) return false;
     return (
       window.matchMedia("(hover: hover) and (pointer: fine)").matches &&
@@ -31,7 +44,7 @@ export function PremiumCard({ href, children, className = "", style }: PremiumCa
 
   function onMove(e: React.MouseEvent) {
     const el = ref.current;
-    if (!el || !interactive()) return;
+    if (!el || !canTilt()) return;
     const rect = el.getBoundingClientRect();
     const px = (e.clientX - rect.left) / rect.width; // 0..1
     const py = (e.clientY - rect.top) / rect.height; // 0..1
@@ -46,7 +59,7 @@ export function PremiumCard({ href, children, className = "", style }: PremiumCa
 
   function onEnter() {
     const el = ref.current;
-    if (!el || !interactive()) return;
+    if (!el || !canTilt()) return;
     el.style.setProperty("--ty", "-6px");
     el.style.setProperty("--sc", "1.015");
   }
