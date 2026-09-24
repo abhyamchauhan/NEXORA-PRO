@@ -83,6 +83,23 @@ export function SectionForm({
         </Link>
       </div>
 
+      {section.type === "heroCarousel" && (
+        <div className="bg-grey-50 border border-grey-200 p-6 mb-4">
+          <p className="text-sm text-grey-700">
+            This is the rotating <strong>hero slider</strong>. Its position on the
+            homepage is set by reordering it in the editor list. The slides
+            themselves (images, headings, buttons) are managed on the Home slider
+            page.
+          </p>
+          <Link
+            href="/admin/home-banners"
+            className="inline-block mt-3 font-display text-xs tracking-button bg-ink text-white px-4 py-2 rounded-button hover:bg-black"
+          >
+            Manage slides →
+          </Link>
+        </div>
+      )}
+
       <div className="bg-white border border-grey-200 p-6 space-y-5">
         <Labeled label="Heading">
           <input value={heading} onChange={(e) => setHeading(e.target.value)} className="in" />

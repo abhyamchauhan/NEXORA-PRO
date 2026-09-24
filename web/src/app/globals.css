@@ -199,6 +199,12 @@ a {
   animation: sale-pulse 1.8s ease-out infinite;
 }
 
+/* Carousel auto-advance progress bar (transform-only). */
+@keyframes carousel-progress {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+
 /* Wishlist heart — a satisfying pop when toggled on. */
 @keyframes heart-pop {
   0% { transform: scale(1); }

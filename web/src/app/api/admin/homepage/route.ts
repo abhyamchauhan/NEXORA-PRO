@@ -2,7 +2,13 @@ import type { SectionType } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import { getAdminSession, forbidden } from "@/lib/auth-guard";
 
-const TYPES: SectionType[] = ["hero", "banner", "featuredProducts", "categoryShowcase"];
+const TYPES: SectionType[] = [
+  "hero",
+  "banner",
+  "featuredProducts",
+  "categoryShowcase",
+  "heroCarousel",
+];
 
 // GET — all sections (including hidden) for the admin editor.
 export async function GET() {
@@ -24,11 +30,6 @@ export async function POST(req: Request) {
   if (!TYPES.includes(type))
     return Response.json({ error: "Invalid section type." }, { status: 400 });
 
-  const last = await prisma.homepageSection.findFirst({
-    orderBy: { position: "desc" },
-  });
-  const position = (last?.position ?? -1) + 1;
-
   const defaults: Record<SectionType, Record<string, unknown>> = {
     hero: {
       heading: "New season, engineered clean.",
@@ -47,7 +48,20 @@ export async function POST(req: Request) {
       heading: "Shop by category",
       categories: ["men", "women", "kids"],
     },
+    heroCarousel: { heading: "Hero slider" },
   };
+
+  // The hero slider defaults to the TOP (position 0) as a sensible starting
+  // point — but it's a normal reorderable section, so the admin can move it
+  // anywhere afterwards. Everything else appends to the end.
+  let position: number;
+  if (type === "heroCarousel") {
+    await prisma.homepageSection.updateMany({ data: { position: { increment: 1 } } });
+    position = 0;
+  } else {
+    const last = await prisma.homepageSection.findFirst({ orderBy: { position: "desc" } });
+    position = (last?.position ?? -1) + 1;
+  }
 
   const section = await prisma.homepageSection.create({
     data: { type, position, ...defaults[type] },

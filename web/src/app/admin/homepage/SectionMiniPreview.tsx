@@ -15,6 +15,7 @@ export type SectionRow = {
 };
 
 const TYPE_LABELS: Record<string, string> = {
+  heroCarousel: "Hero slider",
   hero: "Hero",
   banner: "Banner",
   featuredProducts: "Featured products",
@@ -29,6 +30,19 @@ export function typeLabel(t: string) {
 export function SectionMiniPreview({ s }: { s: SectionRow }) {
   const base =
     "w-28 h-16 shrink-0 border border-grey-200 overflow-hidden relative text-[6px] leading-tight";
+
+  if (s.type === "heroCarousel") {
+    return (
+      <div className={`${base} bg-black text-white flex flex-col justify-center items-center gap-1`}>
+        <span className="relative font-display uppercase">Slider</span>
+        <div className="flex gap-0.5">
+          <span className="w-3 h-0.5 bg-white" />
+          <span className="w-1 h-0.5 bg-white/50" />
+          <span className="w-1 h-0.5 bg-white/50" />
+        </div>
+      </div>
+    );
+  }
 
   if (s.type === "hero" || s.type === "banner") {
     return (

@@ -5,38 +5,49 @@ import Link from "next/link";
 import { ProductImage } from "./ProductImage";
 import type { CategoryBannerView } from "@/lib/category";
 
-// Auto-rotating, swipeable banner carousel for a category landing page.
-// transform-only slides; autoplay pauses on hover and is disabled for
-// prefers-reduced-motion. Swipe on touch, dots + arrows on desktop.
+const INTERVAL = 5000; // ms between auto-advances
+
+// Auto-rotating, swipeable banner carousel. Auto-advances every 5s, loops,
+// pauses on hover/touch, resets its timer after any manual navigation, and
+// shows a thin progress bar to the next slide. transform/opacity only; autoplay
+// + progress are disabled for prefers-reduced-motion (static dots/arrows). A
+// single slide renders as a static hero with no controls.
 export function CategoryBannerCarousel({ banners }: { banners: CategoryBannerView[] }) {
   const [i, setI] = useState(0);
   const [paused, setPaused] = useState(false);
+  const [reduce, setReduce] = useState(false);
   const n = banners.length;
   const startX = useRef<number | null>(null);
-  const reduce = useRef(false);
 
   useEffect(() => {
-    reduce.current = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    setReduce(window.matchMedia("(prefers-reduced-motion: reduce)").matches);
   }, []);
 
   const go = (next: number) => setI(((next % n) + n) % n);
 
+  // Auto-advance. Keyed on `i` so any manual jump restarts the full interval
+  // ("resume from that point"); paused on hover/touch; off for reduced motion.
   useEffect(() => {
-    if (n <= 1 || paused || reduce.current) return;
-    const id = setInterval(() => setI((c) => (c + 1) % n), 5000);
-    return () => clearInterval(id);
-  }, [n, paused]);
+    if (n <= 1 || paused || reduce) return;
+    const id = setTimeout(() => setI((c) => (c + 1) % n), INTERVAL);
+    return () => clearTimeout(id);
+  }, [i, paused, reduce, n]);
 
   if (n === 0) return null;
 
+  const autoplaying = n > 1 && !reduce;
+
   function onTouchStart(e: React.TouchEvent) {
     startX.current = e.touches[0].clientX;
+    setPaused(true); // hold-to-pause on mobile
   }
   function onTouchEnd(e: React.TouchEvent) {
-    if (startX.current === null) return;
-    const dx = e.changedTouches[0].clientX - startX.current;
-    if (Math.abs(dx) > 40) go(dx < 0 ? i + 1 : i - 1);
-    startX.current = null;
+    if (startX.current !== null) {
+      const dx = e.changedTouches[0].clientX - startX.current;
+      if (Math.abs(dx) > 40) go(dx < 0 ? i + 1 : i - 1);
+      startX.current = null;
+    }
+    setPaused(false); // resume shortly after the touch ends
   }
 
   return (
@@ -110,6 +121,20 @@ export function CategoryBannerCarousel({ banners }: { banners: CategoryBannerVie
               />
             ))}
           </div>
+
+          {/* Thin progress bar to the next auto-advance (transform-only). */}
+          {autoplaying && (
+            <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-white/15">
+              <div
+                key={i}
+                className="h-full bg-white origin-left"
+                style={{
+                  animation: `carousel-progress ${INTERVAL}ms linear forwards`,
+                  animationPlayState: paused ? "paused" : "running",
+                }}
+              />
+            </div>
+          )}
         </>
       )}
     </div>

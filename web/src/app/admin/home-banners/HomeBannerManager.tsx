@@ -72,8 +72,11 @@ export function HomeBannerManager({ initial }: { initial: HomeBannerRow[] }) {
         </button>
       </div>
       <p className="text-sm text-grey-500 mb-6">
-        These slides auto-rotate in a swipeable carousel at the very top of the
-        homepage. Reorder with the arrows; toggle Visible to hide one.
+        These slides auto-rotate in a swipeable carousel. Reorder the slides with
+        the arrows; toggle Visible to hide one. To place the slider on the
+        homepage (and move it up/down among the other sections), add a{" "}
+        <strong>Hero slider</strong> section in the{" "}
+        <a href="/admin/homepage" className="underline">Homepage editor</a>.
       </p>
 
       {rows.length === 0 && (

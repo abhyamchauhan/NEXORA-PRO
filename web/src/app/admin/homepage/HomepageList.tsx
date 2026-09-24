@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { SectionMiniPreview, typeLabel, type SectionRow } from "./SectionMiniPreview";
 
 const ADD_TYPES = [
+  { type: "heroCarousel", label: "Hero slider" },
   { type: "hero", label: "Hero" },
   { type: "banner", label: "Banner" },
   { type: "featuredProducts", label: "Featured products" },
