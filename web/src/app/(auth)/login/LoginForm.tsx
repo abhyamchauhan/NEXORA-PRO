@@ -59,60 +59,65 @@ export default function LoginForm() {
   };
 
   return (
-    <section className="flex max-lg:justify-center min-h-[100dvh]">
-      {/* Left — full-bleed looping brand video (falls back to a dark panel if
-          the video file is missing, so it never renders blank/white). */}
-      <span className="relative w-1/2 h-[100dvh] overflow-hidden max-lg:hidden bg-ink">
-        <video
-          autoPlay
-          muted
-          loop
-          playsInline
-          poster="/login-hero.jpg"
-          className="absolute inset-0 w-full h-full object-cover"
-        >
-          {/* Drop your clip at web/public/login-hero.mp4 (webm optional). */}
-          <source src="/login-hero.webm" type="video/webm" />
-          <source src="/login-hero.mp4" type="video/mp4" />
-        </video>
+    <section className="relative min-h-[100dvh] w-full overflow-hidden bg-ink flex items-center justify-center lg:justify-end px-5 sm:px-8 lg:px-16 py-10">
+      {/* Full-bleed looping brand video behind everything (dark fallback via
+          bg-ink so it never renders blank if the file is missing). */}
+      <video
+        autoPlay
+        muted
+        loop
+        playsInline
+        poster="/login-hero.jpg"
+        className="absolute inset-0 w-full h-full object-cover"
+      >
+        {/* Drop your clip at web/public/login-hero.mp4 (webm optional). */}
+        <source src="/login-hero.webm" type="video/webm" />
+        <source src="/login-hero.mp4" type="video/mp4" />
+      </video>
 
-        {/* Gradient for legible overlay text */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-black/40" />
+      {/* Scrim that blends the scene left → right so the video reads as one
+          piece with the card side (no hard split), and keeps text legible. */}
+      <div className="absolute inset-0 bg-gradient-to-r from-black/25 via-black/45 to-black/75" />
+      <div className="absolute inset-0 bg-black/15" />
 
-        {/* Brand overlay */}
-        <div className="relative h-full flex flex-col justify-end p-12 text-white">
-          <p className="font-display text-xs tracking-label text-white/70 mb-2">
-            NEXORA
-          </p>
-          <h2 className="font-display text-4xl leading-tight max-w-sm">
-            Premium streetwear, engineered clean.
-          </h2>
-        </div>
-      </span>
-
-      {/* Right — the real login form */}
-      <span className="w-1/2 h-[100dvh] flex flex-col justify-center items-center max-lg:w-full max-lg:px-[10%]">
-        <AnimatedForm
-          {...formFields}
-          errorField={error}
-          fieldPerRow={1}
-          onSubmit={handleSubmit}
-          goTo={(e) => {
-            e.preventDefault();
-            router.push("/forgot-password");
-          }}
-          googleLogin={googleEnabled ? "Continue with Google" : undefined}
-          onGoogleLogin={() =>
-            signIn("google", { callbackUrl: callbackUrl || "/account" })
-          }
-        />
-        <p className="mt-6 text-sm text-neutral-600 dark:text-neutral-300">
-          New here?{" "}
-          <a href="/register" className="text-ink underline">
-            Create an account
-          </a>
+      {/* Brand copy over the video (desktop) */}
+      <div className="absolute left-10 lg:left-16 top-1/2 -translate-y-1/2 max-w-md text-white hidden lg:block pointer-events-none">
+        <p className="font-display text-xs tracking-label text-white/70 mb-3">
+          NEXORA
         </p>
-      </span>
+        <h2 className="font-display text-5xl leading-[1.05]">
+          Premium streetwear, engineered clean.
+        </h2>
+        <p className="mt-5 text-white/75 text-sm max-w-sm">
+          Sign in to track orders, save your wishlist, and check out faster.
+        </p>
+      </div>
+
+      {/* Premium frosted card — floats over the video, blending the two sides */}
+      <div className="relative w-full max-w-md">
+        <div className="rounded-2xl border border-white/40 bg-white/90 backdrop-blur-xl shadow-[0_24px_70px_-20px_rgba(0,0,0,0.6)] p-7 sm:p-9 [&>section]:w-full">
+          <AnimatedForm
+            {...formFields}
+            errorField={error}
+            fieldPerRow={1}
+            onSubmit={handleSubmit}
+            goTo={(e) => {
+              e.preventDefault();
+              router.push("/forgot-password");
+            }}
+            googleLogin={googleEnabled ? "Continue with Google" : undefined}
+            onGoogleLogin={() =>
+              signIn("google", { callbackUrl: callbackUrl || "/account" })
+            }
+          />
+          <p className="mt-6 text-center text-sm text-neutral-600">
+            New here?{" "}
+            <a href="/register" className="text-ink underline">
+              Create an account
+            </a>
+          </p>
+        </div>
+      </div>
     </section>
   );
 }
