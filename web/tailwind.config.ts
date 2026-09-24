@@ -12,15 +12,16 @@ const config: Config = {
     extend: {
       colors: {
         black: "#000000",
-        // Admin-themable accent (primary buttons / links). Defaults to ink, so
-        // the monochrome look is unchanged until an admin picks another colour.
-        accent: "var(--accent, #1c1c1c)",
+        // Admin-themable accent (primary buttons / links / sale). Brand signal
+        // red by default; admin can override via the theme settings.
+        accent: "var(--accent, #E8291C)",
         ink: "#1c1c1c",
         graphite: "#262626",
         concrete: "#c4c4c4",
         bone: "#e9e5dd",
-        sale: "#c5312d",
-        rating: "#47a730",
+        sale: "#E8291C", // brand signal red
+        rating: "#3ECF6E", // brand success green
+        success: "#3ECF6E",
         grey: {
           50: "#f5f5f5",
           100: "#ededed",

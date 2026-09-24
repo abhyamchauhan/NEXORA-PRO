@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { ThemeSettings as Theme } from "@/lib/site-settings";
+import { FONT_OPTIONS, fontStack, googleFontsHref } from "@/lib/fonts";
 
 const HEX_RE = /^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/;
 
@@ -61,6 +62,20 @@ export function ThemeSettings({ initial }: { initial: Theme }) {
     setMsg(null);
   };
 
+  // Load the currently-selected fonts on this admin page so the preview shows
+  // the real typefaces before saving.
+  useEffect(() => {
+    const id = "theme-preview-fonts";
+    let link = document.getElementById(id) as HTMLLinkElement | null;
+    if (!link) {
+      link = document.createElement("link");
+      link.id = id;
+      link.rel = "stylesheet";
+      document.head.appendChild(link);
+    }
+    link.href = googleFontsHref(t.displayFont, t.bodyFont);
+  }, [t.displayFont, t.bodyFont]);
+
   const invalid =
     !HEX_RE.test(t.bgColor) || !HEX_RE.test(t.textColor) || !HEX_RE.test(t.accentColor);
 
@@ -83,8 +98,10 @@ export function ThemeSettings({ initial }: { initial: Theme }) {
     set({
       bgColor: "#ffffff",
       textColor: "#1c1c1c",
-      accentColor: "#1c1c1c",
+      accentColor: "#E8291C",
       fontScale: "medium",
+      displayFont: "Instrument Sans",
+      bodyFont: "Nunito",
     });
   }
 
@@ -124,6 +141,40 @@ export function ThemeSettings({ initial }: { initial: Theme }) {
         />
       </div>
 
+      {/* Fonts — separate control for headings vs body text */}
+      <div className="mt-6 grid sm:grid-cols-2 gap-6">
+        <label className="block">
+          <span className="font-display text-xs tracking-label text-grey-500">Heading font (display)</span>
+          <select
+            value={t.displayFont}
+            onChange={(e) => set({ displayFont: e.target.value })}
+            className="mt-1 w-full border border-grey-200 px-3 py-2.5 text-sm outline-none focus:border-ink bg-white"
+          >
+            {FONT_OPTIONS.map((f) => (
+              <option key={f.name} value={f.name}>
+                {f.name} · {f.category}
+              </option>
+            ))}
+          </select>
+          <p className="text-xs text-grey-400 mt-1">Used for all headings, buttons &amp; labels.</p>
+        </label>
+        <label className="block">
+          <span className="font-display text-xs tracking-label text-grey-500">Body font (text)</span>
+          <select
+            value={t.bodyFont}
+            onChange={(e) => set({ bodyFont: e.target.value })}
+            className="mt-1 w-full border border-grey-200 px-3 py-2.5 text-sm outline-none focus:border-ink bg-white"
+          >
+            {FONT_OPTIONS.map((f) => (
+              <option key={f.name} value={f.name}>
+                {f.name} · {f.category}
+              </option>
+            ))}
+          </select>
+          <p className="text-xs text-grey-400 mt-1">Used for paragraphs &amp; descriptions.</p>
+        </label>
+      </div>
+
       <div className="mt-6">
         <span className="font-display text-xs tracking-label text-grey-500">Base font size</span>
         <div className="flex gap-2 mt-2">
@@ -155,16 +206,22 @@ export function ThemeSettings({ initial }: { initial: Theme }) {
             fontSize: `${scaleMul}rem`,
           }}
         >
-          <p className="font-display uppercase tracking-button" style={{ fontSize: "1.6em" }}>
+          <p
+            className="uppercase tracking-button"
+            style={{ fontSize: "1.6em", fontFamily: fontStack(t.displayFont), fontWeight: 700 }}
+          >
             NEXORA
           </p>
-          <p style={{ opacity: 0.85, marginTop: 4 }}>
+          <p style={{ opacity: 0.85, marginTop: 4, fontFamily: fontStack(t.bodyFont) }}>
             Premium streetwear. Free doorstep delivery in India.
           </p>
           <button
             type="button"
-            className="mt-4 font-display text-sm tracking-button text-white px-6 py-3 rounded-button"
-            style={{ background: HEX_RE.test(t.accentColor) ? t.accentColor : "#1c1c1c" }}
+            className="mt-4 text-sm tracking-button text-white px-6 py-3 rounded-button"
+            style={{
+              background: HEX_RE.test(t.accentColor) ? t.accentColor : "#E8291C",
+              fontFamily: fontStack(t.displayFont),
+            }}
           >
             Add to bag
           </button>

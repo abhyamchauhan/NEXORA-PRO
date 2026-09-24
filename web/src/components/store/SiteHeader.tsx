@@ -146,14 +146,20 @@ export function SiteHeader() {
               <Link
                 href="/account/wishlist"
                 aria-label="Wishlist"
-                title="Wishlist"
-                className="relative hover:opacity-70 transition-opacity"
+                className="group relative grid place-items-center transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:scale-[1.15]"
               >
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden>
+                <svg
+                  width="21"
+                  height="21"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  aria-hidden
+                  className="overflow-visible transition-[filter,stroke] duration-200 group-hover:[filter:drop-shadow(0_0_7px_rgba(232,41,28,0.75))] group-hover:stroke-sale"
+                >
                   <path
                     d="M12 21s-7.5-4.6-10-9.2C.6 8.8 2.2 5.5 5.4 5.5c2 0 3.3 1.2 4.6 2.9 1.3-1.7 2.6-2.9 4.6-2.9 3.2 0 4.8 3.3 3.4 6.3C19.5 16.4 12 21 12 21z"
                     stroke="currentColor"
-                    strokeWidth="2"
+                    strokeWidth="2.2"
                     strokeLinejoin="round"
                   />
                 </svg>
@@ -162,6 +168,9 @@ export function SiteHeader() {
                     {wishCount}
                   </span>
                 )}
+                <span className="pointer-events-none absolute top-full mt-2 left-1/2 -translate-x-1/2 whitespace-nowrap bg-ink text-white text-[10px] font-display tracking-button px-2 py-1 rounded-button opacity-0 translate-y-1 transition-all duration-200 group-hover:opacity-100 group-hover:translate-y-0 hidden sm:block">
+                  Wishlist
+                </span>
               </Link>
 
               {/* Cart / bag */}

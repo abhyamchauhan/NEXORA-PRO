@@ -164,8 +164,10 @@ model SiteSetting {
   id          String   @id @default("singleton")
   bgColor     String   @default("#ffffff") // primary background
   textColor   String   @default("#1c1c1c") // base text colour
-  accentColor String   @default("#1c1c1c") // primary/accent (buttons, links)
+  accentColor String   @default("#E8291C") // primary/accent (buttons, links, sale)
   fontScale   String   @default("medium") // small | medium | large
+  displayFont String   @default("Instrument Sans") // headings / display type
+  bodyFont    String   @default("Nunito") // body / paragraph type
   updatedAt   DateTime @updatedAt
 }
 

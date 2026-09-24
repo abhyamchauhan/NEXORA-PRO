@@ -1,17 +1,22 @@
 import { prisma } from "./prisma";
+import { isValidFont, fontStack } from "./fonts";
 
 export type ThemeSettings = {
   bgColor: string;
   textColor: string;
   accentColor: string;
   fontScale: "small" | "medium" | "large";
+  displayFont: string; // headings / display
+  bodyFont: string; // body / paragraphs
 };
 
 export const DEFAULT_THEME: ThemeSettings = {
   bgColor: "#ffffff",
   textColor: "#1c1c1c",
-  accentColor: "#1c1c1c",
+  accentColor: "#E8291C", // brand signal red — CTAs, sale, hover accents
   fontScale: "medium",
+  displayFont: "Instrument Sans",
+  bodyFont: "Nunito",
 };
 
 // Root-font multipliers for the base font-scale presets. The whole rem-based
@@ -36,6 +41,8 @@ export function normaliseTheme(raw: Record<string, unknown> | null | undefined):
     textColor: isHex(r.textColor) ? r.textColor.trim() : DEFAULT_THEME.textColor,
     accentColor: isHex(r.accentColor) ? r.accentColor.trim() : DEFAULT_THEME.accentColor,
     fontScale: isScale(r.fontScale) ? r.fontScale : DEFAULT_THEME.fontScale,
+    displayFont: isValidFont(r.displayFont) ? r.displayFont : DEFAULT_THEME.displayFont,
+    bodyFont: isValidFont(r.bodyFont) ? r.bodyFont : DEFAULT_THEME.bodyFont,
   };
 }
 
@@ -57,5 +64,7 @@ export function themeCssVars(t: ThemeSettings): string {
     `--text-body:${t.textColor}`,
     `--accent:${t.accentColor}`,
     `--font-scale:${FONT_SCALES[t.fontScale]}`,
+    `--font-display:${fontStack(t.displayFont)}`,
+    `--font-body:${fontStack(t.bodyFont)}`,
   ].join(";");
 }

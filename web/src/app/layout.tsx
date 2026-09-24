@@ -1,20 +1,8 @@
 import type { Metadata } from "next";
-import { Instrument_Sans, Nunito } from "next/font/google";
 import "./globals.css";
 import { Providers } from "./providers";
 import { getSiteTheme, themeCssVars } from "@/lib/site-settings";
-
-const display = Instrument_Sans({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-  variable: "--font-display",
-});
-
-const body = Nunito({
-  subsets: ["latin"],
-  weight: ["400", "600", "700", "800"],
-  variable: "--font-body",
-});
+import { googleFontsHref } from "@/lib/fonts";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 
@@ -45,8 +33,13 @@ export default async function RootLayout({
   const theme = await getSiteTheme();
 
   return (
-    <html lang="en" className={`${display.variable} ${body.variable}`}>
+    <html lang="en">
       <head>
+        {/* Admin-chosen fonts, loaded at runtime so changes need no rebuild. */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link rel="stylesheet" href={googleFontsHref(theme.displayFont, theme.bodyFont)} />
+        {/* Theme colours + fonts + scale as CSS custom properties. */}
         <style
           // eslint-disable-next-line react/no-danger
           dangerouslySetInnerHTML={{ __html: `:root{${themeCssVars(theme)}}` }}
