@@ -54,7 +54,7 @@ export function WishlistButton({
         strokeWidth="2.2"
         strokeLinejoin="round"
         aria-hidden
-        className={`overflow-visible transition-[filter,stroke,fill] duration-200 group-hover:[filter:drop-shadow(0_0_7px_rgba(232,41,28,0.75))] group-hover:stroke-sale ${
+        className={`overflow-visible transition-[fill,stroke] duration-200 ${
           popKey ? "heart-pop" : ""
         }`}
       >

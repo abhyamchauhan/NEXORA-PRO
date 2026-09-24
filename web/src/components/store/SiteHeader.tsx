@@ -134,7 +134,7 @@ export function SiteHeader() {
                 href={session ? "/account" : "/login"}
                 aria-label={session ? "Account" : "Sign in"}
                 title={session ? "Account" : "Sign in"}
-                className="hover:opacity-70 transition-opacity"
+                className="inline-flex items-center justify-center hover:opacity-70 transition-opacity"
               >
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden>
                   <circle cx="12" cy="8" r="4" stroke="currentColor" strokeWidth="2" />
@@ -146,20 +146,13 @@ export function SiteHeader() {
               <Link
                 href="/account/wishlist"
                 aria-label="Wishlist"
-                className="group relative grid place-items-center transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:scale-[1.15]"
+                className="group relative inline-flex items-center justify-center transition-transform duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:opacity-70 hover:scale-105"
               >
-                <svg
-                  width="21"
-                  height="21"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  aria-hidden
-                  className="overflow-visible transition-[filter,stroke] duration-200 group-hover:[filter:drop-shadow(0_0_7px_rgba(232,41,28,0.75))] group-hover:stroke-sale"
-                >
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden>
                   <path
                     d="M12 21s-7.5-4.6-10-9.2C.6 8.8 2.2 5.5 5.4 5.5c2 0 3.3 1.2 4.6 2.9 1.3-1.7 2.6-2.9 4.6-2.9 3.2 0 4.8 3.3 3.4 6.3C19.5 16.4 12 21 12 21z"
                     stroke="currentColor"
-                    strokeWidth="2.2"
+                    strokeWidth="2"
                     strokeLinejoin="round"
                   />
                 </svg>
@@ -168,9 +161,6 @@ export function SiteHeader() {
                     {wishCount}
                   </span>
                 )}
-                <span className="pointer-events-none absolute top-full mt-2 left-1/2 -translate-x-1/2 whitespace-nowrap bg-ink text-white text-[10px] font-display tracking-button px-2 py-1 rounded-button opacity-0 translate-y-1 transition-all duration-200 group-hover:opacity-100 group-hover:translate-y-0 hidden sm:block">
-                  Wishlist
-                </span>
               </Link>
 
               {/* Cart / bag */}
@@ -178,9 +168,9 @@ export function SiteHeader() {
                 href="/cart"
                 aria-label={`Bag (${count})`}
                 title="Bag"
-                className="relative hover:opacity-70 transition-opacity"
+                className="relative inline-flex items-center justify-center hover:opacity-70 transition-opacity"
               >
-                <span key={`bag-${bump}`} className={bump ? "cart-bounce inline-block" : "inline-block"}>
+                <span key={`bag-${bump}`} className={bump ? "cart-bounce inline-flex" : "inline-flex"}>
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden>
                     <path d="M6 8h12l-1 12H7L6 8z" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" />
                     <path d="M9 8V6a3 3 0 0 1 6 0v2" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
