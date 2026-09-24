@@ -3,6 +3,7 @@ import type { Config } from "tailwindcss";
 // GENRAGE design tokens ported from the Claude Design mockup (_ds/tokens).
 // Monochrome streetwear system — colour is functional only.
 const config: Config = {
+  darkMode: "class",
   content: [
     "./src/app/**/*.{ts,tsx}",
     "./src/components/**/*.{ts,tsx}",
@@ -12,6 +13,12 @@ const config: Config = {
     extend: {
       colors: {
         black: "#000000",
+        // Tokens used by the shadcn/21st animated sign-in component.
+        background: "var(--background)",
+        foreground: "var(--foreground)",
+        skeleton: "var(--skeleton)",
+        border: "var(--btn-border)",
+        input: "var(--input)",
         // Admin-themable accent (primary buttons / links / sale). Brand signal
         // red by default; admin can override via the theme settings.
         accent: "var(--accent, #E8291C)",
@@ -62,11 +69,37 @@ const config: Config = {
       boxShadow: {
         drawer: "-8px 0 40px rgb(0 0 0 / 0.12)",
         card: "0 5px 30px rgb(0 0 0 / 0.05)",
+        input: [
+          "0px 2px 3px -1px rgba(0, 0, 0, 0.1)",
+          "0px 1px 0px 0px rgba(25, 28, 33, 0.02)",
+          "0px 0px 0px 1px rgba(25, 28, 33, 0.08)",
+        ].join(", "),
       },
       letterSpacing: {
         display: "-0.01em",
         label: "0.12em",
         button: "0.05em",
+      },
+      // Animations for the animated sign-in component (ripple + orbiting icons).
+      animation: {
+        ripple: "ripple 2s ease calc(var(--i, 0) * 0.2s) infinite",
+        orbit: "orbit calc(var(--duration) * 1s) linear infinite",
+      },
+      keyframes: {
+        ripple: {
+          "0%, 100%": { transform: "translate(-50%, -50%) scale(1)" },
+          "50%": { transform: "translate(-50%, -50%) scale(0.9)" },
+        },
+        orbit: {
+          "0%": {
+            transform:
+              "rotate(0deg) translateY(calc(var(--radius) * 1px)) rotate(0deg)",
+          },
+          "100%": {
+            transform:
+              "rotate(360deg) translateY(calc(var(--radius) * 1px)) rotate(-360deg)",
+          },
+        },
       },
     },
   },
