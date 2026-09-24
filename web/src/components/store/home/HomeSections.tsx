@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { HydratedSection } from "@/lib/homepage";
 import { CATEGORY_LABELS } from "@/lib/format";
+import { getCategoryImages } from "@/lib/category";
 import { ProductCard } from "@/components/store/ProductCard";
 import { ProductImage } from "@/components/store/ProductImage";
 import { Reveal } from "@/components/store/Reveal";
@@ -119,8 +120,9 @@ function FeaturedProductsSection({ s }: { s: HydratedSection }) {
   );
 }
 
-function CategoryShowcaseSection({ s }: { s: HydratedSection }) {
+async function CategoryShowcaseSection({ s }: { s: HydratedSection }) {
   const cats = s.categories.length ? s.categories : ["men", "women", "kids"];
+  const images = await getCategoryImages();
   return (
     <Reveal>
       <section className="max-w-container mx-auto px-6 py-12">
@@ -128,20 +130,39 @@ function CategoryShowcaseSection({ s }: { s: HydratedSection }) {
           <h2 className="font-display text-2xl sm:text-3xl mb-6">{s.heading}</h2>
         )}
         <div className="grid gap-4 sm:grid-cols-3">
-          {cats.map((c) => (
-            <Link
-              key={c}
-              href={`/category/${c}`}
-              className="group relative bg-grey-50 border border-grey-200 p-8 h-48 flex flex-col justify-end hover:border-ink transition-colors"
-            >
-              <p className="font-display text-3xl">
-                {CATEGORY_LABELS[c] ?? c}
-              </p>
-              <span className="absolute top-6 right-6 font-display text-xs tracking-button text-grey-400 group-hover:text-ink">
-                Shop →
-              </span>
-            </Link>
-          ))}
+          {cats.map((c) => {
+            const img = images[c];
+            return (
+              <Link
+                key={c}
+                href={`/category/${c}`}
+                className="group relative border border-grey-200 h-48 overflow-hidden flex flex-col justify-end p-8 hover:border-ink transition-colors bg-grey-50"
+              >
+                {img && (
+                  <>
+                    {/* representative image + gradient for legible text */}
+                    <ProductImage
+                      src={img}
+                      alt={CATEGORY_LABELS[c] ?? c}
+                      sizes="(max-width: 640px) 100vw, 33vw"
+                      className="transition-transform duration-[600ms] ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.05]"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
+                  </>
+                )}
+                <p className={`relative font-display text-3xl ${img ? "text-white" : ""}`}>
+                  {CATEGORY_LABELS[c] ?? c}
+                </p>
+                <span
+                  className={`absolute top-6 right-6 font-display text-xs tracking-button ${
+                    img ? "text-white/80 group-hover:text-white" : "text-grey-400 group-hover:text-ink"
+                  }`}
+                >
+                  Shop →
+                </span>
+              </Link>
+            );
+          })}
         </div>
       </section>
     </Reveal>

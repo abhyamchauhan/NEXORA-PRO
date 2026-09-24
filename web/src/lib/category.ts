@@ -25,6 +25,19 @@ export type CategoryBannerView = {
 export const isCategory = (v: string): v is Category =>
   v === "men" || v === "women" || v === "kids";
 
+// Map of top-level category → representative image (for "Shop by category").
+// Never throws (used during static-friendly renders).
+export async function getCategoryImages(): Promise<Record<string, string | null>> {
+  try {
+    const rows = await prisma.categorySetting.findMany();
+    const map: Record<string, string | null> = {};
+    for (const r of rows) map[r.category] = r.image ?? null;
+    return map;
+  } catch {
+    return {};
+  }
+}
+
 export function slugify(v: string): string {
   return v
     .toLowerCase()

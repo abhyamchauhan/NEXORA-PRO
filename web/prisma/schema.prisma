@@ -255,6 +255,14 @@ model PromoCountdown {
   @@index([category])
 }
 
+// Per top-level category (Men/Women/Kids) representative image, shown behind
+// the "Shop by category" tiles. One row per category; admin-managed.
+model CategorySetting {
+  category  Category @id
+  image     String?
+  updatedAt DateTime @updatedAt
+}
+
 // Homepage hero carousel slides — an admin-managed, auto-rotating/swipeable
 // banner slider shown at the top of the homepage (same carousel component as
 // the category landing pages).

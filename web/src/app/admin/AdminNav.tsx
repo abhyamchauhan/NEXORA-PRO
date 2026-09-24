@@ -7,6 +7,7 @@ import { signOut } from "next-auth/react";
 const LINKS = [
   { href: "/admin", label: "Dashboard" },
   { href: "/admin/products", label: "Products" },
+  { href: "/admin/categories", label: "Category images" },
   { href: "/admin/subcategories", label: "Sub-categories" },
   { href: "/admin/category-banners", label: "Category banners" },
   { href: "/admin/promos", label: "Promos" },
